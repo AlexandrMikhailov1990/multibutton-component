@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест мульти-кнопки</title>
+    <style>
+        .multibutton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .main-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .main-button:hover {
+            transform: scale(1.1);
+        }
+
+        .main-button img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        .popup-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-button:hover {
+            transform: scale(1.15);
+        }
+
+        .social-button img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .settings-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .demo-content {
+            height: 2000px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+    </style>
+</head>
+<body>
+
+<button class="settings-toggle" onclick="toggleSettings()">⚙️ Настройки</button>
+
+<div class="multibutton">
+    <button class="main-button" onclick="toggleMenu()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню">
+    </button>
+    <div class="popup-menu" id="popupMenu">
+        <a href="https://t.me/username" class="social-button" target="_blank" title="Telegram">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+        </a>
+        <a href="https://wa.me/1234567890" class="social-button" target="_blank" title="WhatsApp">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+        </a>
+        <a href="https://vk.com/username" class="social-button" target="_blank" title="VK">
+            <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">
+        </a>
+    </div>
+</div>
+
+<div class="demo-content">
+    <h1>Тест мульти-кнопки</h1>
+    <p>Нажмите кнопку "⚙️ Настройки" в левом верхнем углу.</p>
+    <p>Затем нажмите на фиолетовую кнопку в правом нижнем углу.</p>
+    <div style="height: 1500px; padding: 20px;">
+        <h2>Дополнительный контент</h2>
+        <p>Этот блок создан для демонстрации работы мульти-кнопки.</p>
+    </div>
+</div>
+
+<script>
+function toggleSettings() {
+    console.log('toggleSettings вызвана');
+    alert('Кнопка настроек работает!');
+}
+
+function toggleMenu() {
+    console.log('toggleMenu вызвана');
+    const menu = document.getElementById('popupMenu');
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'flex';
+    } else {
+        menu.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен - тест');
+});
+</script>
+
+</body>
+</html> 
