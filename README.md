@@ -15,8 +15,7 @@
 ## 🎯 Демо
 
 - **Главная страница:** [index.html](index.html)
-- **Продвинутая версия:** [advanced_multibutton.html](advanced_multibutton.html) - Готовая к использованию версия с Jivo интеграцией
-- **Настраиваемая версия:** [multibutton.html](multibutton.html) - Полная версия с панелью настроек
+- **Основная версия:** [multibutton.html](multibutton.html) - Полная версия с настройками и Jivo интеграцией
 - **Простая версия:** [simple_button.html](simple_button.html) - Упрощенная версия для тестирования
 
 ## 📖 Как использовать
