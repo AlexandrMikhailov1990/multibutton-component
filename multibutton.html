@@ -333,6 +333,18 @@
             font-size: 14px;
         }
 
+        .social-input.newly-added {
+            border: 2px solid #28a745;
+            background: #f8fff9;
+            animation: highlightNew 2s ease-in-out;
+        }
+
+        @keyframes highlightNew {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
         .button-actions button {
             flex: 1;
             padding: 10px;
@@ -662,6 +674,8 @@ function toggleSettings() {
         updateJivoPreview();
     } else {
         panel.style.display = 'none';
+        // Скрываем подсказку при закрытии панели
+        document.getElementById('settingsHint').style.display = 'none';
     }
 }
 
@@ -795,13 +809,27 @@ function selectSocial(social) {
     renderSocialInputs();
     hideSocialSelector();
     
+    // Убеждаемся, что панель настроек остается открытой
+    document.getElementById('settingsPanel').style.display = 'block';
+    
     // Показываем уведомление и подсказку
     showNotification(`✅ ${social.name} добавлен! Не забудьте настроить ссылку и нажать "Применить"`, 'info');
     showSettingsHint();
+    
+    // Прокручиваем к новой кнопке для удобства
+    setTimeout(() => {
+        const newInput = document.getElementById(newId + '_link');
+        if (newInput) {
+            newInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            newInput.focus();
+        }
+    }, 100);
 }
 
 // Функция добавления новой кнопки
 function addSocialInput() {
+    // Убеждаемся, что панель настроек открыта
+    document.getElementById('settingsPanel').style.display = 'block';
     showSocialSelector();
 }
 
@@ -851,6 +879,17 @@ function renderSocialInputs() {
         const inputDiv = document.createElement('div');
         inputDiv.className = 'social-input';
         
+        // Добавляем класс подсветки для новых кнопок (если ссылка не настроена)
+        if (setting.link === 'https://t.me/' || setting.link === 'https://wa.me/' || setting.link === 'https://vk.com/' || 
+            setting.link === 'https://instagram.com/' || setting.link === 'https://facebook.com/' || setting.link === 'https://twitter.com/' ||
+            setting.link === 'https://youtube.com/' || setting.link === 'https://linkedin.com/in/' || setting.link === 'https://discord.gg/' ||
+            setting.link === 'skype:' || setting.link === 'viber://chat?number=' || setting.link === 'https://tiktok.com/@' ||
+            setting.link === 'https://snapchat.com/add/' || setting.link === 'https://pinterest.com/' || setting.link === 'https://reddit.com/r/' ||
+            setting.link === 'https://twitch.tv/' || setting.link === 'https://github.com/' || setting.link === 'https://steamcommunity.com/id/' ||
+            setting.link === 'https://open.spotify.com/user/' || setting.link === 'tel:') {
+            inputDiv.classList.add('newly-added');
+        }
+        
         inputDiv.innerHTML = `
             <div class="social-input-header">
                 <h4 class="social-input-title">${setting.name}</h4>
@@ -879,6 +918,15 @@ function updateSetting(id, field, value) {
         setting[field] = value;
         // Показываем подсказку о необходимости применить настройки
         showSettingsHint();
+        
+        // Убираем подсветку, если ссылка настроена
+        if (field === 'link' && value && value.trim() !== '' && 
+            !value.endsWith('/') && !value.endsWith(':') && !value.endsWith('@')) {
+            const inputDiv = document.querySelector(`[id="${id}_link"]`).closest('.social-input');
+            if (inputDiv) {
+                inputDiv.classList.remove('newly-added');
+            }
+        }
     }
 }
 
@@ -1104,6 +1152,8 @@ document.addEventListener('click', function(event) {
     if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
         document.getElementById('popupMenu').style.display = 'none';
         settingsPanel.style.display = 'none';
+        // Скрываем подсказку при закрытии панели
+        document.getElementById('settingsHint').style.display = 'none';
     }
     
     // Закрытие модального окна при клике вне его
