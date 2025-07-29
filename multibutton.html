@@ -1623,14 +1623,14 @@ function generateReadyCode() {
     // Добавляем HTML структуру
     code += '<div class="multibutton">\n';
     code += '    <button class="main-button">\n';
-    code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню">\n';
+    code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" />\n';
     code += '    </button>\n';
     code += '    <div class="popup-menu" id="popupMenu">\n';
     // Добавляем социальные кнопки
     socialSettings.forEach(setting => {
         if (setting.link && setting.link.trim() !== '') {
             code += `        <a href="${setting.link}" class="social-button" target="_blank" title="${setting.name}">\n`;
-            code += `            <img src="${setting.icon}" alt="${setting.name}">\n`;
+            code += `            <img src="${setting.icon}" alt="${setting.name}" />\n`;
             code += `            ${setting.name}\n`;
             code += '        </a>\n';
         }
