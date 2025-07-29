@@ -781,10 +781,10 @@
         </div>
         <div id="jivoIconSection" style="display: none; margin-top: 15px;">
             <div class="jivo-icon-input">
-                <label>🎨 Загрузить свою иконку:</label>
-                <input type="file" id="jivoIconFile" accept="image/*" onchange="handleJivoIconUpload()">
-                <div class="jivo-icon-preview" id="jivoIconPreview" style="display: none;">
-                    <img id="jivoIconPreviewImg" alt="Предварительный просмотр">
+                <label>🎨 Ссылка на свою иконку:</label>
+                <input type="url" id="jivoIconUrl" placeholder="https://example.com/icon.png" onchange="handleJivoIconUrl()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px;">
+                <div class="jivo-icon-preview" id="jivoIconPreview" style="display: none; margin-top: 10px;">
+                    <img id="jivoIconPreviewImg" alt="Предварительный просмотр" style="max-width: 50px; max-height: 50px; border: 1px solid #ddd; border-radius: 4px;">
                     <button type="button" onclick="removeJivoIcon()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
                 </div>
             </div>
@@ -1058,34 +1058,30 @@ function toggleJivoSection() {
     }
 }
 
-// Функция обработки загрузки иконки Jivo
-function handleJivoIconUpload() {
-    const fileInput = document.getElementById('jivoIconFile');
-    const file = fileInput.files[0];
+// Функция обработки ссылки на иконку Jivo
+function handleJivoIconUrl() {
+    const urlInput = document.getElementById('jivoIconUrl');
+    const url = urlInput.value.trim();
     
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            jivoSettings.customIcon = e.target.result;
-            
-            // Показываем предварительный просмотр
-            const preview = document.getElementById('jivoIconPreview');
-            const previewImg = document.getElementById('jivoIconPreviewImg');
-            previewImg.src = e.target.result;
-            preview.style.display = 'block';
-            
-            showNotification('✅ Иконка загружена!', 'success');
-        };
-        reader.readAsDataURL(file);
+    if (url) {
+        jivoSettings.customIcon = url;
+        
+        // Показываем предварительный просмотр
+        const preview = document.getElementById('jivoIconPreview');
+        const previewImg = document.getElementById('jivoIconPreviewImg');
+        previewImg.src = url;
+        preview.style.display = 'block';
+        
+        showNotification('✅ Ссылка на иконку добавлена!', 'success');
     }
 }
 
 // Функция удаления загруженной иконки
 function removeJivoIcon() {
     jivoSettings.customIcon = null;
-    document.getElementById('jivoIconFile').value = '';
+    document.getElementById('jivoIconUrl').value = '';
     document.getElementById('jivoIconPreview').style.display = 'none';
-    showNotification('🗑️ Иконка удалена', 'info');
+    showNotification('🗑️ Ссылка на иконку удалена', 'info');
 }
 
 // Популярные соцсети и мессенджеры
@@ -1436,7 +1432,7 @@ function clearAllSettings() {
         jivoSettings.customIcon = null;
         
         document.getElementById('jivoEnabled').checked = false;
-        document.getElementById('jivoIconFile').value = '';
+        document.getElementById('jivoIconUrl').value = '';
         document.getElementById('jivoIconPreview').style.display = 'none';
         document.getElementById('jivoIconSection').style.display = 'none';
         
