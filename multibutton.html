@@ -1292,6 +1292,9 @@ function moveSocialUp(index) {
         showNotification(`⬆️ ${temp.name} перемещен вверх`, 'info');
         showSettingsHint();
     }
+    
+    // Предотвращаем всплытие события
+    event.stopPropagation();
 }
 
 // Функция перемещения кнопки вниз
@@ -1309,6 +1312,9 @@ function moveSocialDown(index) {
         showNotification(`⬇️ ${temp.name} перемещен вниз`, 'info');
         showSettingsHint();
     }
+    
+    // Предотвращаем всплытие события
+    event.stopPropagation();
 }
 
 // Функция удаления кнопки
@@ -1326,6 +1332,9 @@ function removeSocialInput(id) {
     // Показываем уведомление об удалении и подсказку
     showNotification(`🗑️ ${name} удален`, 'warning');
     showSettingsHint();
+    
+    // Предотвращаем всплытие события
+    event.stopPropagation();
 }
 
 // Функция отрисовки полей ввода
@@ -1609,6 +1618,14 @@ document.addEventListener('click', function(event) {
     const settingsPanel = document.getElementById('settingsPanel');
     const settingsToggle = document.querySelector('.settings-toggle');
     const socialSelectorModal = document.getElementById('socialSelectorModal');
+    
+    // Проверяем, является ли клик по кнопке перемещения
+    if (event.target.classList.contains('move-button') || 
+        event.target.closest('.move-button') || 
+        event.target.textContent === '↑' || 
+        event.target.textContent === '↓') {
+        return; // Не закрываем панель настроек при клике по кнопкам перемещения
+    }
     
     // Не закрываем панель настроек, если открыт селектор соцсетей
     if (socialSelectorModal.style.display === 'flex') {
