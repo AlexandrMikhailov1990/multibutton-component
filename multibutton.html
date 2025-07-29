@@ -1655,7 +1655,13 @@ function generateReadyCode() {
         textarea.readOnly = true;
         settingsInfo.appendChild(textarea);
     }
-    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки вставьте JS-код и (если нужно) код Jivo вручную, как указано в инструкции. -->';
+    // Добавляем код Jivo, если включен
+    if (jivoSettings.enabled && jivoSettings.code) {
+        code += '\n<!-- Код Jivo чата -->\n';
+        code += jivoSettings.code + '\n';
+    }
+    
+    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки вставьте JS-код вручную, как указано в инструкции. -->';
     codeOutput.style.display = 'block';
     // Обновляем кнопку копирования
     const copyButton = document.querySelector('.copy-button');
