@@ -672,15 +672,15 @@ function createSocialMenu() {
         jivoButton.title = 'Написать в чат';
         jivoButton.onclick = openJivoChat;
         
-        // Создаем SVG иконку чата
+        // Создаем SVG логотип Jivo
         const jivoSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         jivoSvg.setAttribute('width', '25');
         jivoSvg.setAttribute('height', '25');
         jivoSvg.setAttribute('viewBox', '0 0 24 24');
-        jivoSvg.style.fill = '#3bb34a'; // Зеленый цвет Jivo
         
         jivoSvg.innerHTML = `
-            <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            <circle cx="12" cy="12" r="12" fill="#3bb34a"/>
+            <path d="M8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h5v2H8v-2z" fill="white"/>
         `;
         
         jivoButton.appendChild(jivoSvg);
