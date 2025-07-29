@@ -1284,6 +1284,11 @@ function moveSocialUp(index) {
         socialSettings[index] = socialSettings[index - 1];
         socialSettings[index - 1] = temp;
         renderSocialInputs();
+        
+        // Убеждаемся, что панель настроек остается открытой
+        const settingsPanel = document.getElementById('settingsPanel');
+        settingsPanel.style.display = 'block';
+        
         showNotification(`⬆️ ${temp.name} перемещен вверх`, 'info');
         showSettingsHint();
     }
@@ -1296,6 +1301,11 @@ function moveSocialDown(index) {
         socialSettings[index] = socialSettings[index + 1];
         socialSettings[index + 1] = temp;
         renderSocialInputs();
+        
+        // Убеждаемся, что панель настроек остается открытой
+        const settingsPanel = document.getElementById('settingsPanel');
+        settingsPanel.style.display = 'block';
+        
         showNotification(`⬇️ ${temp.name} перемещен вниз`, 'info');
         showSettingsHint();
     }
@@ -1308,6 +1318,10 @@ function removeSocialInput(id) {
     
     socialSettings = socialSettings.filter(setting => setting.id !== id);
     renderSocialInputs();
+    
+    // Убеждаемся, что панель настроек остается открытой
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'block';
     
     // Показываем уведомление об удалении и подсказку
     showNotification(`🗑️ ${name} удален`, 'warning');
