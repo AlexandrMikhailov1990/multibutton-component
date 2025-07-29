@@ -1676,6 +1676,9 @@ function createSocialMenu() {
     if (jivoSettings.enabled) {
         const jivoButton = document.createElement('button');
         jivoButton.className = 'social-button';
+        if (!jivoSettings.customIcon) {
+            jivoButton.className += ' jivo-button';
+        }
         jivoButton.title = 'Написать в чат';
         jivoButton.onclick = openJivoChat;
         
@@ -1778,10 +1781,18 @@ function generateReadyCode() {
     code += '    height: 25px;\n';
     code += '}\n\n';
     code += '.jivo-button {\n';
-    code += '    background: #3bb34a !important;\n';
+    if (jivoSettings.customIcon) {
+        code += '    background: white !important;\n';
+    } else {
+        code += '    background: #3bb34a !important;\n';
+    }
     code += '}\n\n';
     code += '.jivo-button:hover {\n';
-    code += '    background: #2d8f3a !important;\n';
+    if (jivoSettings.customIcon) {
+        code += '    background: #f8f9fa !important;\n';
+    } else {
+        code += '    background: #2d8f3a !important;\n';
+    }
     code += '}\n\n';
     code += '.hidden {\n';
     code += '    display: none !important;\n';
