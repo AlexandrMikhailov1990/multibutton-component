@@ -11,6 +11,8 @@
 - 🔧 **Гибкость** - поддержка Telegram, WhatsApp, VK, Instagram, телефон
 - 💬 **Jivo интеграция** - встроенный чат с автоматическим скрытием стандартной кнопки
 - 🎯 **Готовые решения** - продвинутая версия для немедленного использования
+- 📋 **Селектор соцсетей** - выбор из 20 популярных платформ при добавлении кнопки
+- 🎨 **Библиотека иконок** - готовые ссылки на иконки популярных соцсетей
 
 ## 🎯 Демо
 
@@ -23,8 +25,12 @@
 ### 1. Настройка
 1. Откройте `multibutton.html` в браузере
 2. Нажмите кнопку "⚙️ Настройки" в левом верхнем углу
-3. Заполните ссылки на ваши социальные сети
-4. Нажмите "Применить"
+3. **Добавление кнопок:**
+   - Нажмите "➕ Добавить новую кнопку"
+   - Выберите соцсеть из селектора (20 популярных платформ)
+   - Или введите название и ссылку вручную
+4. Заполните ссылки на ваши социальные сети
+5. Нажмите "Применить"
 
 ### 2. Тестирование
 1. Нажмите на фиолетовую кнопку в правом нижнем углу
@@ -98,11 +104,36 @@
 
 ## 📱 Поддерживаемые платформы
 
+### 🚀 Основные платформы
 - ✅ **Telegram** - `https://t.me/username`
 - ✅ **WhatsApp** - `https://wa.me/1234567890`
 - ✅ **VK** - `https://vk.com/username`
 - ✅ **Instagram** - `https://instagram.com/username`
+- ✅ **Facebook** - `https://facebook.com/username`
+- ✅ **Twitter** - `https://twitter.com/username`
+- ✅ **YouTube** - `https://youtube.com/channel/username`
+- ✅ **LinkedIn** - `https://linkedin.com/in/username`
+
+### 🎮 Игровые и развлекательные
+- ✅ **Discord** - `https://discord.gg/invite`
+- ✅ **Twitch** - `https://twitch.tv/username`
+- ✅ **Steam** - `https://steamcommunity.com/id/username`
+- ✅ **Spotify** - `https://open.spotify.com/user/username`
+
+### 📞 Связь и мессенджеры
+- ✅ **Skype** - `skype:username`
+- ✅ **Viber** - `viber://chat?number=1234567890`
 - ✅ **Телефон** - `tel:+1234567890`
+
+### 📱 Современные платформы
+- ✅ **TikTok** - `https://tiktok.com/@username`
+- ✅ **Snapchat** - `https://snapchat.com/add/username`
+- ✅ **Pinterest** - `https://pinterest.com/username`
+- ✅ **Reddit** - `https://reddit.com/r/community`
+- ✅ **GitHub** - `https://github.com/username`
+
+### 🎨 Готовые иконки
+Все иконки доступны на главной странице проекта в разделе "Популярные иконки для соцсетей"
 
 ## 🚀 Публикация
 
