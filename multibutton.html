@@ -1560,7 +1560,6 @@ function generateReadyCode() {
     code += '    right: 20px;\n';
     code += '    z-index: 10000;\n';
     code += '}\n\n';
-    
     code += '.main-button {\n';
     code += '    width: 60px;\n';
     code += '    height: 60px;\n';
@@ -1574,18 +1573,15 @@ function generateReadyCode() {
     code += '    align-items: center;\n';
     code += '    justify-content: center;\n';
     code += '}\n\n';
-    
     code += '.main-button:hover {\n';
     code += '    transform: scale(1.1);\n';
     code += '    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);\n';
     code += '}\n\n';
-    
     code += '.main-button img {\n';
     code += '    width: 24px;\n';
     code += '    height: 24px;\n';
     code += '    filter: brightness(0) invert(1);\n';
     code += '}\n\n';
-    
     code += '.popup-menu {\n';
     code += '    position: absolute;\n';
     code += '    bottom: 80px;\n';
@@ -1599,7 +1595,6 @@ function generateReadyCode() {
     code += '    gap: 8px;\n';
     code += '    min-width: 200px;\n';
     code += '}\n\n';
-    
     code += '.social-button {\n';
     code += '    display: flex;\n';
     code += '    align-items: center;\n';
@@ -1611,57 +1606,26 @@ function generateReadyCode() {
     code += '    font-size: 14px;\n';
     code += '    font-weight: 500;\n';
     code += '}\n\n';
-    
     code += '.social-button:hover {\n';
     code += '    background: #f8f9fa;\n';
     code += '    transform: translateX(5px);\n';
     code += '}\n\n';
-    
     code += '.social-button img {\n';
     code += '    width: 20px;\n';
     code += '    height: 20px;\n';
     code += '    margin-right: 10px;\n';
     code += '    border-radius: 4px;\n';
     code += '}\n\n';
-    
-    code += '.jivo-button {\n';
-    code += '    display: flex;\n';
-    code += '    align-items: center;\n';
-    code += '    padding: 10px 15px;\n';
-    code += '    background: #3bb34a;\n';
-    code += '    color: white;\n';
-    code += '    border: none;\n';
-    code += '    border-radius: 10px;\n';
-    code += '    cursor: pointer;\n';
-    code += '    transition: background 0.2s;\n';
-    code += '    font-size: 14px;\n';
-    code += '    font-weight: 500;\n';
-    code += '    width: 100%;\n';
-    code += '    text-align: left;\n';
-    code += '}\n\n';
-    
-    code += '.jivo-button:hover {\n';
-    code += '    background: #2d8f3a;\n';
-    code += '}\n\n';
-    
-    code += '.jivo-button svg {\n';
-    code += '    width: 20px;\n';
-    code += '    height: 20px;\n';
-    code += '    margin-right: 10px;\n';
-    code += '}\n\n';
-    
     code += '.hidden {\n';
     code += '    display: none !important;\n';
     code += '}\n';
     code += '</style>\n\n';
-    
     // Добавляем HTML структуру
     code += '<div class="multibutton">\n';
-    code += '    <button class="main-button" onclick="toggleMenu()">\n';
+    code += '    <button class="main-button">\n';
     code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню">\n';
     code += '    </button>\n';
     code += '    <div class="popup-menu" id="popupMenu">\n';
-    
     // Добавляем социальные кнопки
     socialSettings.forEach(setting => {
         if (setting.link && setting.link.trim() !== '') {
@@ -1671,74 +1635,11 @@ function generateReadyCode() {
             code += '        </a>\n';
         }
     });
-    
-    // Добавляем кнопку Jivo, если включена
-    if (jivoSettings.enabled) {
-        code += '        <button class="jivo-button" onclick="openJivoChat()">\n';
-        code += '            <svg viewBox="0 0 32 32">\n';
-        code += '                <circle cx="16" cy="16" r="16" fill="#3bb34a"/>\n';
-        code += '                <text x="16" y="22" text-anchor="middle" fill="white" font-size="14" font-weight="bold">j</text>\n';
-        code += '            </svg>\n';
-        code += '            Написать в чат\n';
-        code += '        </button>\n';
-    }
-    
     code += '    </div>\n';
     code += '</div>\n\n';
-    
-    // Добавляем JavaScript
-    code += '<script>\n';
-    code += '// Функция переключения меню\n';
-    code += 'function toggleMenu() {\n';
-    code += '    const menu = document.getElementById("popupMenu");\n';
-    code += '    if (menu.style.display === "none" || menu.style.display === "") {\n';
-    code += '        menu.style.display = "flex";\n';
-    code += '    } else {\n';
-    code += '        menu.style.display = "none";\n';
-    code += '    }\n';
-    code += '}\n\n';
-    
-    // Добавляем Jivo функции, если включен
-    if (jivoSettings.enabled) {
-        code += '// Jivo функции\n';
-        code += 'function jivo_onLoadCallback() {\n';
-        code += '    const jivo_custom_widget = true;\n';
-        code += '}\n\n';
-        
-        code += 'function jivo_onOpen() {\n';
-        code += '    document.querySelector(".multibutton").style.display = "none";\n';
-        code += '}\n\n';
-        
-        code += 'function jivo_onClose() {\n';
-        code += '    document.querySelector(".multibutton").style.display = "block";\n';
-        code += '}\n\n';
-        
-        code += 'function openJivoChat() {\n';
-        code += '    if (window.jivo_api && typeof window.jivo_api.open === "function") {\n';
-        code += '        window.jivo_api.open();\n';
-        code += '        if (typeof window.jivo_onOpen === "function") window.jivo_onOpen();\n';
-        code += '    } else {\n';
-        code += '        setTimeout(openJivoChat, 300);\n';
-        code += '    }\n';
-        code += '}\n\n';
-        
-        // Добавляем код Jivo (пропускаем проблемный код)
-        code += '        <!-- Jivo код будет добавлен отдельно -->\n\n';
-    }
-    
-    code += '// Закрытие меню при клике вне его\n';
-    code += 'document.addEventListener("click", function(event) {\n';
-    code += '    const multibutton = document.querySelector(".multibutton");\n';
-    code += '    if (!multibutton.contains(event.target)) {\n';
-    code += '        document.getElementById("popupMenu").style.display = "none";\n';
-    code += '    }\n';
-    code += '});\n';
-    code += '</script>\n';
-    
     // Показываем готовый код
     const codeOutput = document.getElementById('codeOutput');
     const settingsInfo = document.getElementById('settingsInfo');
-    
     // Создаем textarea для отображения кода
     if (!document.getElementById('readyCodeTextarea')) {
         const textarea = document.createElement('textarea');
@@ -1754,10 +1655,8 @@ function generateReadyCode() {
         textarea.readOnly = true;
         settingsInfo.appendChild(textarea);
     }
-    
-    document.getElementById('readyCodeTextarea').value = code;
+    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки вставьте JS-код и (если нужно) код Jivo вручную, как указано в инструкции. -->';
     codeOutput.style.display = 'block';
-    
     // Обновляем кнопку копирования
     const copyButton = document.querySelector('.copy-button');
     if (copyButton) {
