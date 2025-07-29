@@ -125,6 +125,38 @@
             margin: 0;
         }
 
+        .social-input-actions {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .move-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .move-button:hover:not(:disabled) {
+            background: #5a6268;
+            transform: scale(1.05);
+        }
+
+        .move-button:disabled {
+            background: #e9ecef;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+
         .remove-button {
             background: #ff4757;
             color: white;
@@ -285,6 +317,20 @@
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
+        }
+
+        .settings-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .settings-hint p {
+            margin: 0;
+            font-size: 14px;
         }
 
         .button-actions button {
@@ -514,6 +560,10 @@
         <button class="clear-button" onclick="clearAllSettings()">Очистить все</button>
     </div>
     
+    <div class="settings-hint" id="settingsHint" style="display: none;">
+        <p>💡 <strong>Не забудьте нажать "Применить"</strong> после изменения настроек!</p>
+    </div>
+    
     <div class="code-output" id="codeOutput">
         <h4>Настройки применены:</h4>
         <div id="settingsInfo" style="background: #e9ecef; padding: 10px; border-radius: 3px; font-family: monospace; font-size: 12px;"></div>
@@ -726,6 +776,12 @@ function showNotification(message, type = 'success', duration = 3000) {
     }, duration);
 }
 
+// Функция показа подсказки о применении настроек
+function showSettingsHint() {
+    const hint = document.getElementById('settingsHint');
+    hint.style.display = 'block';
+}
+
 // Функция выбора соцсети
 function selectSocial(social) {
     const newId = 'custom_' + nextId++;
@@ -739,18 +795,38 @@ function selectSocial(social) {
     renderSocialInputs();
     hideSocialSelector();
     
-    // Показываем уведомление
-    showNotification(`✅ ${social.name} добавлен! Настройте ссылку и нажмите "Применить"`);
-    
-    // Автоматически применяем настройки после добавления новой кнопки
-    setTimeout(() => {
-        applySettings();
-    }, 100);
+    // Показываем уведомление и подсказку
+    showNotification(`✅ ${social.name} добавлен! Не забудьте настроить ссылку и нажать "Применить"`, 'info');
+    showSettingsHint();
 }
 
 // Функция добавления новой кнопки
 function addSocialInput() {
     showSocialSelector();
+}
+
+// Функция перемещения кнопки вверх
+function moveSocialUp(index) {
+    if (index > 0) {
+        const temp = socialSettings[index];
+        socialSettings[index] = socialSettings[index - 1];
+        socialSettings[index - 1] = temp;
+        renderSocialInputs();
+        showNotification(`⬆️ ${temp.name} перемещен вверх`, 'info');
+        showSettingsHint();
+    }
+}
+
+// Функция перемещения кнопки вниз
+function moveSocialDown(index) {
+    if (index < socialSettings.length - 1) {
+        const temp = socialSettings[index];
+        socialSettings[index] = socialSettings[index + 1];
+        socialSettings[index + 1] = temp;
+        renderSocialInputs();
+        showNotification(`⬇️ ${temp.name} перемещен вниз`, 'info');
+        showSettingsHint();
+    }
 }
 
 // Функция удаления кнопки
@@ -761,8 +837,9 @@ function removeSocialInput(id) {
     socialSettings = socialSettings.filter(setting => setting.id !== id);
     renderSocialInputs();
     
-    // Показываем уведомление об удалении
+    // Показываем уведомление об удалении и подсказку
     showNotification(`🗑️ ${name} удален`, 'warning');
+    showSettingsHint();
 }
 
 // Функция отрисовки полей ввода
@@ -770,14 +847,18 @@ function renderSocialInputs() {
     const container = document.getElementById('socialInputs');
     container.innerHTML = '';
     
-    socialSettings.forEach(setting => {
+    socialSettings.forEach((setting, index) => {
         const inputDiv = document.createElement('div');
         inputDiv.className = 'social-input';
         
         inputDiv.innerHTML = `
             <div class="social-input-header">
                 <h4 class="social-input-title">${setting.name}</h4>
-                <button class="remove-button" onclick="removeSocialInput('${setting.id}')" title="Удалить">×</button>
+                <div class="social-input-actions">
+                    <button class="move-button move-up" onclick="moveSocialUp(${index})" title="Переместить вверх" ${index === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="move-button move-down" onclick="moveSocialDown(${index})" title="Переместить вниз" ${index === socialSettings.length - 1 ? 'disabled' : ''}>↓</button>
+                    <button class="remove-button" onclick="removeSocialInput('${setting.id}')" title="Удалить">×</button>
+                </div>
             </div>
             <label>Название:</label>
             <input type="text" id="${setting.id}_name" value="${setting.name}" placeholder="Название кнопки" onchange="updateSetting('${setting.id}', 'name', this.value)">
@@ -796,6 +877,8 @@ function updateSetting(id, field, value) {
     const setting = socialSettings.find(s => s.id === id);
     if (setting) {
         setting[field] = value;
+        // Показываем подсказку о необходимости применить настройки
+        showSettingsHint();
     }
 }
 
@@ -825,6 +908,9 @@ function applySettings() {
     
     // Показываем блок с информацией
     document.getElementById('codeOutput').style.display = 'block';
+    
+    // Скрываем подсказку
+    document.getElementById('settingsHint').style.display = 'none';
     
     // Показываем уведомление об успешном применении
     showNotification('✅ Настройки применены успешно!', 'success');
