@@ -9,7 +9,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 9999;
+            z-index: 10000;
         }
 
         .main-button {
@@ -82,6 +82,7 @@
             max-height: 85vh;
             overflow-y: auto;
             display: none;
+            z-index: 10010;
         }
 
         .settings-panel h3 {
@@ -237,17 +238,22 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            padding: 10px 15px;
-            background: #667eea;
-            color: white;
+            z-index: 10030;
+            font-size: 2rem;
+            padding: 18px 36px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(102,126,234,0.18);
+            font-weight: bold;
             cursor: pointer;
-            z-index: 10000;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
         }
-
         .settings-toggle:hover {
-            background: #5a6fd8;
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 10px 32px rgba(102,126,234,0.28);
+            transform: scale(1.04);
         }
 
         .demo-content {
@@ -619,7 +625,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 10001;
+            z-index: 10020;
         }
 
         .social-selector-content {
@@ -1153,11 +1159,10 @@ const popularSocials = [
     { name: 'TikTok', icon: 'https://cdn-icons-png.flaticon.com/512/3938/3938056.png', link: 'https://tiktok.com/@' },
     { name: 'Snapchat', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111372.png', link: 'https://snapchat.com/add/' },
     { name: 'Pinterest', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111460.png', link: 'https://pinterest.com/' },
-    { name: 'Reddit', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111373.png', link: 'https://reddit.com/r/' },
-    { name: 'Twitch', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111375.png', link: 'https://twitch.tv/' },
+    { name: 'LINE', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111498.png', link: 'https://line.me/' },
+    { name: 'Steam', icon: 'https://cdn-icons-png.flaticon.com/512/5968/5968703.png', link: 'https://steamcommunity.com/id/' },
     { name: 'GitHub', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111432.png', link: 'https://github.com/' },
-    { name: 'Steam', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111376.png', link: 'https://steamcommunity.com/id/' },
-    { name: 'Spotify', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111377.png', link: 'https://open.spotify.com/user/' },
+    { name: 'Spotify', icon: 'https://cdn-icons-png.flaticon.com/512/174/174872.png', link: 'https://open.spotify.com/user/' },
     { name: 'Telephone', icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png', link: 'tel:' }
 ];
 
