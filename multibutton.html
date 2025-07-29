@@ -719,12 +719,12 @@ const popularSocials = [
     { name: 'Instagram', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', link: 'https://instagram.com/' },
     { name: 'Facebook', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111392.png', link: 'https://facebook.com/' },
     { name: 'Twitter', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111738.png', link: 'https://twitter.com/' },
-    { name: 'YouTube', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111744.png', link: 'https://youtube.com/' },
+    { name: 'YouTube', icon: 'https://cdn-icons-png.flaticon.com/512/3670/3670147.png', link: 'https://youtube.com/' },
     { name: 'LinkedIn', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111499.png', link: 'https://linkedin.com/in/' },
-    { name: 'Discord', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111374.png', link: 'https://discord.gg/' },
+    { name: 'Discord', icon: 'https://cdn-icons-png.flaticon.com/512/3670/3670157.png', link: 'https://discord.gg/' },
     { name: 'Skype', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111365.png', link: 'skype:' },
     { name: 'Viber', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111370.png', link: 'viber://chat?number=' },
-    { name: 'TikTok', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111371.png', link: 'https://tiktok.com/@' },
+    { name: 'TikTok', icon: 'https://cdn-icons-png.flaticon.com/512/3938/3938056.png', link: 'https://tiktok.com/@' },
     { name: 'Snapchat', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111372.png', link: 'https://snapchat.com/add/' },
     { name: 'Pinterest', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111460.png', link: 'https://pinterest.com/' },
     { name: 'Reddit', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111373.png', link: 'https://reddit.com/r/' },
@@ -806,8 +806,6 @@ function showSettingsHint() {
 
 // Функция выбора соцсети
 function selectSocial(social) {
-    console.log('selectSocial вызвана для:', social.name);
-    
     const newId = 'custom_' + nextId++;
     const newSetting = {
         id: newId,
@@ -826,7 +824,6 @@ function selectSocial(social) {
     // Принудительно открываем панель настроек
     const settingsPanel = document.getElementById('settingsPanel');
     settingsPanel.style.display = 'block';
-    console.log('Панель настроек принудительно открыта');
     
     // Показываем уведомление и подсказку
     showNotification(`✅ ${social.name} добавлен! Не забудьте настроить ссылку и нажать "Применить"`, 'info');
@@ -838,7 +835,6 @@ function selectSocial(social) {
         if (newInput) {
             newInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             newInput.focus();
-            console.log('Фокус установлен на поле ссылки');
         }
     }, 200);
 }
@@ -897,13 +893,16 @@ function renderSocialInputs() {
         inputDiv.className = 'social-input';
         
         // Добавляем класс подсветки для новых кнопок (если ссылка не настроена)
-        if (setting.link === 'https://t.me/' || setting.link === 'https://wa.me/' || setting.link === 'https://vk.com/' || 
-            setting.link === 'https://instagram.com/' || setting.link === 'https://facebook.com/' || setting.link === 'https://twitter.com/' ||
-            setting.link === 'https://youtube.com/' || setting.link === 'https://linkedin.com/in/' || setting.link === 'https://discord.gg/' ||
-            setting.link === 'skype:' || setting.link === 'viber://chat?number=' || setting.link === 'https://tiktok.com/@' ||
-            setting.link === 'https://snapchat.com/add/' || setting.link === 'https://pinterest.com/' || setting.link === 'https://reddit.com/r/' ||
-            setting.link === 'https://twitch.tv/' || setting.link === 'https://github.com/' || setting.link === 'https://steamcommunity.com/id/' ||
-            setting.link === 'https://open.spotify.com/user/' || setting.link === 'tel:') {
+        const baseLinks = [
+            'https://t.me/', 'https://wa.me/', 'https://vk.com/', 'https://instagram.com/', 
+            'https://facebook.com/', 'https://twitter.com/', 'https://youtube.com/', 
+            'https://linkedin.com/in/', 'https://discord.gg/', 'skype:', 'viber://chat?number=', 
+            'https://tiktok.com/@', 'https://snapchat.com/add/', 'https://pinterest.com/', 
+            'https://reddit.com/r/', 'https://twitch.tv/', 'https://github.com/', 
+            'https://steamcommunity.com/id/', 'https://open.spotify.com/user/', 'tel:'
+        ];
+        
+        if (baseLinks.includes(setting.link)) {
             inputDiv.classList.add('newly-added');
         }
         
@@ -1168,7 +1167,6 @@ document.addEventListener('click', function(event) {
     
     // Не закрываем панель настроек, если открыт селектор соцсетей
     if (socialSelectorModal.style.display === 'flex') {
-        console.log('Селектор открыт, не закрываем панель настроек');
         // Закрытие модального окна при клике вне его
         if (event.target === socialSelectorModal) {
             hideSocialSelector();
@@ -1177,7 +1175,6 @@ document.addEventListener('click', function(event) {
     }
     
     if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
-        console.log('Закрываем панель настроек - клик вне элементов');
         document.getElementById('popupMenu').style.display = 'none';
         settingsPanel.style.display = 'none';
         // Скрываем подсказку при закрытии панели
