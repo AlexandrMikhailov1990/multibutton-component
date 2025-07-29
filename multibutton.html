@@ -779,6 +779,16 @@
             <input type="checkbox" id="jivoEnabled" onchange="toggleJivoSection()">
             <label for="jivoEnabled">Включить Jivo чат</label>
         </div>
+        <div id="jivoIconSection" style="display: none; margin-top: 15px;">
+            <div class="jivo-icon-input">
+                <label>🎨 Загрузить свою иконку:</label>
+                <input type="file" id="jivoIconFile" accept="image/*" onchange="handleJivoIconUpload()">
+                <div class="jivo-icon-preview" id="jivoIconPreview" style="display: none;">
+                    <img id="jivoIconPreviewImg" alt="Предварительный просмотр">
+                    <button type="button" onclick="removeJivoIcon()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div class="button-actions">
@@ -988,7 +998,8 @@ let socialSettings = [
 ];
 
 let jivoSettings = {
-    enabled: false
+    enabled: false,
+    customIcon: null
 };
 
 let nextId = 1;
@@ -1037,7 +1048,44 @@ function toggleMenu() {
 // Функция переключения секции Jivo
 function toggleJivoSection() {
     const enabled = document.getElementById('jivoEnabled').checked;
+    const iconSection = document.getElementById('jivoIconSection');
     jivoSettings.enabled = enabled;
+    
+    if (enabled) {
+        iconSection.style.display = 'block';
+    } else {
+        iconSection.style.display = 'none';
+    }
+}
+
+// Функция обработки загрузки иконки Jivo
+function handleJivoIconUpload() {
+    const fileInput = document.getElementById('jivoIconFile');
+    const file = fileInput.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            jivoSettings.customIcon = e.target.result;
+            
+            // Показываем предварительный просмотр
+            const preview = document.getElementById('jivoIconPreview');
+            const previewImg = document.getElementById('jivoIconPreviewImg');
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+            
+            showNotification('✅ Иконка загружена!', 'success');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Функция удаления загруженной иконки
+function removeJivoIcon() {
+    jivoSettings.customIcon = null;
+    document.getElementById('jivoIconFile').value = '';
+    document.getElementById('jivoIconPreview').style.display = 'none';
+    showNotification('🗑️ Иконка удалена', 'info');
 }
 
 // Популярные соцсети и мессенджеры
@@ -1385,8 +1433,12 @@ function clearAllSettings() {
         socialSettings = [];
         nextId = 1;
         jivoSettings.enabled = false;
+        jivoSettings.customIcon = null;
         
         document.getElementById('jivoEnabled').checked = false;
+        document.getElementById('jivoIconFile').value = '';
+        document.getElementById('jivoIconPreview').style.display = 'none';
+        document.getElementById('jivoIconSection').style.display = 'none';
         
         renderSocialInputs();
         createSocialMenu(); // Пересоздаем меню без кнопки Jivo
@@ -1431,18 +1483,29 @@ function createSocialMenu() {
         jivoButton.title = 'Написать в чат';
         jivoButton.onclick = openJivoChat;
         
-        // Создаем SVG логотип Jivo
-        const jivoSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        jivoSvg.setAttribute('width', '25');
-        jivoSvg.setAttribute('height', '25');
-        jivoSvg.setAttribute('viewBox', '0 0 24 24');
+        if (jivoSettings.customIcon) {
+            // Используем загруженную иконку
+            const img = document.createElement('img');
+            img.src = jivoSettings.customIcon;
+            img.alt = 'Написать в чат';
+            img.style.width = '25px';
+            img.style.height = '25px';
+            jivoButton.appendChild(img);
+        } else {
+            // Используем стандартный SVG логотип Jivo
+            const jivoSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            jivoSvg.setAttribute('width', '25');
+            jivoSvg.setAttribute('height', '25');
+            jivoSvg.setAttribute('viewBox', '0 0 24 24');
+            
+            jivoSvg.innerHTML = `
+                <circle cx="12" cy="12" r="12" fill="#3bb34a"/>
+                <text x="12" y="16" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">j</text>
+            `;
+            
+            jivoButton.appendChild(jivoSvg);
+        }
         
-        jivoSvg.innerHTML = `
-            <circle cx="12" cy="12" r="12" fill="#3bb34a"/>
-            <text x="12" y="16" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">j</text>
-        `;
-        
-        jivoButton.appendChild(jivoSvg);
         menu.appendChild(jivoButton);
     }
 }
@@ -1542,10 +1605,14 @@ function generateReadyCode() {
     // Добавляем кнопку Jivo, если включен
     if (jivoSettings.enabled) {
         code += '        <button class="social-button jivo-button" onclick="openJivoChat()" title="Написать в чат">\n';
-        code += '            <svg viewBox="0 0 32 32" width="25" height="25">\n';
-        code += '                <circle cx="16" cy="16" r="12" fill="#3bb34a"/>\n';
-        code += '                <text x="16" y="22" text-anchor="middle" fill="white" font-size="14" font-weight="bold">j</text>\n';
-        code += '            </svg>\n';
+        if (jivoSettings.customIcon) {
+            code += `            <img src="${jivoSettings.customIcon}" alt="Написать в чат" />\n`;
+        } else {
+            code += '            <svg viewBox="0 0 32 32" width="25" height="25">\n';
+            code += '                <circle cx="16" cy="16" r="12" fill="#3bb34a"/>\n';
+            code += '                <text x="16" y="22" text-anchor="middle" fill="white" font-size="14" font-weight="bold">j</text>\n';
+            code += '            </svg>\n';
+        }
         code += '        </button>\n';
     }
     
