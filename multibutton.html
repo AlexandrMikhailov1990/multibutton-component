@@ -439,6 +439,39 @@
         .social-selector-cancel:hover {
             background: #5a6268;
         }
+
+        /* Стили для уведомлений */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10002;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        .notification.warning {
+            background: #ffc107;
+            color: #212529;
+        }
     </style>
 </head>
 <body>
@@ -524,6 +557,9 @@
         </div>
     </div>
 </div>
+
+<!-- Контейнер для уведомлений -->
+<div id="notificationContainer"></div>
 
 <div class="demo-content">
     <h1>Демонстрация мульти-кнопки</h1>
@@ -664,6 +700,32 @@ function hideSocialSelector() {
     document.getElementById('socialSelectorModal').style.display = 'none';
 }
 
+// Функция показа уведомлений
+function showNotification(message, type = 'success', duration = 3000) {
+    const container = document.getElementById('notificationContainer');
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    container.appendChild(notification);
+    
+    // Показываем уведомление
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Скрываем уведомление
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (container.contains(notification)) {
+                container.removeChild(notification);
+            }
+        }, 300);
+    }, duration);
+}
+
 // Функция выбора соцсети
 function selectSocial(social) {
     const newId = 'custom_' + nextId++;
@@ -676,6 +738,14 @@ function selectSocial(social) {
     socialSettings.push(newSetting);
     renderSocialInputs();
     hideSocialSelector();
+    
+    // Показываем уведомление
+    showNotification(`✅ ${social.name} добавлен! Настройте ссылку и нажмите "Применить"`);
+    
+    // Автоматически применяем настройки после добавления новой кнопки
+    setTimeout(() => {
+        applySettings();
+    }, 100);
 }
 
 // Функция добавления новой кнопки
@@ -685,8 +755,14 @@ function addSocialInput() {
 
 // Функция удаления кнопки
 function removeSocialInput(id) {
+    const setting = socialSettings.find(s => s.id === id);
+    const name = setting ? setting.name : 'Кнопка';
+    
     socialSettings = socialSettings.filter(setting => setting.id !== id);
     renderSocialInputs();
+    
+    // Показываем уведомление об удалении
+    showNotification(`🗑️ ${name} удален`, 'warning');
 }
 
 // Функция отрисовки полей ввода
@@ -749,6 +825,9 @@ function applySettings() {
     
     // Показываем блок с информацией
     document.getElementById('codeOutput').style.display = 'block';
+    
+    // Показываем уведомление об успешном применении
+    showNotification('✅ Настройки применены успешно!', 'success');
 }
 
 // Функция открытия Jivo чата
@@ -806,6 +885,9 @@ function clearAllSettings() {
         document.getElementById('jivoContainer').innerHTML = '';
         document.getElementById('codeOutput').style.display = 'none';
         updateJivoPreview();
+        
+        // Показываем уведомление об очистке
+        showNotification('🧹 Все настройки очищены', 'info');
     }
 }
 
@@ -913,6 +995,8 @@ function copySettings() {
     document.body.removeChild(textarea);
     
     // Показываем уведомление
+    showNotification('📋 Настройки скопированы в буфер обмена!', 'success');
+    
     const button = event.target;
     const originalText = button.textContent;
     button.textContent = '✅ Скопировано!';
