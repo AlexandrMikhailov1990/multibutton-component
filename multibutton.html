@@ -791,6 +791,29 @@
         </div>
     </div>
     
+    <!-- Секция главной иконки -->
+    <div class="settings-section">
+        <h4>🎯 Главная иконка</h4>
+        <div class="main-icon-input">
+            <label>Выберите иконку для главной кнопки:</label>
+            <div style="margin-top: 10px;">
+                <input type="radio" id="defaultIcon" name="mainIcon" value="default" checked onchange="handleMainIconChange()">
+                <label for="defaultIcon">По умолчанию (карандаш)</label>
+            </div>
+            <div style="margin-top: 5px;">
+                <input type="radio" id="customMainIcon" name="mainIcon" value="custom" onchange="handleMainIconChange()">
+                <label for="customMainIcon">Своя иконка</label>
+            </div>
+            <div id="customMainIconSection" style="display: none; margin-top: 10px;">
+                <input type="url" id="mainIconUrl" placeholder="https://example.com/icon.png" onchange="handleMainIconUrl()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <div class="main-icon-preview" id="mainIconPreview" style="display: none; margin-top: 10px;">
+                    <img id="mainIconPreviewImg" alt="Предварительный просмотр" style="max-width: 50px; max-height: 50px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button type="button" onclick="removeMainIcon()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="button-actions">
         <button class="apply-button" onclick="applySettings()">Применить</button>
         <button class="clear-button" onclick="clearAllSettings()">Очистить все</button>
@@ -1002,6 +1025,11 @@ let jivoSettings = {
     customIcon: null
 };
 
+let mainIconSettings = {
+    type: 'default', // 'default' или 'custom'
+    customUrl: null
+};
+
 let nextId = 1;
 
 // Jivo коллбэки
@@ -1082,6 +1110,60 @@ function removeJivoIcon() {
     document.getElementById('jivoIconUrl').value = '';
     document.getElementById('jivoIconPreview').style.display = 'none';
     showNotification('🗑️ Ссылка на иконку удалена', 'info');
+}
+
+// Функция обработки изменения типа главной иконки
+function handleMainIconChange() {
+    const defaultIcon = document.getElementById('defaultIcon');
+    const customSection = document.getElementById('customMainIconSection');
+    
+    if (defaultIcon.checked) {
+        mainIconSettings.type = 'default';
+        customSection.style.display = 'none';
+        mainIconSettings.customUrl = null;
+        updateMainButtonIcon();
+    } else {
+        mainIconSettings.type = 'custom';
+        customSection.style.display = 'block';
+    }
+}
+
+// Функция обработки ссылки на главную иконку
+function handleMainIconUrl() {
+    const urlInput = document.getElementById('mainIconUrl');
+    const url = urlInput.value.trim();
+    
+    if (url) {
+        mainIconSettings.customUrl = url;
+        
+        // Показываем предварительный просмотр
+        const preview = document.getElementById('mainIconPreview');
+        const previewImg = document.getElementById('mainIconPreviewImg');
+        previewImg.src = url;
+        preview.style.display = 'block';
+        
+        updateMainButtonIcon();
+        showNotification('✅ Ссылка на главную иконку добавлена!', 'success');
+    }
+}
+
+// Функция удаления главной иконки
+function removeMainIcon() {
+    mainIconSettings.customUrl = null;
+    document.getElementById('mainIconUrl').value = '';
+    document.getElementById('mainIconPreview').style.display = 'none';
+    updateMainButtonIcon();
+    showNotification('🗑️ Ссылка на главную иконку удалена', 'info');
+}
+
+// Функция обновления главной кнопки
+function updateMainButtonIcon() {
+    const mainButton = document.querySelector('.main-button img');
+    if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+        mainButton.src = mainIconSettings.customUrl;
+    } else {
+        mainButton.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+    }
 }
 
 // Популярные соцсети и мессенджеры
@@ -1430,14 +1512,21 @@ function clearAllSettings() {
         nextId = 1;
         jivoSettings.enabled = false;
         jivoSettings.customIcon = null;
+        mainIconSettings.type = 'default';
+        mainIconSettings.customUrl = null;
         
         document.getElementById('jivoEnabled').checked = false;
         document.getElementById('jivoIconUrl').value = '';
         document.getElementById('jivoIconPreview').style.display = 'none';
         document.getElementById('jivoIconSection').style.display = 'none';
+        document.getElementById('defaultIcon').checked = true;
+        document.getElementById('mainIconUrl').value = '';
+        document.getElementById('mainIconPreview').style.display = 'none';
+        document.getElementById('customMainIconSection').style.display = 'none';
         
         renderSocialInputs();
         createSocialMenu(); // Пересоздаем меню без кнопки Jivo
+        updateMainButtonIcon(); // Обновляем главную иконку
         document.getElementById('jivoContainer').innerHTML = '';
         document.getElementById('codeOutput').style.display = 'none';
         
@@ -1586,7 +1675,11 @@ function generateReadyCode() {
     // Добавляем HTML структуру
     code += '<div class="multibutton">\n';
     code += '    <button class="main-button">\n';
-    code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" />\n';
+    if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+        code += `        <img src="${mainIconSettings.customUrl}" alt="Меню" />\n`;
+    } else {
+        code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" />\n';
+    }
     code += '    </button>\n';
     code += '    <div class="popup-menu" id="popupMenu">\n';
     // Добавляем социальные кнопки
