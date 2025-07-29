@@ -1612,6 +1612,12 @@ function generateReadyCode() {
     code += '    width: 25px;\n';
     code += '    height: 25px;\n';
     code += '}\n\n';
+    code += '.jivo-button {\n';
+    code += '    background: #3bb34a !important;\n';
+    code += '}\n\n';
+    code += '.jivo-button:hover {\n';
+    code += '    background: #2d8f3a !important;\n';
+    code += '}\n\n';
     code += '.hidden {\n';
     code += '    display: none !important;\n';
     code += '}\n';
@@ -1630,6 +1636,17 @@ function generateReadyCode() {
             code += '        </a>\n';
         }
     });
+    
+    // Добавляем кнопку Jivo, если включен
+    if (jivoSettings.enabled) {
+        code += '        <button class="social-button jivo-button" onclick="openJivoChat()" title="Написать в чат">\n';
+        code += '            <svg viewBox="0 0 32 32" width="25" height="25">\n';
+        code += '                <circle cx="16" cy="16" r="16" fill="#3bb34a"/>\n';
+        code += '                <text x="16" y="22" text-anchor="middle" fill="white" font-size="14" font-weight="bold">j</text>\n';
+        code += '            </svg>\n';
+        code += '        </button>\n';
+    }
+    
     code += '    </div>\n';
     code += '</div>\n\n';
     // Показываем готовый код
@@ -1659,7 +1676,7 @@ function generateReadyCode() {
         code += '<!-- Вставьте ваш код Jivo здесь -->\n';
     }
     
-    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки добавьте JavaScript:\n<script>\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        mainButton.addEventListener("click", toggleMenu);\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton &amp;&amp; menu &amp;&amp; !multibutton.contains(event.target)) {\n        menu.style.display = "none";\n    }\n});\n</script> -->';
+    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки добавьте JavaScript:\n<script>\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api && typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        mainButton.addEventListener("click", toggleMenu);\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton &amp;&amp; menu &amp;&amp; !multibutton.contains(event.target)) {\n        menu.style.display = "none";\n    }\n});\n</script> -->';
     codeOutput.style.display = 'block';
     // Обновляем кнопку копирования
     const copyButton = document.querySelector('.copy-button');
