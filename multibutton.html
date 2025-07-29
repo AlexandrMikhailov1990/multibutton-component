@@ -762,6 +762,14 @@ function showSocialSelector() {
 // Функция скрытия селектора
 function hideSocialSelector() {
     document.getElementById('socialSelectorModal').style.display = 'none';
+    
+    // Убеждаемся, что панель настроек остается открытой
+    setTimeout(() => {
+        const settingsPanel = document.getElementById('settingsPanel');
+        if (settingsPanel && settingsPanel.style.display === 'none') {
+            settingsPanel.style.display = 'block';
+        }
+    }, 50);
 }
 
 // Функция показа уведомлений
@@ -798,6 +806,8 @@ function showSettingsHint() {
 
 // Функция выбора соцсети
 function selectSocial(social) {
+    console.log('selectSocial вызвана для:', social.name);
+    
     const newId = 'custom_' + nextId++;
     const newSetting = {
         id: newId,
@@ -806,11 +816,17 @@ function selectSocial(social) {
         icon: social.icon
     };
     socialSettings.push(newSetting);
-    renderSocialInputs();
+    
+    // Сначала скрываем селектор
     hideSocialSelector();
     
-    // Убеждаемся, что панель настроек остается открытой
-    document.getElementById('settingsPanel').style.display = 'block';
+    // Затем обновляем отображение и убеждаемся, что панель открыта
+    renderSocialInputs();
+    
+    // Принудительно открываем панель настроек
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'block';
+    console.log('Панель настроек принудительно открыта');
     
     // Показываем уведомление и подсказку
     showNotification(`✅ ${social.name} добавлен! Не забудьте настроить ссылку и нажать "Применить"`, 'info');
@@ -822,8 +838,9 @@ function selectSocial(social) {
         if (newInput) {
             newInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             newInput.focus();
+            console.log('Фокус установлен на поле ссылки');
         }
-    }, 100);
+    }, 200);
 }
 
 // Функция добавления новой кнопки
@@ -1149,16 +1166,22 @@ document.addEventListener('click', function(event) {
     const settingsToggle = document.querySelector('.settings-toggle');
     const socialSelectorModal = document.getElementById('socialSelectorModal');
     
+    // Не закрываем панель настроек, если открыт селектор соцсетей
+    if (socialSelectorModal.style.display === 'flex') {
+        console.log('Селектор открыт, не закрываем панель настроек');
+        // Закрытие модального окна при клике вне его
+        if (event.target === socialSelectorModal) {
+            hideSocialSelector();
+        }
+        return; // Не закрываем панель настроек
+    }
+    
     if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
+        console.log('Закрываем панель настроек - клик вне элементов');
         document.getElementById('popupMenu').style.display = 'none';
         settingsPanel.style.display = 'none';
         // Скрываем подсказку при закрытии панели
         document.getElementById('settingsHint').style.display = 'none';
-    }
-    
-    // Закрытие модального окна при клике вне его
-    if (socialSelectorModal.style.display === 'flex' && event.target === socialSelectorModal) {
-        hideSocialSelector();
     }
 });
 
