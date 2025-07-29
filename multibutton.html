@@ -343,6 +343,102 @@
         .hidden {
             display: none;
         }
+
+        /* Стили для модального окна выбора соцсетей */
+        .social-selector-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        .social-selector-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-selector-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .social-selector-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .social-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .social-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+        }
+
+        .social-option img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
+        }
+
+        .social-option span {
+            font-size: 12px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .social-selector-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-selector-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .social-selector-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .social-selector-cancel:hover {
+            background: #5a6268;
+        }
     </style>
 </head>
 <body>
@@ -413,6 +509,21 @@
 
 <!-- Контейнер для Jivo виджета -->
 <div id="jivoContainer"></div>
+
+<!-- Модальное окно выбора соцсетей -->
+<div class="social-selector-modal" id="socialSelectorModal">
+    <div class="social-selector-content">
+        <div class="social-selector-header">
+            <h3>📱 Выберите социальную сеть</h3>
+        </div>
+        <div class="social-selector-grid" id="socialSelectorGrid">
+            <!-- Опции соцсетей будут добавлены динамически -->
+        </div>
+        <div class="social-selector-actions">
+            <button class="social-selector-btn social-selector-cancel" onclick="hideSocialSelector()">Отмена</button>
+        </div>
+    </div>
+</div>
 
 <div class="demo-content">
     <h1>Демонстрация мульти-кнопки</h1>
@@ -500,17 +611,76 @@ function updateJivoPreview() {
     }
 }
 
-// Функция добавления новой кнопки
-function addSocialInput() {
+// Популярные соцсети и мессенджеры
+const popularSocials = [
+    { name: 'Telegram', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111646.png', link: 'https://t.me/' },
+    { name: 'WhatsApp', icon: 'https://cdn-icons-png.flaticon.com/512/733/733585.png', link: 'https://wa.me/' },
+    { name: 'VK', icon: 'https://cdn-icons-png.flaticon.com/512/145/145813.png', link: 'https://vk.com/' },
+    { name: 'Instagram', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', link: 'https://instagram.com/' },
+    { name: 'Facebook', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111392.png', link: 'https://facebook.com/' },
+    { name: 'Twitter', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111738.png', link: 'https://twitter.com/' },
+    { name: 'YouTube', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111744.png', link: 'https://youtube.com/' },
+    { name: 'LinkedIn', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111499.png', link: 'https://linkedin.com/in/' },
+    { name: 'Discord', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111374.png', link: 'https://discord.gg/' },
+    { name: 'Skype', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111365.png', link: 'skype:' },
+    { name: 'Viber', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111370.png', link: 'viber://chat?number=' },
+    { name: 'TikTok', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111371.png', link: 'https://tiktok.com/@' },
+    { name: 'Snapchat', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111372.png', link: 'https://snapchat.com/add/' },
+    { name: 'Pinterest', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111460.png', link: 'https://pinterest.com/' },
+    { name: 'Reddit', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111373.png', link: 'https://reddit.com/r/' },
+    { name: 'Twitch', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111375.png', link: 'https://twitch.tv/' },
+    { name: 'GitHub', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111432.png', link: 'https://github.com/' },
+    { name: 'Steam', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111376.png', link: 'https://steamcommunity.com/id/' },
+    { name: 'Spotify', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111377.png', link: 'https://open.spotify.com/user/' },
+    { name: 'Telephone', icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png', link: 'tel:' }
+];
+
+// Функция показа селектора соцсетей
+function showSocialSelector() {
+    const modal = document.getElementById('socialSelectorModal');
+    const grid = document.getElementById('socialSelectorGrid');
+    
+    // Очищаем и заполняем сетку
+    grid.innerHTML = '';
+    
+    popularSocials.forEach(social => {
+        const option = document.createElement('div');
+        option.className = 'social-option';
+        option.onclick = () => selectSocial(social);
+        
+        option.innerHTML = `
+            <img src="${social.icon}" alt="${social.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1827/1827933.png'">
+            <span>${social.name}</span>
+        `;
+        
+        grid.appendChild(option);
+    });
+    
+    modal.style.display = 'flex';
+}
+
+// Функция скрытия селектора
+function hideSocialSelector() {
+    document.getElementById('socialSelectorModal').style.display = 'none';
+}
+
+// Функция выбора соцсети
+function selectSocial(social) {
     const newId = 'custom_' + nextId++;
     const newSetting = {
         id: newId,
-        name: 'Новая кнопка',
-        link: '',
-        icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png'
+        name: social.name,
+        link: social.link,
+        icon: social.icon
     };
     socialSettings.push(newSetting);
     renderSocialInputs();
+    hideSocialSelector();
+}
+
+// Функция добавления новой кнопки
+function addSocialInput() {
+    showSocialSelector();
 }
 
 // Функция удаления кнопки
@@ -759,10 +929,16 @@ document.addEventListener('click', function(event) {
     const multibutton = document.querySelector('.multibutton');
     const settingsPanel = document.getElementById('settingsPanel');
     const settingsToggle = document.querySelector('.settings-toggle');
+    const socialSelectorModal = document.getElementById('socialSelectorModal');
     
     if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
         document.getElementById('popupMenu').style.display = 'none';
         settingsPanel.style.display = 'none';
+    }
+    
+    // Закрытие модального окна при клике вне его
+    if (socialSelectorModal.style.display === 'flex' && event.target === socialSelectorModal) {
+        hideSocialSelector();
     }
 });
 
