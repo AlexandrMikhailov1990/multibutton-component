@@ -793,7 +793,7 @@
     
     <!-- Секция главной иконки -->
     <div class="settings-section">
-        <h4>🎯 Главная иконка</h4>
+        <h4>🎯 Главная кнопка</h4>
         <div class="main-icon-input">
             <label>Выберите иконку для главной кнопки:</label>
             <div style="margin-top: 10px;">
@@ -809,6 +809,26 @@
                 <div class="main-icon-preview" id="mainIconPreview" style="display: none; margin-top: 10px;">
                     <img id="mainIconPreviewImg" alt="Предварительный просмотр" style="max-width: 50px; max-height: 50px; border: 1px solid #ddd; border-radius: 4px;">
                     <button type="button" onclick="removeMainIcon()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-color-input" style="margin-top: 20px;">
+            <label>🎨 Цвет кнопки:</label>
+            <div style="margin-top: 10px;">
+                <input type="radio" id="defaultColor" name="mainColor" value="default" checked onchange="handleMainColorChange()">
+                <label for="defaultColor">По умолчанию (фиолетовый градиент)</label>
+            </div>
+            <div style="margin-top: 5px;">
+                <input type="radio" id="customMainColor" name="mainColor" value="custom" onchange="handleMainColorChange()">
+                <label for="customMainColor">Свой цвет</label>
+            </div>
+            <div id="customMainColorSection" style="display: none; margin-top: 10px;">
+                <input type="color" id="mainColorPicker" value="#667eea" onchange="handleMainColorPicker()" style="width: 50px; height: 40px; border: none; border-radius: 4px; cursor: pointer;">
+                <input type="text" id="mainColorCode" placeholder="#667eea" onchange="handleMainColorCode()" style="width: calc(100% - 60px); padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-left: 10px;">
+                <div class="main-color-preview" id="mainColorPreview" style="display: none; margin-top: 10px;">
+                    <div id="mainColorPreviewBox" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ddd;"></div>
+                    <button type="button" onclick="removeMainColor()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
                 </div>
             </div>
         </div>
@@ -1027,7 +1047,9 @@ let jivoSettings = {
 
 let mainIconSettings = {
     type: 'default', // 'default' или 'custom'
-    customUrl: null
+    customUrl: null,
+    colorType: 'default', // 'default' или 'custom'
+    customColor: '#667eea'
 };
 
 let nextId = 1;
@@ -1163,6 +1185,87 @@ function updateMainButtonIcon() {
         mainButton.src = mainIconSettings.customUrl;
     } else {
         mainButton.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+    }
+}
+
+// Функция обработки изменения типа цвета главной кнопки
+function handleMainColorChange() {
+    const defaultColor = document.getElementById('defaultColor');
+    const customSection = document.getElementById('customMainColorSection');
+    
+    if (defaultColor.checked) {
+        mainIconSettings.colorType = 'default';
+        customSection.style.display = 'none';
+        updateMainButtonColor();
+    } else {
+        mainIconSettings.colorType = 'custom';
+        customSection.style.display = 'block';
+        updateMainButtonColor();
+    }
+}
+
+// Функция обработки выбора цвета через color picker
+function handleMainColorPicker() {
+    const colorPicker = document.getElementById('mainColorPicker');
+    const colorCode = document.getElementById('mainColorCode');
+    const color = colorPicker.value;
+    
+    mainIconSettings.customColor = color;
+    colorCode.value = color;
+    
+    updateMainButtonColor();
+    updateMainColorPreview();
+    showNotification('✅ Цвет кнопки изменен!', 'success');
+}
+
+// Функция обработки ввода цветового кода
+function handleMainColorCode() {
+    const colorCode = document.getElementById('mainColorCode');
+    const colorPicker = document.getElementById('mainColorPicker');
+    const color = colorCode.value.trim();
+    
+    if (color && /^#[0-9A-F]{6}$/i.test(color)) {
+        mainIconSettings.customColor = color;
+        colorPicker.value = color;
+        
+        updateMainButtonColor();
+        updateMainColorPreview();
+        showNotification('✅ Цветовой код применен!', 'success');
+    } else if (color) {
+        showNotification('❌ Неверный формат цвета! Используйте #RRGGBB', 'error');
+    }
+}
+
+// Функция удаления пользовательского цвета
+function removeMainColor() {
+    mainIconSettings.colorType = 'default';
+    document.getElementById('defaultColor').checked = true;
+    document.getElementById('customMainColorSection').style.display = 'none';
+    document.getElementById('mainColorPreview').style.display = 'none';
+    updateMainButtonColor();
+    showNotification('🗑️ Пользовательский цвет удален', 'info');
+}
+
+// Функция обновления цвета главной кнопки
+function updateMainButtonColor() {
+    const mainButton = document.querySelector('.main-button');
+    if (mainIconSettings.colorType === 'custom') {
+        mainButton.style.background = mainIconSettings.customColor;
+    } else {
+        mainButton.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    }
+}
+
+// Функция обновления предварительного просмотра цвета
+function updateMainColorPreview() {
+    const preview = document.getElementById('mainColorPreview');
+    const previewBox = document.getElementById('mainColorPreviewBox');
+    
+    if (mainIconSettings.colorType === 'custom') {
+        previewBox.style.background = mainIconSettings.customColor;
+        preview.style.display = 'block';
+    } else {
+        preview.style.display = 'none';
     }
 }
 
@@ -1514,6 +1617,8 @@ function clearAllSettings() {
         jivoSettings.customIcon = null;
         mainIconSettings.type = 'default';
         mainIconSettings.customUrl = null;
+        mainIconSettings.colorType = 'default';
+        mainIconSettings.customColor = '#667eea';
         
         document.getElementById('jivoEnabled').checked = false;
         document.getElementById('jivoIconUrl').value = '';
@@ -1523,10 +1628,16 @@ function clearAllSettings() {
         document.getElementById('mainIconUrl').value = '';
         document.getElementById('mainIconPreview').style.display = 'none';
         document.getElementById('customMainIconSection').style.display = 'none';
+        document.getElementById('defaultColor').checked = true;
+        document.getElementById('mainColorCode').value = '#667eea';
+        document.getElementById('mainColorPicker').value = '#667eea';
+        document.getElementById('mainColorPreview').style.display = 'none';
+        document.getElementById('customMainColorSection').style.display = 'none';
         
         renderSocialInputs();
         createSocialMenu(); // Пересоздаем меню без кнопки Jivo
         updateMainButtonIcon(); // Обновляем главную иконку
+        updateMainButtonColor(); // Обновляем цвет главной кнопки
         document.getElementById('jivoContainer').innerHTML = '';
         document.getElementById('codeOutput').style.display = 'none';
         
@@ -1614,7 +1725,11 @@ function generateReadyCode() {
     code += '    width: 60px;\n';
     code += '    height: 60px;\n';
     code += '    border-radius: 50%;\n';
-    code += '    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n';
+    if (mainIconSettings.colorType === 'custom') {
+        code += `    background: ${mainIconSettings.customColor};\n`;
+    } else {
+        code += '    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n';
+    }
     code += '    border: none;\n';
     code += '    cursor: pointer;\n';
     code += '    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);\n';
