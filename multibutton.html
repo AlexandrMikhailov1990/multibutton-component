@@ -524,6 +524,15 @@
             background: #218838;
             transform: translateY(-1px);
         }
+        
+        .add-button.custom-button {
+            background: #ff6b35;
+            margin-top: 10px;
+        }
+        
+        .add-button.custom-button:hover {
+            background: #e55a2b;
+        }
 
         .button-actions {
             display: flex;
@@ -757,7 +766,10 @@
         <div id="socialInputs">
             <!-- Социальные кнопки будут добавляться сюда динамически -->
         </div>
-        <button class="add-button" onclick="addSocialInput()">➕ Добавить новую кнопку</button>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="add-button" onclick="addSocialInput()" style="width: 50%; margin-bottom: 0;">➕ Добавить новую кнопку</button>
+            <button class="add-button custom-button" onclick="addCustomSocialInput()" style="width: 50%; margin-bottom: 0;">🎨 Создать собственную кнопку</button>
+        </div>
     </div>
     
     <!-- Секция Jivo чата -->
@@ -948,18 +960,18 @@
                 </div>
                 
                 <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="Одноклассники">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="Одноклассники">
                     <div class="icon-info">
                         <strong>Одноклассники</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/145/145807.png</code>
+                        <code>https://cdn-icons-png.flaticon.com/512/145/145813.png</code>
                     </div>
                 </div>
                 
                 <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/552/552489.png" alt="Имейл">
+                    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Имейл">
                     <div class="icon-info">
                         <strong>Имейл</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/552/552489.png</code>
+                        <code>https://cdn-icons-png.flaticon.com/512/561/561127.png</code>
                     </div>
                 </div>
             </div>
@@ -1064,8 +1076,8 @@ const popularSocials = [
     { name: 'Facebook', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111392.png', link: 'https://facebook.com/' },
     { name: 'Twitter', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111738.png', link: 'https://twitter.com/' },
     { name: 'YouTube', icon: 'https://cdn-icons-png.flaticon.com/512/3670/3670147.png', link: 'https://youtube.com/' },
-    { name: 'Одноклассники', icon: 'https://cdn-icons-png.flaticon.com/512/145/145807.png', link: 'https://ok.ru/' },
-    { name: 'Имейл', icon: 'https://cdn-icons-png.flaticon.com/512/552/552489.png', link: 'mailto:' }
+    { name: 'Одноклассники', icon: 'https://cdn-icons-png.flaticon.com/512/145/145813.png', link: 'https://ok.ru/' },
+    { name: 'Имейл', icon: 'https://cdn-icons-png.flaticon.com/512/561/561127.png', link: 'mailto:' }
 ];
 
 // Функция показа селектора соцсетей
@@ -1177,6 +1189,40 @@ function addSocialInput() {
     // Убеждаемся, что панель настроек открыта
     document.getElementById('settingsPanel').style.display = 'block';
     showSocialSelector();
+}
+
+// Функция создания собственной кнопки
+function addCustomSocialInput() {
+    const customId = 'custom_' + nextId++;
+    
+    // Создаем новую настройку с пустыми полями
+    const newSetting = {
+        id: customId,
+        name: 'Моя кнопка',
+        link: '',
+        icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png' // Иконка по умолчанию
+    };
+    
+    socialSettings.push(newSetting);
+    renderSocialInputs();
+    
+    // Убеждаемся, что панель настроек остается открытой
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'block';
+    
+    // Показываем уведомление и подсказку
+    showNotification('🎨 Создана собственная кнопка! Настройте её параметры', 'success');
+    showSettingsHint();
+    
+    // Прокручиваем к новому полю и фокусируемся на названии
+    setTimeout(() => {
+        const nameInput = document.getElementById(customId + '_name');
+        if (nameInput) {
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            nameInput.focus();
+            nameInput.select();
+        }
+    }, 100);
 }
 
 // Функция перемещения кнопки вверх
