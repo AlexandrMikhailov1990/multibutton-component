@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мульти-кнопка с соцсетями</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .demo-section p {
+            color: #666;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .feature p {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .demo-content {
+            height: 800px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+        
+        .demo-content h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .demo-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Мульти-кнопка с соцсетями</h1>
+            <p>Красивая и функциональная кнопка для вашего сайта</p>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📱 Демонстрация</h2>
+            <p>Нажмите кнопку "⚙️ Настройки" в левом верхнем углу, чтобы настроить ссылки на соцсети.</p>
+            <p>Затем нажмите на фиолетовую кнопку в правом нижнем углу, чтобы открыть меню соцсетей.</p>
+            
+            <div class="demo-content">
+                <h3>🎯 Как это работает:</h3>
+                <p>1. <strong>Настройка:</strong> Укажите ссылки на ваши социальные сети в панели настроек</p>
+                <p>2. <strong>Применение:</strong> Нажмите "Применить" для обновления кнопок</p>
+                <p>3. <strong>Использование:</strong> Кликните на главную кнопку для открытия меню соцсетей</p>
+                <p>4. <strong>Копирование:</strong> Скопируйте настройки для использования на вашем сайте</p>
+                
+                <h3>✨ Особенности:</h3>
+                <p>• Поддержка Telegram, WhatsApp, VK, Instagram, телефон</p>
+                <p>• Настраиваемые иконки для каждой соцсети</p>
+                <p>• Красивый дизайн с анимациями</p>
+                <p>• Адаптивность для всех устройств</p>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🎨 Красивый дизайн</h3>
+                <p>Современный градиентный дизайн с плавными анимациями и эффектами наведения</p>
+            </div>
+            
+            <div class="feature">
+                <h3>⚙️ Простая настройка</h3>
+                <p>Удобная панель настроек для быстрого изменения ссылок и иконок</p>
+            </div>
+            
+            <div class="feature">
+                <h3>📱 Адаптивность</h3>
+                <p>Отлично выглядит на всех устройствах - от мобильных до десктопов</p>
+            </div>
+            
+            <div class="feature">
+                <h3>🚀 Быстрая работа</h3>
+                <p>Легкий код без зависимостей, загружается мгновенно</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="multibutton.html" class="cta-button">🎯 Попробовать демо</a>
+        </div>
+    </div>
+</body>
+</html> 
