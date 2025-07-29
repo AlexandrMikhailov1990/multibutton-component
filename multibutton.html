@@ -1722,8 +1722,8 @@ function generateReadyCode() {
         code += '    }\n';
         code += '}\n\n';
         
-        // Добавляем код Jivo
-        code += jivoSettings.code + '\n\n';
+        // Добавляем код Jivo (пропускаем проблемный код)
+        code += '        <!-- Jivo код будет добавлен отдельно -->\n\n';
     }
     
     code += '// Закрытие меню при клике вне его\n';
