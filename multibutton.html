@@ -779,16 +779,6 @@
             <input type="checkbox" id="jivoEnabled" onchange="toggleJivoSection()">
             <label for="jivoEnabled">Включить Jivo чат</label>
         </div>
-        <div id="jivoSection" style="display: none;">
-            <div class="jivo-input">
-                <label>Код виджета Jivo:</label>
-                <textarea id="jivoCode" placeholder="&lt;script src='//code.jivo.ru/widget/baAsKme1em' async&gt;&lt;/script&gt;">&lt;script src="//code.jivo.ru/widget/baAsKme1em" async&gt;&lt;/script&gt;</textarea>
-            </div>
-            <div class="preview-section">
-                <h4>📋 Предварительный просмотр кода:</h4>
-                <div class="preview-code" id="jivoPreview"></div>
-            </div>
-        </div>
     </div>
     
     <div class="button-actions">
@@ -998,8 +988,7 @@ let socialSettings = [
 ];
 
 let jivoSettings = {
-    enabled: false,
-    code: '&lt;script src="//code.jivo.ru/widget/baAsKme1em" async&gt;&lt;/script&gt;'
+    enabled: false
 };
 
 let nextId = 1;
@@ -1027,7 +1016,6 @@ function toggleSettings() {
     if (panel.style.display === 'none' || panel.style.display === '') {
         panel.style.display = 'block';
         renderSocialInputs();
-        updateJivoPreview();
     } else {
         panel.style.display = 'none';
         // Скрываем подсказку при закрытии панели
@@ -1049,22 +1037,7 @@ function toggleMenu() {
 // Функция переключения секции Jivo
 function toggleJivoSection() {
     const enabled = document.getElementById('jivoEnabled').checked;
-    const section = document.getElementById('jivoSection');
-    section.style.display = enabled ? 'block' : 'none';
     jivoSettings.enabled = enabled;
-    updateJivoPreview();
-}
-
-// Функция обновления предварительного просмотра Jivo
-function updateJivoPreview() {
-    const preview = document.getElementById('jivoPreview');
-    const code = document.getElementById('jivoCode').value;
-    
-    if (jivoSettings.enabled && code.trim()) {
-        preview.textContent = 'Jivo чат включен с кодом: ' + code;
-    } else {
-        preview.textContent = 'Jivo чат отключен или код не введен';
-    }
 }
 
 // Популярные соцсети и мессенджеры
@@ -1361,7 +1334,6 @@ function applySettings() {
     
     // Обновляем настройки Jivo
     jivoSettings.enabled = document.getElementById('jivoEnabled').checked;
-    jivoSettings.code = document.getElementById('jivoCode').value;
     
     // Пересоздаем меню (включая кнопку Jivo)
     createSocialMenu();
@@ -1399,25 +1371,11 @@ function applyJivoChat() {
     const container = document.getElementById('jivoContainer');
     container.innerHTML = '';
     
-    if (jivoSettings.enabled && jivoSettings.code.trim()) {
+    if (jivoSettings.enabled) {
         // Добавляем CSS для скрытия стандартной кнопки Jivo
         const style = document.createElement('style');
         style.textContent = '.jivo-widget-button { display: none !important; }';
         container.appendChild(style);
-        
-        // Создаем временный div для парсинга HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = jivoSettings.code;
-        
-        // Находим script тег
-        const script = tempDiv.querySelector('script');
-        if (script) {
-            // Создаем новый script элемент
-            const newScript = document.createElement('script');
-            newScript.src = script.src;
-            newScript.async = script.async;
-            container.appendChild(newScript);
-        }
     }
 }
 
@@ -1427,17 +1385,13 @@ function clearAllSettings() {
         socialSettings = [];
         nextId = 1;
         jivoSettings.enabled = false;
-        jivoSettings.code = '&lt;script src="//code.jivo.ru/widget/baAsKme1em" async&gt;&lt;/script&gt;';
         
         document.getElementById('jivoEnabled').checked = false;
-        document.getElementById('jivoCode').value = jivoSettings.code;
-        document.getElementById('jivoSection').style.display = 'none';
         
         renderSocialInputs();
         createSocialMenu(); // Пересоздаем меню без кнопки Jivo
         document.getElementById('jivoContainer').innerHTML = '';
         document.getElementById('codeOutput').style.display = 'none';
-        updateJivoPreview();
         
         // Показываем уведомление об очистке
         showNotification('🧹 Все настройки очищены', 'info');
@@ -1619,7 +1573,7 @@ function generateReadyCode() {
 
     
     // Добавляем код Jivo, если включен
-    if (jivoSettings.enabled && jivoSettings.code) {
+    if (jivoSettings.enabled) {
         code += '\n<!-- Код Jivo чата -->\n';
         code += '<!-- Вставьте ваш код Jivo здесь -->\n';
     }
@@ -1670,7 +1624,7 @@ function copySettings() {
     // Копируем настройки Jivo
     settingsText += '\n💬 Jivo чат:\n';
     if (jivoSettings.enabled) {
-        settingsText += `Включен: ${jivoSettings.code}\n`;
+        settingsText += 'Включен\n';
     } else {
         settingsText += 'Отключен\n';
     }
@@ -1737,8 +1691,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createSocialMenu();
     
     // Устанавливаем начальные значения Jivo
-    document.getElementById('jivoCode').value = jivoSettings.code;
-    updateJivoPreview();
+    // (код Jivo теперь вставляется клиентом отдельно)
 });
 </script>
 
