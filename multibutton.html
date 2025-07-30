@@ -1074,13 +1074,21 @@ function jivo_onClose() {
 function toggleSettings() {
     console.log('toggleSettings вызвана');
     const panel = document.getElementById('settingsPanel');
+    console.log('Панель найдена:', panel);
+    console.log('Текущий display:', panel.style.display);
+    
     if (panel.style.display === 'none' || panel.style.display === '') {
+        console.log('Открываем панель');
         panel.style.display = 'block';
         renderSocialInputs();
     } else {
+        console.log('Закрываем панель');
         panel.style.display = 'none';
         // Скрываем подсказку при закрытии панели
-        document.getElementById('settingsHint').style.display = 'none';
+        const hint = document.getElementById('settingsHint');
+        if (hint) {
+            hint.style.display = 'none';
+        }
     }
 }
 
@@ -1088,9 +1096,14 @@ function toggleSettings() {
 function toggleMenu() {
     console.log('toggleMenu вызвана');
     const menu = document.getElementById('popupMenu');
+    console.log('Меню найдено:', menu);
+    console.log('Текущий display меню:', menu.style.display);
+    
     if (menu.style.display === 'none' || menu.style.display === '') {
+        console.log('Открываем меню');
         menu.style.display = 'flex';
     } else {
+        console.log('Закрываем меню');
         menu.style.display = 'none';
     }
 }
