@@ -789,6 +789,42 @@
                 </div>
             </div>
         </div>
+        <div id="jivoCodeSection" style="display: none; margin-top: 15px;">
+            <div class="jivo-code-input">
+                <label>📝 Код виджета Jivo:</label>
+                <textarea id="jivoCode" placeholder='<script src="//code.jivo.ru/widget/ВАШ_КОД" async></script>' style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px; height: 60px; font-family: monospace; font-size: 12px;"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Секция настроек отображения -->
+    <div class="settings-section">
+        <h4>🎛️ Настройки отображения</h4>
+        <div class="display-settings">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Способ открытия меню:</label>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="openMethodClick" name="openMethod" value="click" checked onchange="handleOpenMethodChange()">
+                    <label for="openMethodClick">По клику на главную кнопку (по умолчанию)</label>
+                </div>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="openMethodAlways" name="openMethod" value="always" onchange="handleOpenMethodChange()">
+                    <label for="openMethodAlways">Всегда видимое меню (без клика)</label>
+                </div>
+            </div>
+            
+            <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Ориентация меню:</label>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="menuOrientationVertical" name="menuOrientation" value="vertical" checked onchange="handleMenuOrientationChange()">
+                    <label for="menuOrientationVertical">Вертикальное (по умолчанию)</label>
+                </div>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="menuOrientationHorizontal" name="menuOrientation" value="horizontal" onchange="handleMenuOrientationChange()">
+                    <label for="menuOrientationHorizontal">Горизонтальное</label>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Секция главной иконки -->
@@ -1042,7 +1078,13 @@ let socialSettings = [
 
 let jivoSettings = {
     enabled: false,
-    customIcon: null
+    customIcon: null,
+    code: ''
+};
+
+let displaySettings = {
+    openMethod: 'click', // 'click' или 'always'
+    menuOrientation: 'vertical' // 'vertical' или 'horizontal'
 };
 
 let mainIconSettings = {
@@ -1112,12 +1154,15 @@ function toggleMenu() {
 function toggleJivoSection() {
     const enabled = document.getElementById('jivoEnabled').checked;
     const iconSection = document.getElementById('jivoIconSection');
+    const codeSection = document.getElementById('jivoCodeSection');
     jivoSettings.enabled = enabled;
     
     if (enabled) {
         iconSection.style.display = 'block';
+        codeSection.style.display = 'block';
     } else {
         iconSection.style.display = 'none';
+        codeSection.style.display = 'none';
     }
 }
 
@@ -1136,6 +1181,57 @@ function handleJivoIconUrl() {
         preview.style.display = 'block';
         
         showNotification('✅ Ссылка на иконку добавлена!', 'success');
+    }
+}
+
+// Функция обработки изменения способа открытия меню
+function handleOpenMethodChange() {
+    const clickRadio = document.getElementById('openMethodClick');
+    if (clickRadio.checked) {
+        displaySettings.openMethod = 'click';
+    } else {
+        displaySettings.openMethod = 'always';
+    }
+    updateMenuDisplay();
+}
+
+// Функция обработки изменения ориентации меню
+function handleMenuOrientationChange() {
+    const verticalRadio = document.getElementById('menuOrientationVertical');
+    if (verticalRadio.checked) {
+        displaySettings.menuOrientation = 'vertical';
+    } else {
+        displaySettings.menuOrientation = 'horizontal';
+    }
+    updateMenuDisplay();
+}
+
+// Функция обновления отображения меню
+function updateMenuDisplay() {
+    const menu = document.getElementById('popupMenu');
+    const mainButton = document.querySelector('.main-button');
+    
+    if (displaySettings.openMethod === 'always') {
+        menu.style.display = 'flex';
+        if (mainButton) {
+            mainButton.style.display = 'none';
+        }
+    } else {
+        menu.style.display = 'none';
+        if (mainButton) {
+            mainButton.style.display = 'flex';
+        }
+    }
+    
+    // Обновляем ориентацию меню
+    if (displaySettings.menuOrientation === 'horizontal') {
+        menu.style.flexDirection = 'row';
+        menu.style.bottom = '20px';
+        menu.style.right = '80px';
+    } else {
+        menu.style.flexDirection = 'column';
+        menu.style.bottom = '70px';
+        menu.style.right = '0';
     }
 }
 
@@ -1576,6 +1672,17 @@ function applySettings() {
     
     // Обновляем настройки Jivo
     jivoSettings.enabled = document.getElementById('jivoEnabled').checked;
+    jivoSettings.code = document.getElementById('jivoCode').value;
+    
+    // Обновляем настройки отображения
+    const openMethodClick = document.getElementById('openMethodClick');
+    displaySettings.openMethod = openMethodClick.checked ? 'click' : 'always';
+    
+    const menuOrientationVertical = document.getElementById('menuOrientationVertical');
+    displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
+    
+    // Применяем настройки отображения
+    updateMenuDisplay();
     
     // Пересоздаем меню (включая кнопку Jivo)
     createSocialMenu();
@@ -1628,6 +1735,9 @@ function clearAllSettings() {
         nextId = 1;
         jivoSettings.enabled = false;
         jivoSettings.customIcon = null;
+        jivoSettings.code = '';
+        displaySettings.openMethod = 'click';
+        displaySettings.menuOrientation = 'vertical';
         mainIconSettings.type = 'default';
         mainIconSettings.customUrl = null;
         mainIconSettings.colorType = 'default';
@@ -1637,6 +1747,10 @@ function clearAllSettings() {
         document.getElementById('jivoIconUrl').value = '';
         document.getElementById('jivoIconPreview').style.display = 'none';
         document.getElementById('jivoIconSection').style.display = 'none';
+        document.getElementById('jivoCodeSection').style.display = 'none';
+        document.getElementById('jivoCode').value = '';
+        document.getElementById('openMethodClick').checked = true;
+        document.getElementById('menuOrientationVertical').checked = true;
         document.getElementById('defaultIcon').checked = true;
         document.getElementById('mainIconUrl').value = '';
         document.getElementById('mainIconPreview').style.display = 'none';
@@ -1765,10 +1879,20 @@ function generateReadyCode() {
     code += '}\n\n';
     code += '.popup-menu {\n';
     code += '    position: absolute;\n';
-    code += '    bottom: 70px;\n';
-    code += '    right: 0;\n';
-    code += '    display: none;\n';
-    code += '    flex-direction: column;\n';
+    if (displaySettings.menuOrientation === 'horizontal') {
+        code += '    bottom: 20px;\n';
+        code += '    right: 80px;\n';
+        code += '    flex-direction: row;\n';
+    } else {
+        code += '    bottom: 70px;\n';
+        code += '    right: 0;\n';
+        code += '    flex-direction: column;\n';
+    }
+    if (displaySettings.openMethod === 'always') {
+        code += '    display: flex;\n';
+    } else {
+        code += '    display: none;\n';
+    }
     code += '    align-items: center;\n';
     code += '    gap: 10px;\n';
     code += '}\n\n';
@@ -1813,13 +1937,15 @@ function generateReadyCode() {
     code += '</style>\n\n';
     // Добавляем HTML структуру
     code += '<div class="multibutton">\n';
-    code += '    <button class="main-button">\n';
-    if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
-        code += `        <img src="${mainIconSettings.customUrl}" alt="Меню" />\n`;
-    } else {
-        code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" />\n';
+    if (displaySettings.openMethod === 'click') {
+        code += '    <button class="main-button">\n';
+        if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+            code += `        <img src="${mainIconSettings.customUrl}" alt="Меню" />\n`;
+        } else {
+            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" />\n';
+        }
+        code += '    </button>\n';
     }
-    code += '    </button>\n';
     code += '    <div class="popup-menu" id="popupMenu">\n';
     // Добавляем социальные кнопки
     socialSettings.forEach(setting => {
@@ -1868,12 +1994,12 @@ function generateReadyCode() {
 
     
     // Добавляем код Jivo, если включен
-    if (jivoSettings.enabled) {
+    if (jivoSettings.enabled && jivoSettings.code) {
         code += '\n<!-- Код Jivo чата -->\n';
-        code += '<!-- Вставьте ваш код Jivo здесь -->\n';
+        code += jivoSettings.code + '\n';
     }
     
-    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки добавьте JavaScript:\n<script>\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api &amp;&amp; typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\n// Скрываем стандартную кнопку Jivo\nfunction jivo_onLoadCallback() {\n    const jivo_custom_widget = true;\n}\n\n// Скрываем мульти-кнопку при открытии чата\nfunction jivo_onOpen() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "none";\n    }\n}\n\n// Показываем мульти-кнопку при закрытии чата\nfunction jivo_onClose() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "block";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        mainButton.addEventListener("click", toggleMenu);\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton &amp;&amp; menu &amp;&amp; !multibutton.contains(event.target)) {\n        menu.style.display = "none";\n    }\n});\n</script> -->';
+    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки добавьте JavaScript:\n<script>\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api &amp;&amp; typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\n// Скрываем стандартную кнопку Jivo\nfunction jivo_onLoadCallback() {\n    const jivo_custom_widget = true;\n}\n\n// Скрываем мульти-кнопку при открытии чата\nfunction jivo_onOpen() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "none";\n    }\n}\n\n// Показываем мульти-кнопку при закрытии чата\nfunction jivo_onClose() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "block";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        mainButton.addEventListener("click", toggleMenu);\n    }\n    \n    // Применяем настройки отображения\n    const menu = document.getElementById("popupMenu");\n    if (menu) {\n        if ("' + displaySettings.openMethod + '" === "always") {\n            menu.style.display = "flex";\n        } else {\n            menu.style.display = "none";\n        }\n        \n        if ("' + displaySettings.menuOrientation + '" === "horizontal") {\n            menu.style.flexDirection = "row";\n            menu.style.bottom = "20px";\n            menu.style.right = "80px";\n        } else {\n            menu.style.flexDirection = "column";\n            menu.style.bottom = "70px";\n            menu.style.right = "0";\n        }\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton &amp;&amp; menu &amp;&amp; !multibutton.contains(event.target)) {\n        // Скрываем меню только если не выбрано "всегда видимое меню"\n        if ("' + displaySettings.openMethod + '" !== "always") {\n            menu.style.display = "none";\n        }\n    }\n});\n</script> -->';
     codeOutput.style.display = 'block';
     // Обновляем кнопку копирования
     const copyButton = document.querySelector('.copy-button');
@@ -1971,7 +2097,10 @@ document.addEventListener('click', function(event) {
     }
     
     if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
-        document.getElementById('popupMenu').style.display = 'none';
+        // Скрываем меню только если не выбрано "всегда видимое меню"
+        if (displaySettings.openMethod !== 'always') {
+            document.getElementById('popupMenu').style.display = 'none';
+        }
         settingsPanel.style.display = 'none';
         // Скрываем подсказку при закрытии панели
         document.getElementById('settingsHint').style.display = 'none';
@@ -1984,6 +2113,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Создаем начальное меню
     createSocialMenu();
+    
+    // Применяем начальные настройки отображения
+    updateMenuDisplay();
     
     // Устанавливаем начальные значения Jivo
     // (код Jivo теперь вставляется клиентом отдельно)
