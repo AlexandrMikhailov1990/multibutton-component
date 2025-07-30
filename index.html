@@ -5,172 +5,291 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мульти-кнопка с соцсетями</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            line-height: 1.6;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px;
         }
         
         .header {
             text-align: center;
             color: white;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
+            padding: 60px 0;
         }
         
         .header h1 {
-            font-size: 3rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 800;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        .demo-section {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
+        .hero-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 60px 40px;
             margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .demo-section h2 {
+        .hero-content {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .hero-content h2 {
+            font-size: 2.5rem;
             color: #333;
             margin-bottom: 20px;
-            text-align: center;
+            font-weight: 700;
         }
         
-        .demo-section p {
+        .hero-content p {
+            font-size: 1.1rem;
             color: #666;
-            line-height: 1.6;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .feature {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            border-left: 4px solid #667eea;
-        }
-        
-        .feature h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .feature p {
-            color: #666;
-            line-height: 1.5;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .cta-button {
             display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px 30px;
+            padding: 18px 40px;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
         }
         
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
         }
         
-        .demo-content {
-            height: 800px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 15px;
-            padding: 40px;
-            margin-top: 30px;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
         }
         
-        .demo-content h3 {
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+        
+        .feature-card h3 {
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 600;
         }
         
-        .demo-content p {
+        .feature-card p {
             color: #666;
             line-height: 1.6;
+            font-size: 1rem;
         }
         
-
+        .demo-preview {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .demo-preview h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .demo-preview p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .demo-preview ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .demo-preview li {
+            color: #666;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .demo-preview li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .hero-section {
+                padding: 40px 20px;
+            }
+            
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .feature-card {
+                padding: 30px 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🚀 Мульти-кнопка с соцсетями</h1>
-            <p>Красивая и функциональная кнопка для вашего сайта</p>
+            <p>Создайте красивую и функциональную кнопку для связи с клиентами через социальные сети</p>
         </div>
         
-        <div class="demo-section">
-            <h2>📱 Демонстрация</h2>
-            <p>Нажмите кнопку "⚙️ Настройки" в левом верхнем углу, чтобы настроить ссылки на соцсети.</p>
-            <p>Затем нажмите на фиолетовую кнопку в правом нижнем углу, чтобы открыть меню соцсетей.</p>
+        <div class="hero-section">
+            <div class="hero-content">
+                <h2>📱 Умная кнопка для вашего сайта</h2>
+                <p>Настройте ссылки на все ваши социальные сети в одном месте. Простое управление, красивый дизайн и полная кастомизация.</p>
+                <a href="multibutton.html" class="cta-button">🚀 Попробовать демо</a>
+            </div>
             
-            <div class="demo-content">
+            <div class="demo-preview">
                 <h3>🎯 Как это работает:</h3>
-                <p>1. <strong>Настройка:</strong> Укажите ссылки на ваши социальные сети в панели настроек</p>
-                <p>2. <strong>Применение:</strong> Нажмите "Применить" для обновления кнопок</p>
-                <p>3. <strong>Использование:</strong> Кликните на главную кнопку для открытия меню соцсетей</p>
-                <p>4. <strong>Копирование:</strong> Скопируйте настройки для использования на вашем сайте</p>
+                <ul>
+                    <li><strong>Настройка:</strong> Укажите ссылки на ваши социальные сети в удобной панели</li>
+                    <li><strong>Кастомизация:</strong> Выберите иконки, цвета и стили для кнопок</li>
+                    <li><strong>Интеграция:</strong> Добавьте Jivo чат для мгновенной связи с клиентами</li>
+                    <li><strong>Готово:</strong> Скопируйте код и вставьте на ваш сайт</li>
+                </ul>
                 
-                <h3>✨ Особенности:</h3>
-                <p>• Поддержка Telegram, WhatsApp, VK, Instagram, телефон</p>
-                <p>• Настраиваемые иконки для каждой соцсети</p>
-                <p>• Красивый дизайн с анимациями</p>
-                <p>• Адаптивность для всех устройств</p>
+                <h3 style="margin-top: 30px;">✨ Поддерживаемые платформы:</h3>
+                <ul>
+                    <li>Telegram, WhatsApp, VK, Instagram, Facebook</li>
+                    <li>Twitter, YouTube, Одноклассники, Email</li>
+                    <li>Jivo чат и любые другие мессенджеры</li>
+                </ul>
             </div>
         </div>
         
-        <div class="features">
-            <div class="feature">
-                <h3>🎨 Красивый дизайн</h3>
-                <p>Современный градиентный дизайн с плавными анимациями и эффектами наведения</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🎨 Современный дизайн</h3>
+                <p>Красивые градиенты, плавные анимации и эффекты наведения. Настраиваемые цвета и иконки для вашего бренда.</p>
             </div>
             
-            <div class="feature">
+            <div class="feature-card">
                 <h3>⚙️ Простая настройка</h3>
-                <p>Удобная панель настроек для быстрого изменения ссылок и иконок</p>
+                <p>Интуитивно понятная панель управления. Добавляйте, удаляйте и настраивайте кнопки в несколько кликов.</p>
             </div>
             
-            <div class="feature">
+            <div class="feature-card">
                 <h3>📱 Адаптивность</h3>
-                <p>Отлично выглядит на всех устройствах - от мобильных до десктопов</p>
+                <p>Отлично выглядит на всех устройствах - от смартфонов до больших экранов. Автоматическая адаптация под размер экрана.</p>
             </div>
             
-            <div class="feature">
+            <div class="feature-card">
                 <h3>🚀 Быстрая работа</h3>
-                <p>Легкий код без зависимостей, загружается мгновенно</p>
+                <p>Легкий код без внешних зависимостей. Загружается мгновенно и не замедляет ваш сайт.</p>
             </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 40px;">
-            <a href="multibutton.html" class="cta-button">🚀 Попробовать демо</a>
+            
+            <div class="feature-card">
+                <h3>💬 Jivo интеграция</h3>
+                <p>Встроенная поддержка Jivo чата. Скрывайте стандартную кнопку и используйте свою кастомную.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🔧 Гибкая настройка</h3>
+                <p>Загружайте собственные иконки, меняйте цвета кнопок, настраивайте порядок отображения.</p>
+            </div>
         </div>
     </div>
 </body>
