@@ -860,11 +860,20 @@
                 <label for="customMainColor">Свой цвет</label>
             </div>
             <div id="customMainColorSection" style="display: none; margin-top: 10px;">
-                <input type="color" id="mainColorPicker" value="#667eea" onchange="handleMainColorPicker()" style="width: 50px; height: 40px; border: none; border-radius: 4px; cursor: pointer;">
-                <input type="text" id="mainColorCode" placeholder="#667eea" onchange="handleMainColorCode()" style="width: calc(100% - 60px); padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-left: 10px;">
-                <div class="main-color-preview" id="mainColorPreview" style="display: none; margin-top: 10px;">
-                    <div id="mainColorPreviewBox" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ddd;"></div>
-                    <button type="button" onclick="removeMainColor()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="position: relative;">
+                        <input type="color" id="mainColorPicker" value="#667eea" onchange="handleMainColorPicker()" style="width: 60px; height: 50px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; padding: 0;">
+                        <div style="position: absolute; top: -5px; right: -5px; background: #fff; border: 1px solid #ddd; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666;">🎨</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <input type="text" id="mainColorCode" placeholder="#667eea" onchange="handleMainColorCode()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: monospace; font-size: 14px;">
+                        <div style="font-size: 11px; color: #666; margin-top: 2px;">HEX код цвета</div>
+                    </div>
+                    <div id="mainColorPreviewBox" style="width: 50px; height: 50px; border-radius: 50%; border: 3px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="button" onclick="removeMainColor()" style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">❌ Убрать цвет</button>
+                    <div id="colorInfo" style="font-size: 11px; color: #666; font-family: monospace;"></div>
                 </div>
             </div>
         </div>
@@ -1368,6 +1377,10 @@ function handleMainColorChange() {
         mainIconSettings.colorType = 'custom';
         customSection.style.display = 'block';
         updateMainButtonColor();
+        updateMainColorPreview();
+        if (mainIconSettings.customColor) {
+            updateColorInfo(mainIconSettings.customColor);
+        }
     }
 }
 
@@ -1382,6 +1395,7 @@ function handleMainColorPicker() {
     
     updateMainButtonColor();
     updateMainColorPreview();
+    updateColorInfo(color);
     showNotification('✅ Цвет кнопки изменен!', 'success');
 }
 
@@ -1397,6 +1411,7 @@ function handleMainColorCode() {
         
         updateMainButtonColor();
         updateMainColorPreview();
+        updateColorInfo(color);
         showNotification('✅ Цветовой код применен!', 'success');
     } else if (color) {
         showNotification('❌ Неверный формат цвета! Используйте #RRGGBB', 'error');
@@ -1408,7 +1423,8 @@ function removeMainColor() {
     mainIconSettings.colorType = 'default';
     document.getElementById('defaultColor').checked = true;
     document.getElementById('customMainColorSection').style.display = 'none';
-    document.getElementById('mainColorPreview').style.display = 'none';
+    document.getElementById('mainColorPreviewBox').style.display = 'none';
+    document.getElementById('colorInfo').textContent = '';
     updateMainButtonColor();
     showNotification('🗑️ Пользовательский цвет удален', 'info');
 }
@@ -1425,14 +1441,28 @@ function updateMainButtonColor() {
 
 // Функция обновления предварительного просмотра цвета
 function updateMainColorPreview() {
-    const preview = document.getElementById('mainColorPreview');
     const previewBox = document.getElementById('mainColorPreviewBox');
     
     if (mainIconSettings.colorType === 'custom') {
         previewBox.style.background = mainIconSettings.customColor;
-        preview.style.display = 'block';
+        previewBox.style.display = 'block';
     } else {
-        preview.style.display = 'none';
+        previewBox.style.display = 'none';
+    }
+}
+
+// Функция обновления информации о цвете
+function updateColorInfo(color) {
+    const colorInfo = document.getElementById('colorInfo');
+    if (color) {
+        // Конвертируем HEX в RGB
+        const r = parseInt(color.substr(1,2), 16);
+        const g = parseInt(color.substr(3,2), 16);
+        const b = parseInt(color.substr(5,2), 16);
+        
+        colorInfo.textContent = `RGB: ${r}, ${g}, ${b}`;
+    } else {
+        colorInfo.textContent = '';
     }
 }
 
