@@ -475,6 +475,8 @@
             border-radius: 5px;
             border: 1px solid #dee2e6;
             display: none;
+            max-width: 100%;
+            overflow: hidden;
         }
 
         .code-output h4 {
@@ -482,15 +484,31 @@
             color: #333;
         }
 
-        .code-textarea {
+        #settingsInfo {
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 15px;
+        }
+
+        #readyCodeTextarea {
             width: 100%;
-            height: 200px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            font-family: monospace;
-            font-size: 12px;
+            min-height: 200px;
+            max-height: 600px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
             resize: vertical;
+            background: #fff;
+            color: #333;
+            margin-bottom: 10px;
+            white-space: pre;
+            overflow-x: scroll;
+            word-wrap: normal;
+            -webkit-overflow-scrolling: touch;
         }
 
         .copy-button {
@@ -536,8 +554,9 @@
 
         .button-actions {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin: 20px 0;
+            width: 100%;
         }
 
         .settings-hint {
@@ -568,21 +587,29 @@
 
         .button-actions button {
             flex: 1;
-            padding: 10px;
+            min-height: 48px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 16px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .apply-button {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
         .apply-button:hover {
-            background: #5a6fd8;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102,126,234,0.3);
         }
 
         .clear-button {
@@ -592,6 +619,8 @@
 
         .clear-button:hover {
             background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108,117,125,0.3);
         }
 
         .preview-section {
