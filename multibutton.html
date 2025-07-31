@@ -256,6 +256,35 @@
             transform: scale(1.04);
         }
 
+        .donate-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10030;
+            font-size: 2rem;
+            padding: 18px 36px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(102,126,234,0.18);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .donate-button:hover {
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 10px 32px rgba(102,126,234,0.28);
+            transform: scale(1.04);
+            color: #fff;
+            text-decoration: none;
+        }
+
         .demo-content {
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -799,6 +828,7 @@
 <body>
 
 <button class="settings-toggle" onclick="toggleSettings()">⚙️ Настройки</button>
+<a href="https://yoomoney.ru/to/410011389098834" class="donate-button" target="_blank">💝 Поддержать проект</a>
 
 <div class="settings-panel" id="settingsPanel">
     <h3>Настройка мульти-кнопки</h3>
