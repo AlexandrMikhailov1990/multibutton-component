@@ -534,29 +534,36 @@
 
         .add-button {
             width: 100%;
-            padding: 12px;
+            min-height: 48px;
+            padding: 12px 24px;
             background: #28a745;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .add-button:hover {
             background: #218838;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40,167,69,0.3);
         }
         
         .add-button.custom-button {
             background: #ff6b35;
-            margin-top: 10px;
         }
         
         .add-button.custom-button:hover {
             background: #e55a2b;
+            box-shadow: 0 4px 8px rgba(255,107,53,0.3);
         }
 
         .button-actions {
