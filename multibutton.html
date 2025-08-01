@@ -960,6 +960,29 @@
                 </div>
             </div>
         </div>
+        
+        <div class="main-shape-input" style="margin-top: 20px;">
+            <label>🔲 Форма кнопки:</label>
+            <div style="margin-top: 10px;">
+                <input type="radio" id="defaultShape" name="mainShape" value="default" checked onchange="handleMainShapeChange()">
+                <label for="defaultShape">По умолчанию (круглая)</label>
+            </div>
+            <div style="margin-top: 5px;">
+                <input type="radio" id="customMainShape" name="mainShape" value="custom" onchange="handleMainShapeChange()">
+                <label for="customMainShape">Автоматически по иконке</label>
+            </div>
+            <div id="customMainShapeSection" style="display: none; margin-top: 10px;">
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border-left: 3px solid #667eea;">
+                    <p style="margin: 0; font-size: 12px; color: #666;">
+                        <strong>💡 Как это работает:</strong><br>
+                        • Если иконка квадратная - кнопка станет квадратной<br>
+                        • Если иконка круглая - кнопка останется круглой<br>
+                        • Если иконка прямоугольная - кнопка станет прямоугольной<br>
+                        • Размер кнопки автоматически подстроится под иконку
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div class="button-actions">
@@ -1241,7 +1264,8 @@ let mainIconSettings = {
     type: 'default', // 'default' или 'custom'
     customUrl: null,
     colorType: 'default', // 'default' или 'custom'
-    customColor: '#667eea'
+    customColor: '#667eea',
+    shapeType: 'default' // 'default' или 'custom'
 };
 
 let nextId = 1;
@@ -1442,8 +1466,16 @@ function updateMainButtonIcon() {
     const mainButton = document.querySelector('.main-button img');
     if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
         mainButton.src = mainIconSettings.customUrl;
+        // Обновляем форму кнопки если включена автоматическая настройка
+        if (mainIconSettings.shapeType === 'custom') {
+            updateMainButtonShape();
+        }
     } else {
         mainButton.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+        // Возвращаем к форме по умолчанию
+        if (mainIconSettings.shapeType === 'custom') {
+            updateMainButtonShape();
+        }
     }
 }
 
@@ -1498,6 +1530,89 @@ function handleMainColorCode() {
         showNotification('✅ Цветовой код применен!', 'success');
     } else if (color) {
         showNotification('❌ Неверный формат цвета! Используйте #RRGGBB', 'error');
+    }
+}
+
+// Функция обработки изменения формы главной кнопки
+function handleMainShapeChange() {
+    const defaultShape = document.getElementById('defaultShape');
+    const customSection = document.getElementById('customMainShapeSection');
+    
+    if (defaultShape.checked) {
+        mainIconSettings.shapeType = 'default';
+        customSection.style.display = 'none';
+        updateMainButtonShape();
+    } else {
+        mainIconSettings.shapeType = 'custom';
+        customSection.style.display = 'block';
+        updateMainButtonShape();
+    }
+}
+
+// Функция определения формы иконки
+function detectIconShape(imageUrl) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+            const ratio = this.width / this.height;
+            let shape = 'circle';
+            
+            if (Math.abs(ratio - 1) < 0.1) {
+                shape = 'square';
+            } else if (ratio > 1.2) {
+                shape = 'horizontal';
+            } else if (ratio < 0.8) {
+                shape = 'vertical';
+            }
+            
+            resolve(shape);
+        };
+        img.onerror = function() {
+            resolve('circle'); // По умолчанию круглая
+        };
+        img.src = imageUrl;
+    });
+}
+
+// Функция обновления формы главной кнопки
+async function updateMainButtonShape() {
+    const mainButton = document.querySelector('.main-button');
+    
+    if (mainIconSettings.shapeType === 'custom' && mainIconSettings.customUrl) {
+        const shape = await detectIconShape(mainIconSettings.customUrl);
+        
+        // Сбрасываем все стили формы
+        mainButton.style.borderRadius = '';
+        mainButton.style.width = '';
+        mainButton.style.height = '';
+        
+        // Применяем стили в зависимости от формы
+        switch (shape) {
+            case 'square':
+                mainButton.style.borderRadius = '8px';
+                mainButton.style.width = '60px';
+                mainButton.style.height = '60px';
+                break;
+            case 'horizontal':
+                mainButton.style.borderRadius = '8px';
+                mainButton.style.width = '80px';
+                mainButton.style.height = '50px';
+                break;
+            case 'vertical':
+                mainButton.style.borderRadius = '8px';
+                mainButton.style.width = '50px';
+                mainButton.style.height = '80px';
+                break;
+            default:
+                mainButton.style.borderRadius = '50%';
+                mainButton.style.width = '60px';
+                mainButton.style.height = '60px';
+        }
+    } else {
+        // Возвращаем к форме по умолчанию
+        mainButton.style.borderRadius = '50%';
+        mainButton.style.width = '60px';
+        mainButton.style.height = '60px';
     }
 }
 
@@ -1913,6 +2028,7 @@ function clearAllSettings() {
         mainIconSettings.customUrl = null;
         mainIconSettings.colorType = 'default';
         mainIconSettings.customColor = '#667eea';
+        mainIconSettings.shapeType = 'default';
         
         document.getElementById('jivoEnabled').checked = false;
         document.getElementById('jivoIconUrl').value = '';
@@ -1931,11 +2047,14 @@ function clearAllSettings() {
         document.getElementById('mainColorPicker').value = '#667eea';
         document.getElementById('mainColorPreview').style.display = 'none';
         document.getElementById('customMainColorSection').style.display = 'none';
+        document.getElementById('defaultShape').checked = true;
+        document.getElementById('customMainShapeSection').style.display = 'none';
         
         renderSocialInputs();
         createSocialMenu(); // Пересоздаем меню без кнопки Jivo
         updateMainButtonIcon(); // Обновляем главную иконку
         updateMainButtonColor(); // Обновляем цвет главной кнопки
+        updateMainButtonShape(); // Обновляем форму главной кнопки
         document.getElementById('jivoContainer').innerHTML = '';
         document.getElementById('codeOutput').style.display = 'none';
         
