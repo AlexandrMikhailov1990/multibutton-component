@@ -1466,12 +1466,22 @@ function updateMainButtonIcon() {
     const mainButton = document.querySelector('.main-button img');
     if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
         mainButton.src = mainIconSettings.customUrl;
+        // Устанавливаем правильные стили для изображения
+        mainButton.style.width = '100%';
+        mainButton.style.height = '100%';
+        mainButton.style.objectFit = 'cover';
+        mainButton.style.filter = 'none'; // Убираем фильтр для сохранения оригинальных цветов
         // Обновляем форму кнопки если включена автоматическая настройка
         if (mainIconSettings.shapeType === 'custom') {
             updateMainButtonShape();
         }
     } else {
         mainButton.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+        // Возвращаем стили по умолчанию
+        mainButton.style.width = '30px';
+        mainButton.style.height = '30px';
+        mainButton.style.objectFit = 'contain';
+        mainButton.style.filter = 'brightness(0) invert(1)';
         // Возвращаем к форме по умолчанию
         if (mainIconSettings.shapeType === 'custom') {
             updateMainButtonShape();
@@ -1577,6 +1587,7 @@ function detectIconShape(imageUrl) {
 // Функция обновления формы главной кнопки
 async function updateMainButtonShape() {
     const mainButton = document.querySelector('.main-button');
+    const mainButtonImg = document.querySelector('.main-button img');
     
     if (mainIconSettings.shapeType === 'custom' && mainIconSettings.customUrl) {
         const shape = await detectIconShape(mainIconSettings.customUrl);
@@ -1592,27 +1603,47 @@ async function updateMainButtonShape() {
                 mainButton.style.borderRadius = '8px';
                 mainButton.style.width = '60px';
                 mainButton.style.height = '60px';
+                mainButtonImg.style.width = '100%';
+                mainButtonImg.style.height = '100%';
+                mainButtonImg.style.objectFit = 'cover';
+                mainButtonImg.style.borderRadius = '8px';
                 break;
             case 'horizontal':
                 mainButton.style.borderRadius = '8px';
                 mainButton.style.width = '80px';
                 mainButton.style.height = '50px';
+                mainButtonImg.style.width = '100%';
+                mainButtonImg.style.height = '100%';
+                mainButtonImg.style.objectFit = 'cover';
+                mainButtonImg.style.borderRadius = '8px';
                 break;
             case 'vertical':
                 mainButton.style.borderRadius = '8px';
                 mainButton.style.width = '50px';
                 mainButton.style.height = '80px';
+                mainButtonImg.style.width = '100%';
+                mainButtonImg.style.height = '100%';
+                mainButtonImg.style.objectFit = 'cover';
+                mainButtonImg.style.borderRadius = '8px';
                 break;
             default:
                 mainButton.style.borderRadius = '50%';
                 mainButton.style.width = '60px';
                 mainButton.style.height = '60px';
+                mainButtonImg.style.width = '100%';
+                mainButtonImg.style.height = '100%';
+                mainButtonImg.style.objectFit = 'cover';
+                mainButtonImg.style.borderRadius = '50%';
         }
     } else {
         // Возвращаем к форме по умолчанию
         mainButton.style.borderRadius = '50%';
         mainButton.style.width = '60px';
         mainButton.style.height = '60px';
+        mainButtonImg.style.width = '100%';
+        mainButtonImg.style.height = '100%';
+        mainButtonImg.style.objectFit = 'cover';
+        mainButtonImg.style.borderRadius = '50%';
     }
 }
 
