@@ -288,21 +288,19 @@
         .donate-button {
             position: fixed;
             top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
             z-index: 10030;
             font-size: 1.1rem;
             padding: 12px 24px;
-            width: 220px;
-            height: 27px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #333;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
-            box-shadow: 0 6px 24px rgba(102,126,234,0.18);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.1);
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            transition: all 0.3s ease;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -311,10 +309,10 @@
         }
 
         .donate-button:hover {
-            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
-            box-shadow: 0 10px 32px rgba(102,126,234,0.28);
-            transform: translateX(-50%) scale(1.04);
-            color: #fff;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.15);
+            transform: scale(1.05);
+            color: #333;
             text-decoration: none;
         }
 
@@ -487,8 +485,9 @@
         }
 
         .icons-note {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 8px;
             margin-top: 30px;
@@ -500,7 +499,7 @@
             font-weight: 500;
         }
 
-        .icons-note ol {
+        .icons-note ul {
             margin: 0;
             padding-left: 20px;
             color: #555;
