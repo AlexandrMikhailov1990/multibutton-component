@@ -860,7 +860,10 @@
 <a href="https://yoomoney.ru/to/410011389098834" class="donate-button" target="_blank">💝 Поддержать проект</a>
 
 <div class="settings-panel" id="settingsPanel">
-    <h3>Настройка мульти-кнопки</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0;">Настройка мульти-кнопки</h3>
+        <button onclick="closeSettingsPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">×</button>
+    </div>
     
     <!-- Секция социальных кнопок -->
     <div class="settings-section">
@@ -2036,6 +2039,17 @@ function updateSetting(id, field, value) {
     }
 }
 
+// Функция закрытия панели настроек
+function closeSettingsPanel() {
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'none';
+    // Скрываем подсказку при закрытии панели
+    const hint = document.getElementById('settingsHint');
+    if (hint) {
+        hint.style.display = 'none';
+    }
+}
+
 // Функция применения настроек
 function applySettings() {
     console.log('applySettings вызвана');
@@ -2504,14 +2518,11 @@ document.addEventListener('click', function(event) {
         return; // Не закрываем панель настроек
     }
     
-    if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
+    if (!multibutton.contains(event.target)) {
         // Скрываем меню только если не выбрано "всегда видимое меню"
         if (displaySettings.openMethod !== 'always') {
             document.getElementById('popupMenu').style.display = 'none';
         }
-        settingsPanel.style.display = 'none';
-        // Скрываем подсказку при закрытии панели
-        document.getElementById('settingsHint').style.display = 'none';
     }
 });
 
