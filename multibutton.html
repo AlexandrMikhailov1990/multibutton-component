@@ -969,43 +969,28 @@
                 <label for="defaultShape">По умолчанию (круглая)</label>
             </div>
             <div style="margin-top: 5px;">
-                <input type="radio" id="customMainShape" name="mainShape" value="custom" onchange="handleMainShapeChange()">
-                <label for="customMainShape">Автоматически по иконке</label>
-            </div>
-            <div style="margin-top: 5px;">
                 <input type="radio" id="customSizeShape" name="mainShape" value="customSize" onchange="handleMainShapeChange()">
                 <label for="customSizeShape">Собственный размер</label>
-            </div>
-            <div id="customMainShapeSection" style="display: none; margin-top: 10px;">
-                <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border-left: 3px solid #667eea;">
-                    <p style="margin: 0; font-size: 12px; color: #666;">
-                        <strong>💡 Как это работает:</strong><br>
-                        • Если иконка квадратная - кнопка станет квадратной<br>
-                        • Если иконка круглая - кнопка останется круглой<br>
-                        • Если иконка прямоугольная - кнопка станет прямоугольной<br>
-                        • Размер кнопки автоматически подстроится под иконку
-                    </p>
-                </div>
             </div>
             <div id="customSizeSection" style="display: none; margin-top: 10px;">
                 <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border-left: 3px solid #28a745;">
                     <p style="margin: 0 0 10px 0; font-size: 12px; color: #666;">
                         <strong>📏 Укажите размеры кнопки в пикселях:</strong>
                     </p>
-                                            <div style="display: flex; gap: 10px; align-items: center;">
-                            <div>
-                                <label for="customWidth" style="font-size: 12px; color: #666;">Ширина:</label>
-                                <input type="number" id="customWidth" value="120" min="30" max="500" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
-                            </div>
-                            <div>
-                                <label for="customHeight" style="font-size: 12px; color: #666;">Высота:</label>
-                                <input type="number" id="customHeight" value="60" min="30" max="500" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
-                            </div>
-                            <div>
-                                <label for="customBorderRadius" style="font-size: 12px; color: #666;">Скругление:</label>
-                                <input type="number" id="customBorderRadius" value="8" min="0" max="50" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
-                            </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div>
+                            <label for="customWidth" style="font-size: 12px; color: #666;">Ширина:</label>
+                            <input type="number" id="customWidth" value="120" min="30" max="500" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
                         </div>
+                        <div>
+                            <label for="customHeight" style="font-size: 12px; color: #666;">Высота:</label>
+                            <input type="number" id="customHeight" value="60" min="30" max="500" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                        </div>
+                        <div>
+                            <label for="customBorderRadius" style="font-size: 12px; color: #666;">Скругление:</label>
+                            <input type="number" id="customBorderRadius" value="8" min="0" max="50" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                        </div>
+                    </div>
                     <p style="margin: 10px 0 0 0; font-size: 11px; color: #888;">
                         💡 Рекомендуемые размеры для логотипов: ширина 120-200px, высота 50-80px
                     </p>
@@ -1600,24 +1585,15 @@ function handleMainColorCode() {
 // Функция обработки изменения формы главной кнопки
 function handleMainShapeChange() {
     const defaultShape = document.getElementById('defaultShape');
-    const customMainShape = document.getElementById('customMainShape');
     const customSizeShape = document.getElementById('customSizeShape');
-    const customSection = document.getElementById('customMainShapeSection');
     const customSizeSection = document.getElementById('customSizeSection');
     
     if (defaultShape.checked) {
         mainIconSettings.shapeType = 'default';
-        customSection.style.display = 'none';
-        customSizeSection.style.display = 'none';
-        updateMainButtonShape();
-    } else if (customMainShape.checked) {
-        mainIconSettings.shapeType = 'custom';
-        customSection.style.display = 'block';
         customSizeSection.style.display = 'none';
         updateMainButtonShape();
     } else if (customSizeShape.checked) {
         mainIconSettings.shapeType = 'customSize';
-        customSection.style.display = 'none';
         customSizeSection.style.display = 'block';
         updateMainButtonShape();
     }
@@ -1672,66 +1648,6 @@ async function updateMainButtonShape() {
             customIcon.style.borderRadius = customBorderRadius + 'px';
             customIcon.style.objectFit = 'cover';
             customIcon.style.padding = '0';
-        }
-    } else if (mainIconSettings.shapeType === 'custom' && mainIconSettings.customUrl) {
-        const shape = await detectIconShape(mainIconSettings.customUrl);
-        
-        // Сбрасываем все стили формы
-        mainButton.style.borderRadius = '';
-        mainButton.style.width = '';
-        mainButton.style.height = '';
-        
-        // Применяем стили в зависимости от формы с сохранением пропорций
-        switch (shape) {
-            case 'square':
-                mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '70px';
-                mainButton.style.height = '70px';
-                if (customIcon) {
-                    customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'cover';
-                    customIcon.style.padding = '0';
-                }
-                break;
-            case 'extra-wide':
-                mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '200px';
-                mainButton.style.height = '60px';
-                if (customIcon) {
-                    customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'cover';
-                    customIcon.style.padding = '0';
-                }
-                break;
-            case 'horizontal':
-                mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '140px';
-                mainButton.style.height = '60px';
-                if (customIcon) {
-                    customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'cover';
-                    customIcon.style.padding = '0';
-                }
-                break;
-            case 'vertical':
-                mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '60px';
-                mainButton.style.height = '100px';
-                if (customIcon) {
-                    customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'cover';
-                    customIcon.style.padding = '0';
-                }
-                break;
-            default:
-                mainButton.style.borderRadius = '50%';
-                mainButton.style.width = '70px';
-                mainButton.style.height = '70px';
-                if (customIcon) {
-                    customIcon.style.borderRadius = '50%';
-                    customIcon.style.objectFit = 'cover';
-                    customIcon.style.padding = '0';
-                }
         }
     } else {
         // Возвращаем к форме по умолчанию
@@ -2186,7 +2102,6 @@ function clearAllSettings() {
         document.getElementById('mainColorPreview').style.display = 'none';
         document.getElementById('customMainColorSection').style.display = 'none';
         document.getElementById('defaultShape').checked = true;
-        document.getElementById('customMainShapeSection').style.display = 'none';
         document.getElementById('customSizeSection').style.display = 'none';
         document.getElementById('customWidth').value = '120';
         document.getElementById('customHeight').value = '60';
@@ -2287,11 +2202,6 @@ function generateReadyCode() {
         code += `    width: ${mainIconSettings.customWidth}px;\n`;
         code += `    height: ${mainIconSettings.customHeight}px;\n`;
         code += `    border-radius: ${mainIconSettings.customBorderRadius}px;\n`;
-    } else if (mainIconSettings.shapeType === 'custom') {
-        // Применяем автоматические размеры на основе иконки
-        code += '    width: 70px;\n';
-        code += '    height: 70px;\n';
-        code += '    border-radius: 8px;\n';
     } else {
         code += '    width: 60px;\n';
         code += '    height: 60px;\n';
