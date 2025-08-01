@@ -1423,7 +1423,7 @@ function updateMenuDisplay() {
     }
     
     // Обновляем позицию меню с учетом размера кнопки
-    updateMenuPosition();
+    // updateMenuPosition(); // Временно отключено для отладки
 }
 
 // Функция удаления загруженной иконки
@@ -1659,29 +1659,33 @@ async function updateMainButtonShape() {
     }
     
     // Обновляем позицию выпадающего меню
-    updateMenuPosition();
+    // updateMenuPosition(); // Временно отключено для отладки
 }
 
 // Функция обновления позиции выпадающего меню
 function updateMenuPosition() {
-    const mainButton = document.querySelector('.main-button');
-    const popupMenu = document.getElementById('popupMenu');
-    
-    if (mainButton && popupMenu) {
-        const buttonHeight = mainButton.offsetHeight;
-        const gap = 10; // Отступ между кнопкой и меню
+    try {
+        const mainButton = document.querySelector('.main-button');
+        const popupMenu = document.getElementById('popupMenu');
         
-        // Вычисляем новую позицию меню
-        const newBottom = buttonHeight + gap;
-        
-        // Применяем позицию в зависимости от ориентации
-        if (displaySettings.menuOrientation === 'horizontal') {
-            popupMenu.style.bottom = gap + 'px';
-            popupMenu.style.right = (buttonHeight + gap) + 'px';
-        } else {
-            popupMenu.style.bottom = newBottom + 'px';
-            popupMenu.style.right = '0';
+        if (mainButton && popupMenu) {
+            const buttonHeight = mainButton.offsetHeight || 60; // Значение по умолчанию
+            const gap = 10; // Отступ между кнопкой и меню
+            
+            // Вычисляем новую позицию меню
+            const newBottom = buttonHeight + gap;
+            
+            // Применяем позицию в зависимости от ориентации
+            if (displaySettings.menuOrientation === 'horizontal') {
+                popupMenu.style.bottom = gap + 'px';
+                popupMenu.style.right = (buttonHeight + gap) + 'px';
+            } else {
+                popupMenu.style.bottom = newBottom + 'px';
+                popupMenu.style.right = '0';
+            }
         }
+    } catch (error) {
+        console.log('Ошибка в updateMenuPosition:', error);
     }
 }
 
