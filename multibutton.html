@@ -2275,9 +2275,26 @@ function generateReadyCode() {
     code += '    z-index: 10000;\n';
     code += '}\n\n';
     code += '.main-button {\n';
-    code += '    width: 60px;\n';
-    code += '    height: 60px;\n';
-    code += '    border-radius: 50%;\n';
+    
+    // Применяем кастомные размеры если они настроены
+    if (mainIconSettings.shapeType === 'customSize') {
+        const customWidth = document.getElementById('customWidth').value;
+        const customHeight = document.getElementById('customHeight').value;
+        const customBorderRadius = document.getElementById('customBorderRadius').value;
+        code += `    width: ${customWidth}px;\n`;
+        code += `    height: ${customHeight}px;\n`;
+        code += `    border-radius: ${customBorderRadius}px;\n`;
+    } else if (mainIconSettings.shapeType === 'custom') {
+        // Применяем автоматические размеры на основе иконки
+        code += '    width: 70px;\n';
+        code += '    height: 70px;\n';
+        code += '    border-radius: 8px;\n';
+    } else {
+        code += '    width: 60px;\n';
+        code += '    height: 60px;\n';
+        code += '    border-radius: 50%;\n';
+    }
+    
     if (mainIconSettings.colorType === 'custom') {
         code += `    background: ${mainIconSettings.customColor};\n`;
     } else {
@@ -2290,15 +2307,26 @@ function generateReadyCode() {
     code += '    display: flex;\n';
     code += '    align-items: center;\n';
     code += '    justify-content: center;\n';
+    code += '    position: relative;\n';
+    code += '    overflow: hidden;\n';
     code += '}\n\n';
     code += '.main-button:hover {\n';
     code += '    transform: scale(1.1);\n';
     code += '    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);\n';
     code += '}\n\n';
     code += '.main-button img {\n';
-    code += '    width: 30px;\n';
-    code += '    height: 30px;\n';
-    code += '    filter: brightness(0) invert(1);\n';
+    if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+        // Для кастомных иконок
+        code += '    width: 100%;\n';
+        code += '    height: 100%;\n';
+        code += '    object-fit: cover;\n';
+        code += '    filter: none;\n';
+    } else {
+        // Для стандартных иконок
+        code += '    width: 30px;\n';
+        code += '    height: 30px;\n';
+        code += '    filter: brightness(0) invert(1);\n';
+    }
     code += '}\n\n';
     code += '.popup-menu {\n';
     code += '    position: absolute;\n';
