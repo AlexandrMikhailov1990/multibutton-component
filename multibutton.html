@@ -2293,18 +2293,13 @@ function createSocialMenu() {
             img.style.height = '25px';
             jivoButton.appendChild(img);
         } else {
-            // Используем стандартный SVG логотип Jivo
-            const jivoSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            jivoSvg.setAttribute('width', '25');
-            jivoSvg.setAttribute('height', '25');
-            jivoSvg.setAttribute('viewBox', '0 0 24 24');
-            
-            jivoSvg.innerHTML = `
-                <circle cx="12" cy="12" r="12" fill="#3bb34a"/>
-                <text x="12" y="16" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">j</text>
-            `;
-            
-            jivoButton.appendChild(jivoSvg);
+            // Используем стандартную иконку Jivo (svg-silh)
+            const img = document.createElement('img');
+            img.src = 'https://svgsilh.com/svg/873316-1f7a22.svg';
+            img.alt = 'Jivo чат';
+            img.style.width = '25px';
+            img.style.height = '25px';
+            jivoButton.appendChild(img);
         }
         
         menu.appendChild(jivoButton);
