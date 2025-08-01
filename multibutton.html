@@ -2393,11 +2393,11 @@ function generateReadyCode() {
     if (displaySettings.openMethod === 'click') {
         code += '    <button class="main-button">\n';
         if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
-            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" style="display: none;">\n';
-            code += `        <img src="${mainIconSettings.customUrl}" alt="Кастомная иконка" class="custom-icon">\n`;
+            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" style="display: none;" />\n';
+            code += `        <img src="${mainIconSettings.customUrl}" alt="Кастомная иконка" class="custom-icon" />\n`;
         } else {
-            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon">\n';
-            code += '        <img src="" alt="Кастомная иконка" class="custom-icon" style="display: none;">\n';
+            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" />\n';
+            code += '        <img src="" alt="Кастомная иконка" class="custom-icon" style="display: none;" />\n';
         }
         code += '    </button>\n';
     }
