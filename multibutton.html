@@ -1478,12 +1478,13 @@ function updateMainButtonIcon() {
         customIcon.style.display = 'block';
         customIcon.style.width = '100%';
         customIcon.style.height = '100%';
-        customIcon.style.objectFit = 'cover';
+        customIcon.style.objectFit = 'contain';
         customIcon.style.filter = 'none'; // Убираем фильтр для сохранения оригинальных цветов
         customIcon.style.position = 'absolute';
         customIcon.style.top = '0';
         customIcon.style.left = '0';
         customIcon.style.zIndex = '1';
+        customIcon.style.padding = '8px';
         
         // Скрываем стандартную иконку
         defaultIcon.style.display = 'none';
@@ -1627,46 +1628,56 @@ async function updateMainButtonShape() {
         mainButton.style.width = '';
         mainButton.style.height = '';
         
-        // Применяем стили в зависимости от формы
+        // Применяем стили в зависимости от формы с сохранением пропорций
         switch (shape) {
             case 'square':
                 mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '60px';
-                mainButton.style.height = '60px';
+                mainButton.style.width = '70px';
+                mainButton.style.height = '70px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
+                    customIcon.style.objectFit = 'contain';
+                    customIcon.style.padding = '8px';
                 }
                 break;
             case 'extra-wide':
                 mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '160px';
-                mainButton.style.height = '50px';
+                mainButton.style.width = '200px';
+                mainButton.style.height = '60px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
+                    customIcon.style.objectFit = 'contain';
+                    customIcon.style.padding = '8px';
                 }
                 break;
             case 'horizontal':
                 mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '120px';
-                mainButton.style.height = '50px';
+                mainButton.style.width = '140px';
+                mainButton.style.height = '60px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
+                    customIcon.style.objectFit = 'contain';
+                    customIcon.style.padding = '8px';
                 }
                 break;
             case 'vertical':
                 mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '50px';
-                mainButton.style.height = '80px';
+                mainButton.style.width = '60px';
+                mainButton.style.height = '100px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
+                    customIcon.style.objectFit = 'contain';
+                    customIcon.style.padding = '8px';
                 }
                 break;
             default:
                 mainButton.style.borderRadius = '50%';
-                mainButton.style.width = '60px';
-                mainButton.style.height = '60px';
+                mainButton.style.width = '70px';
+                mainButton.style.height = '70px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '50%';
+                    customIcon.style.objectFit = 'contain';
+                    customIcon.style.padding = '8px';
                 }
         }
     } else {
