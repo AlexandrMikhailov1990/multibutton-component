@@ -1418,13 +1418,12 @@ function updateMenuDisplay() {
     // Обновляем ориентацию меню
     if (displaySettings.menuOrientation === 'horizontal') {
         menu.style.flexDirection = 'row';
-        menu.style.bottom = '20px';
-        menu.style.right = '80px';
     } else {
         menu.style.flexDirection = 'column';
-        menu.style.bottom = '70px';
-        menu.style.right = '0';
     }
+    
+    // Обновляем позицию меню с учетом размера кнопки
+    updateMenuPosition();
 }
 
 // Функция удаления загруженной иконки
@@ -1656,6 +1655,32 @@ async function updateMainButtonShape() {
         mainButton.style.height = '60px';
         if (customIcon) {
             customIcon.style.borderRadius = '50%';
+        }
+    }
+    
+    // Обновляем позицию выпадающего меню
+    updateMenuPosition();
+}
+
+// Функция обновления позиции выпадающего меню
+function updateMenuPosition() {
+    const mainButton = document.querySelector('.main-button');
+    const popupMenu = document.getElementById('popupMenu');
+    
+    if (mainButton && popupMenu) {
+        const buttonHeight = mainButton.offsetHeight;
+        const gap = 10; // Отступ между кнопкой и меню
+        
+        // Вычисляем новую позицию меню
+        const newBottom = buttonHeight + gap;
+        
+        // Применяем позицию в зависимости от ориентации
+        if (displaySettings.menuOrientation === 'horizontal') {
+            popupMenu.style.bottom = gap + 'px';
+            popupMenu.style.right = (buttonHeight + gap) + 'px';
+        } else {
+            popupMenu.style.bottom = newBottom + 'px';
+            popupMenu.style.right = '0';
         }
     }
 }
@@ -2251,12 +2276,8 @@ function generateReadyCode() {
     code += '.popup-menu {\n';
     code += '    position: absolute;\n';
     if (displaySettings.menuOrientation === 'horizontal') {
-        code += '    bottom: 20px;\n';
-        code += '    right: 80px;\n';
         code += '    flex-direction: row;\n';
     } else {
-        code += '    bottom: 70px;\n';
-        code += '    right: 0;\n';
         code += '    flex-direction: column;\n';
     }
     if (displaySettings.openMethod === 'always') {
@@ -2364,7 +2385,7 @@ function generateReadyCode() {
         code += jivoSettings.code + '\n';
     }
     
-    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки добавьте JavaScript:\n<script>\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api &amp;&amp; typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\n// Скрываем стандартную кнопку Jivo\nfunction jivo_onLoadCallback() {\n    const jivo_custom_widget = true;\n}\n\n// Скрываем мульти-кнопку при открытии чата\nfunction jivo_onOpen() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "none";\n    }\n}\n\n// Показываем мульти-кнопку при закрытии чата\nfunction jivo_onClose() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "block";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        mainButton.addEventListener("click", toggleMenu);\n    }\n    \n    // Применяем настройки отображения\n    const menu = document.getElementById("popupMenu");\n    if (menu) {\n        if ("' + displaySettings.openMethod + '" === "always") {\n            menu.style.display = "flex";\n        } else {\n            menu.style.display = "none";\n        }\n        \n        if ("' + displaySettings.menuOrientation + '" === "horizontal") {\n            menu.style.flexDirection = "row";\n            menu.style.bottom = "20px";\n            menu.style.right = "80px";\n        } else {\n            menu.style.flexDirection = "column";\n            menu.style.bottom = "70px";\n            menu.style.right = "0";\n        }\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton &amp;&amp; menu &amp;&amp; !multibutton.contains(event.target)) {\n        // Скрываем меню только если не выбрано "всегда видимое меню"\n        if ("' + displaySettings.openMethod + '" !== "always") {\n            menu.style.display = "none";\n        }\n    }\n});\n</script> -->';
+    document.getElementById('readyCodeTextarea').value = code + '\n\n<!-- Для работы кнопки добавьте JavaScript:\n<script>\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api &amp;&amp; typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\n// Скрываем стандартную кнопку Jivo\nfunction jivo_onLoadCallback() {\n    const jivo_custom_widget = true;\n}\n\n// Скрываем мульти-кнопку при открытии чата\nfunction jivo_onOpen() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "none";\n    }\n}\n\n// Показываем мульти-кнопку при закрытии чата\nfunction jivo_onClose() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "block";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        mainButton.addEventListener("click", toggleMenu);\n    }\n    \n    // Применяем настройки отображения\n    const menu = document.getElementById("popupMenu");\n    if (menu) {\n        if ("' + displaySettings.openMethod + '" === "always") {\n            menu.style.display = "flex";\n        } else {\n            menu.style.display = "none";\n        }\n        \n        if ("' + displaySettings.menuOrientation + '" === "horizontal") {\n            menu.style.flexDirection = "row";\n        } else {\n            menu.style.flexDirection = "column";\n        }\n        \n        // Обновляем позицию меню с учетом размера кнопки\n        updateMenuPosition();\n    }\n});\n\n// Функция обновления позиции выпадающего меню\nfunction updateMenuPosition() {\n    const mainButton = document.querySelector('.main-button');\n    const popupMenu = document.getElementById('popupMenu');\n    \n    if (mainButton && popupMenu) {\n        const buttonHeight = mainButton.offsetHeight;\n        const gap = 10; // Отступ между кнопкой и меню\n        \n        // Вычисляем новую позицию меню\n        const newBottom = buttonHeight + gap;\n        \n        // Применяем позицию в зависимости от ориентации\n        if ("' + displaySettings.menuOrientation + '" === "horizontal") {\n            popupMenu.style.bottom = gap + 'px';\n            popupMenu.style.right = (buttonHeight + gap) + 'px';\n        } else {\n            popupMenu.style.bottom = newBottom + 'px';\n            popupMenu.style.right = '0';\n        }\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton &amp;&amp; menu &amp;&amp; !multibutton.contains(event.target)) {\n        // Скрываем меню только если не выбрано "всегда видимое меню"\n        if ("' + displaySettings.openMethod + '" !== "always") {\n            menu.style.display = "none";\n        }\n    }\n});\n</script> -->';
     codeOutput.style.display = 'block';
     // Обновляем кнопку копирования
     const copyButton = document.querySelector('.copy-button');
