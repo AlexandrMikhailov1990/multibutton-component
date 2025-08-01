@@ -39,6 +39,10 @@
             height: 30px;
             filter: brightness(0) invert(1);
         }
+        
+        .main-button .custom-icon {
+            display: none;
+        }
 
         .popup-menu {
             position: absolute;
@@ -1478,13 +1482,13 @@ function updateMainButtonIcon() {
         customIcon.style.display = 'block';
         customIcon.style.width = '100%';
         customIcon.style.height = '100%';
-        customIcon.style.objectFit = 'contain';
+        customIcon.style.objectFit = 'cover';
         customIcon.style.filter = 'none'; // Убираем фильтр для сохранения оригинальных цветов
         customIcon.style.position = 'absolute';
         customIcon.style.top = '0';
         customIcon.style.left = '0';
         customIcon.style.zIndex = '1';
-        customIcon.style.padding = '8px';
+        customIcon.style.padding = '0';
         
         // Скрываем стандартную иконку
         defaultIcon.style.display = 'none';
@@ -1636,8 +1640,8 @@ async function updateMainButtonShape() {
                 mainButton.style.height = '70px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'contain';
-                    customIcon.style.padding = '8px';
+                    customIcon.style.objectFit = 'cover';
+                    customIcon.style.padding = '0';
                 }
                 break;
             case 'extra-wide':
@@ -1646,8 +1650,8 @@ async function updateMainButtonShape() {
                 mainButton.style.height = '60px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'contain';
-                    customIcon.style.padding = '8px';
+                    customIcon.style.objectFit = 'cover';
+                    customIcon.style.padding = '0';
                 }
                 break;
             case 'horizontal':
@@ -1656,8 +1660,8 @@ async function updateMainButtonShape() {
                 mainButton.style.height = '60px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'contain';
-                    customIcon.style.padding = '8px';
+                    customIcon.style.objectFit = 'cover';
+                    customIcon.style.padding = '0';
                 }
                 break;
             case 'vertical':
@@ -1666,8 +1670,8 @@ async function updateMainButtonShape() {
                 mainButton.style.height = '100px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
-                    customIcon.style.objectFit = 'contain';
-                    customIcon.style.padding = '8px';
+                    customIcon.style.objectFit = 'cover';
+                    customIcon.style.padding = '0';
                 }
                 break;
             default:
@@ -1676,8 +1680,8 @@ async function updateMainButtonShape() {
                 mainButton.style.height = '70px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '50%';
-                    customIcon.style.objectFit = 'contain';
-                    customIcon.style.padding = '8px';
+                    customIcon.style.objectFit = 'cover';
+                    customIcon.style.padding = '0';
                 }
         }
     } else {
