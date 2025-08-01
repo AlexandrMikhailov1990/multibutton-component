@@ -1302,7 +1302,10 @@ let mainIconSettings = {
     customUrl: null,
     colorType: 'default', // 'default' или 'custom'
     customColor: '#667eea',
-    shapeType: 'default' // 'default' или 'custom'
+    shapeType: 'default', // 'default', 'custom' или 'customSize'
+    customWidth: 120,
+    customHeight: 60,
+    customBorderRadius: 8
 };
 
 let nextId = 1;
@@ -2099,6 +2102,13 @@ function applySettings() {
     const menuOrientationVertical = document.getElementById('menuOrientationVertical');
     displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
     
+    // Сохраняем кастомные размеры кнопки
+    if (mainIconSettings.shapeType === 'customSize') {
+        mainIconSettings.customWidth = parseInt(document.getElementById('customWidth').value) || 120;
+        mainIconSettings.customHeight = parseInt(document.getElementById('customHeight').value) || 60;
+        mainIconSettings.customBorderRadius = parseInt(document.getElementById('customBorderRadius').value) || 8;
+    }
+    
     // Применяем настройки отображения
     updateMenuDisplay();
     
@@ -2161,6 +2171,9 @@ function clearAllSettings() {
         mainIconSettings.colorType = 'default';
         mainIconSettings.customColor = '#667eea';
         mainIconSettings.shapeType = 'default';
+        mainIconSettings.customWidth = 120;
+        mainIconSettings.customHeight = 60;
+        mainIconSettings.customBorderRadius = 8;
         
         document.getElementById('jivoEnabled').checked = false;
         document.getElementById('jivoIconUrl').value = '';
@@ -2278,12 +2291,9 @@ function generateReadyCode() {
     
     // Применяем кастомные размеры если они настроены
     if (mainIconSettings.shapeType === 'customSize') {
-        const customWidth = document.getElementById('customWidth').value;
-        const customHeight = document.getElementById('customHeight').value;
-        const customBorderRadius = document.getElementById('customBorderRadius').value;
-        code += `    width: ${customWidth}px;\n`;
-        code += `    height: ${customHeight}px;\n`;
-        code += `    border-radius: ${customBorderRadius}px;\n`;
+        code += `    width: ${mainIconSettings.customWidth}px;\n`;
+        code += `    height: ${mainIconSettings.customHeight}px;\n`;
+        code += `    border-radius: ${mainIconSettings.customBorderRadius}px;\n`;
     } else if (mainIconSettings.shapeType === 'custom') {
         // Применяем автоматические размеры на основе иконки
         code += '    width: 70px;\n';
