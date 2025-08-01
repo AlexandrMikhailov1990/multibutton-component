@@ -2280,8 +2280,12 @@ function generateReadyCode() {
     code += '.popup-menu {\n';
     code += '    position: absolute;\n';
     if (displaySettings.menuOrientation === 'horizontal') {
+        code += '    bottom: 10px;\n';
+        code += '    right: 70px;\n';
         code += '    flex-direction: row;\n';
     } else {
+        code += '    bottom: 70px;\n';
+        code += '    right: 0;\n';
         code += '    flex-direction: column;\n';
     }
     if (displaySettings.openMethod === 'always') {
