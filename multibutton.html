@@ -26,6 +26,8 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-width: 50px;
+            min-height: 50px;
         }
 
         .main-button:hover {
@@ -1590,7 +1592,12 @@ function detectIconShape(imageUrl) {
             const ratio = this.width / this.height;
             let shape = 'circle';
             
-            if (Math.abs(ratio - 1) < 0.1) {
+            // Для очень широких изображений (логотипы) используем горизонтальную форму
+            if (ratio > 5) {
+                shape = 'extra-wide';
+            } else if (ratio > 3) {
+                shape = 'horizontal';
+            } else if (Math.abs(ratio - 1) < 0.1) {
                 shape = 'square';
             } else if (ratio > 1.2) {
                 shape = 'horizontal';
@@ -1630,9 +1637,17 @@ async function updateMainButtonShape() {
                     customIcon.style.borderRadius = '8px';
                 }
                 break;
+            case 'extra-wide':
+                mainButton.style.borderRadius = '8px';
+                mainButton.style.width = '160px';
+                mainButton.style.height = '50px';
+                if (customIcon) {
+                    customIcon.style.borderRadius = '8px';
+                }
+                break;
             case 'horizontal':
                 mainButton.style.borderRadius = '8px';
-                mainButton.style.width = '80px';
+                mainButton.style.width = '120px';
                 mainButton.style.height = '50px';
                 if (customIcon) {
                     customIcon.style.borderRadius = '8px';
