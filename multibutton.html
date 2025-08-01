@@ -2318,17 +2318,24 @@ function generateReadyCode() {
     code += '    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);\n';
     code += '}\n\n';
     code += '.main-button img {\n';
+    code += '    width: 30px;\n';
+    code += '    height: 30px;\n';
+    code += '    filter: brightness(0) invert(1);\n';
+    code += '}\n\n';
+    code += '.main-button .custom-icon {\n';
     if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
         // Для кастомных иконок
         code += '    width: 100%;\n';
         code += '    height: 100%;\n';
         code += '    object-fit: cover;\n';
         code += '    filter: none;\n';
+        code += '    position: absolute;\n';
+        code += '    top: 0;\n';
+        code += '    left: 0;\n';
+        code += '    z-index: 1;\n';
+        code += '    padding: 0;\n';
     } else {
-        // Для стандартных иконок
-        code += '    width: 30px;\n';
-        code += '    height: 30px;\n';
-        code += '    filter: brightness(0) invert(1);\n';
+        code += '    display: none;\n';
     }
     code += '}\n\n';
     code += '.popup-menu {\n';
@@ -2386,9 +2393,11 @@ function generateReadyCode() {
     if (displaySettings.openMethod === 'click') {
         code += '    <button class="main-button">\n';
         if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
-            code += `        <img src="${mainIconSettings.customUrl}" alt="Меню" />\n`;
+            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" style="display: none;">\n';
+            code += `        <img src="${mainIconSettings.customUrl}" alt="Кастомная иконка" class="custom-icon">\n`;
         } else {
-            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" />\n';
+            code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon">\n';
+            code += '        <img src="" alt="Кастомная иконка" class="custom-icon" style="display: none;">\n';
         }
         code += '    </button>\n';
     }
