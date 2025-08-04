@@ -1661,6 +1661,9 @@ function handleMainColorChange() {
             updateColorInfo(mainIconSettings.customColor);
         }
     }
+    
+    // Обновляем иконку в режиме чата
+    updateMainButtonIcon();
 }
 
 // Функция обработки выбора цвета через color picker
@@ -1675,6 +1678,7 @@ function handleMainColorPicker() {
     updateMainButtonColor();
     updateMainColorPreview();
     updateColorInfo(color);
+    updateMainButtonIcon(); // Обновляем иконку в режиме чата
     showNotification('✅ Цвет кнопки изменен!', 'success');
 }
 
@@ -1691,6 +1695,7 @@ function handleMainColorCode() {
         updateMainButtonColor();
         updateMainColorPreview();
         updateColorInfo(color);
+        updateMainButtonIcon(); // Обновляем иконку в режиме чата
         showNotification('✅ Цветовой код применен!', 'success');
     } else if (color) {
         showNotification('❌ Неверный формат цвета! Используйте #RRGGBB', 'error');
@@ -1712,6 +1717,9 @@ function handleMainShapeChange() {
         customSizeSection.style.display = 'block';
         updateMainButtonShape();
     }
+    
+    // Обновляем иконку в режиме чата
+    updateMainButtonIcon();
 }
 
 // Функция определения формы иконки
@@ -1776,6 +1784,9 @@ async function updateMainButtonShape() {
     
     // Обновляем позицию выпадающего меню
     updateMenuPosition();
+    
+    // Обновляем иконку в режиме чата
+    updateMainButtonIcon();
 }
 
 // Функция обновления позиции выпадающего меню
