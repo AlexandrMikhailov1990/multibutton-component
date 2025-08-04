@@ -2248,15 +2248,54 @@ function applySettings() {
     // Генерируем готовый код для вставки
     generateReadyCode();
     
-    // Закрываем панель настроек
-    const settingsPanel = document.getElementById('settingsPanel');
-    settingsPanel.style.display = 'none';
+    // НЕ закрываем панель настроек - оставляем её открытой
+    // const settingsPanel = document.getElementById('settingsPanel');
+    // settingsPanel.style.display = 'none';
     
     // Скрываем подсказку
     document.getElementById('settingsHint').style.display = 'none';
     
     // Показываем уведомление об успешном применении
     showNotification('✅ Настройки применены! Готовый код сгенерирован.', 'success');
+    
+    // Скроллим к блоку с кодом и выделяем его
+    setTimeout(() => {
+        const codeOutput = document.getElementById('codeOutput');
+        if (codeOutput) {
+            codeOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Добавляем визуальное выделение блока
+            codeOutput.style.border = '3px solid #28a745';
+            codeOutput.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.3)';
+            codeOutput.style.transform = 'scale(1.02)';
+            codeOutput.style.transition = 'all 0.3s ease';
+            
+            // Убираем выделение через 3 секунды
+            setTimeout(() => {
+                codeOutput.style.border = '1px solid #dee2e6';
+                codeOutput.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+                codeOutput.style.transform = 'scale(1)';
+            }, 3000);
+        }
+        
+        // Выделяем кнопку "Копировать готовый код"
+        const copyButton = document.querySelector('.copy-button');
+        if (copyButton) {
+            copyButton.style.background = '#ffc107';
+            copyButton.style.color = '#212529';
+            copyButton.style.transform = 'scale(1.1)';
+            copyButton.style.boxShadow = '0 4px 15px rgba(255, 193, 7, 0.4)';
+            copyButton.style.transition = 'all 0.3s ease';
+            
+            // Возвращаем кнопку к исходному состоянию через 3 секунды
+            setTimeout(() => {
+                copyButton.style.background = '#28a745';
+                copyButton.style.color = 'white';
+                copyButton.style.transform = 'scale(1)';
+                copyButton.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            }, 3000);
+        }
+    }, 500);
 }
 
 // Функция открытия Jivo чата
