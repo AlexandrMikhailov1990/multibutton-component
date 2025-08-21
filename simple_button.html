@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103841163', 'ym');
+
+        ym(103841163, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/103841163" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простая мульти-кнопка</title>
+    <style>
+        .multibutton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .main-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .main-button:hover {
+            transform: scale(1.1);
+        }
+
+        .main-button img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        .popup-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-button:hover {
+            transform: scale(1.15);
+        }
+
+        .social-button img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            display: none;
+        }
+
+        .settings-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .demo-content {
+            height: 2000px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+    </style>
+</head>
+<body>
+
+<button class="settings-toggle" onclick="toggleSettings()">⚙️ Настройки</button>
+
+<div class="settings-panel" id="settingsPanel">
+    <h3>Настройка соцсетей</h3>
+    
+    <div style="margin-bottom: 15px;">
+        <label>Telegram:</label>
+        <input type="text" id="telegramLink" placeholder="https://t.me/username" value="https://t.me/username" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <label>WhatsApp:</label>
+        <input type="text" id="whatsappLink" placeholder="https://wa.me/1234567890" value="https://wa.me/1234567890" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <label>VK:</label>
+        <input type="text" id="vkLink" placeholder="https://vk.com/username" value="https://vk.com/username" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+    </div>
+    
+    <button onclick="applySettings()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Применить</button>
+</div>
+
+<div class="multibutton">
+    <button class="main-button" onclick="toggleMenu()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню">
+    </button>
+    <div class="popup-menu" id="popupMenu">
+        <a href="https://t.me/username" class="social-button" target="_blank" title="Telegram">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+        </a>
+        <a href="https://wa.me/1234567890" class="social-button" target="_blank" title="WhatsApp">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+        </a>
+        <a href="https://vk.com/username" class="social-button" target="_blank" title="VK">
+            <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">
+        </a>
+    </div>
+</div>
+
+<div class="demo-content">
+    <h1>Простая мульти-кнопка</h1>
+    <p>Нажмите кнопку "⚙️ Настройки" в левом верхнем углу.</p>
+    <p>Затем нажмите на фиолетовую кнопку в правом нижнем углу.</p>
+    <div style="height: 1500px; padding: 20px;">
+        <h2>Дополнительный контент</h2>
+        <p>Этот блок создан для демонстрации работы мульти-кнопки.</p>
+    </div>
+</div>
+
+<script>
+function toggleSettings() {
+    console.log('toggleSettings вызвана');
+    const panel = document.getElementById('settingsPanel');
+    if (panel.style.display === 'none' || panel.style.display === '') {
+        panel.style.display = 'block';
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+function toggleMenu() {
+    console.log('toggleMenu вызвана');
+    const menu = document.getElementById('popupMenu');
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'flex';
+    } else {
+        menu.style.display = 'none';
+    }
+}
+
+function applySettings() {
+    console.log('applySettings вызвана');
+    
+    const telegramLink = document.getElementById('telegramLink').value;
+    const whatsappLink = document.getElementById('whatsappLink').value;
+    const vkLink = document.getElementById('vkLink').value;
+    
+    const menu = document.getElementById('popupMenu');
+    menu.innerHTML = '';
+    
+    if (telegramLink && telegramLink.trim() !== '') {
+        const button = document.createElement('a');
+        button.href = telegramLink;
+        button.className = 'social-button';
+        button.target = '_blank';
+        button.title = 'Telegram';
+        button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">';
+        menu.appendChild(button);
+    }
+    
+    if (whatsappLink && whatsappLink.trim() !== '') {
+        const button = document.createElement('a');
+        button.href = whatsappLink;
+        button.className = 'social-button';
+        button.target = '_blank';
+        button.title = 'WhatsApp';
+        button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">';
+        menu.appendChild(button);
+    }
+    
+    if (vkLink && vkLink.trim() !== '') {
+        const button = document.createElement('a');
+        button.href = vkLink;
+        button.className = 'social-button';
+        button.target = '_blank';
+        button.title = 'VK';
+        button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">';
+        menu.appendChild(button);
+    }
+    
+    alert('Настройки применены!');
+}
+
+document.addEventListener('click', function(event) {
+    const multibutton = document.querySelector('.multibutton');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const settingsToggle = document.querySelector('.settings-toggle');
+    
+    if (!multibutton.contains(event.target) && !settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
+        document.getElementById('popupMenu').style.display = 'none';
+        settingsPanel.style.display = 'none';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен - простая версия');
+});
+</script>
+
+</body>
+</html> 
