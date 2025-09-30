@@ -1,0 +1,3709 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Мульти-кнопка с соцсетями и Jivo v2.0</title>
+    
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103841163', 'ym');
+
+        ym(103841163, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/103841163" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .multibutton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+        }
+
+        .main-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 50px;
+            min-height: 50px;
+        }
+
+        .main-button:hover {
+            transform: scale(1.1);
+        }
+
+        .main-button img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .main-button .custom-icon {
+            display: none;
+        }
+
+        .popup-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-button:hover {
+            transform: scale(1.15);
+        }
+
+        .social-button img {
+            width: 25px;
+            height: 25px;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            max-height: 85vh;
+            display: none;
+            z-index: 10010;
+            cursor: move;
+            user-select: none;
+        }
+
+        .settings-panel-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px 20px 10px 20px;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 10011;
+            cursor: move;
+        }
+
+        .settings-panel-content {
+            max-height: calc(85vh - 80px);
+            overflow-y: auto;
+            padding: 10px 20px 20px 20px;
+        }
+
+        .settings-panel h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .settings-section h4 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .mode-selector {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .mode-selector h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .mode-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .mode-selector input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .jivo-widgets-settings {
+            display: none;
+        }
+
+        .social-input {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .social-input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .social-input-title {
+            font-weight: bold;
+            color: #555;
+            margin: 0;
+        }
+
+        .social-input-actions {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .move-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .move-button:hover:not(:disabled) {
+            background: #5a6268;
+            transform: scale(1.05);
+        }
+
+        .move-button:disabled {
+            background: #e9ecef;
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .remove-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .remove-button:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        .social-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .social-input input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        .jivo-input {
+            margin-bottom: 15px;
+        }
+
+        .jivo-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .jivo-input textarea {
+            width: 100%;
+            height: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+        }
+
+        .jivo-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .jivo-toggle input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .jivo-toggle label {
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .settings-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10030;
+            font-size: 1.2rem;
+            padding: 12px 24px;
+            width: 220px;
+            height: 50px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(102,126,234,0.18);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .settings-toggle:hover {
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 10px 32px rgba(102,126,234,0.28);
+            transform: scale(1.04);
+        }
+
+        .donate-button {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10030;
+            font-size: 1.2rem;
+            padding: 12px 24px;
+            width: 250px;
+            height: 50px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(102,126,234,0.18);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .donate-button:hover {
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 10px 32px rgba(102,126,234,0.28);
+            transform: translateX(-50%) scale(1.04);
+        }
+
+        .demo-content {
+            min-height: 100vh;
+            background: transparent;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .demo-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .demo-header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 10px;
+        }
+
+        .demo-instructions {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-instructions h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .demo-instructions ol {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .demo-instructions li {
+            margin-bottom: 15px;
+        }
+
+        .demo-instructions strong {
+            color: #333;
+        }
+
+        .demo-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-feature {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .demo-feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .demo-feature h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .demo-feature p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Стили для блока с иконками */
+        .icons-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .icons-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+
+        .icons-section > p {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .icon-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .icon-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+        }
+
+        .icon-item img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            border-radius: 8px;
+        }
+
+        .icon-info {
+            flex: 1;
+        }
+
+        .icon-info strong {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .icon-info code {
+            display: block;
+            background: #e9ecef;
+            padding: 8px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            color: #333;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .icons-note {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .icons-note p {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .icons-note ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .icons-note li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .icons-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .icon-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .icon-item img {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+
+        .code-output {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-width: 100%;
+            overflow: hidden;
+            height: auto;
+            max-height: none;
+        }
+
+        .code-output h4 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        #settingsInfo {
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0 0 15px 0;
+            margin: 0;
+            height: auto;
+            max-height: none;
+        }
+
+        #readyCodeTextarea {
+            width: 100%;
+            min-height: 200px;
+            max-height: none;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+            background: #fff;
+            color: #333;
+            margin: 0 0 10px 0;
+            white-space: pre;
+            overflow-x: auto;
+            word-wrap: normal;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .copy-button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+        }
+
+        .add-button {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 24px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .add-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40,167,69,0.3);
+        }
+        
+        .add-button.custom-button {
+            background: #ff6b35;
+        }
+        
+        .add-button.custom-button:hover {
+            background: #e55a2b;
+            box-shadow: 0 4px 8px rgba(255,107,53,0.3);
+        }
+
+        .button-actions {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .settings-hint {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .settings-hint p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .social-input.newly-added {
+            border: 2px solid #28a745;
+            background: #f8fff9;
+            animation: highlightNew 2s ease-in-out;
+        }
+
+        @keyframes highlightNew {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .button-actions button {
+            flex: 1;
+            min-height: 48px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .apply-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .apply-button:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102,126,234,0.3);
+        }
+
+        .clear-button {
+            background: #6c757d;
+            color: white;
+        }
+
+        .clear-button:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+        }
+
+        .preview-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .preview-section h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .preview-code {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 11px;
+            white-space: pre-wrap;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        /* Стили для скрытия стандартной кнопки Jivo */
+        .hidden {
+            display: none;
+        }
+
+        /* Стили для модального окна выбора соцсетей */
+        .social-selector-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10020;
+        }
+
+        .social-selector-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-selector-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .social-selector-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .social-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .social-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+        }
+
+        .social-option img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
+        }
+
+        .social-option span {
+            font-size: 12px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .social-selector-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-selector-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .social-selector-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .social-selector-cancel:hover {
+            background: #5a6268;
+        }
+
+        /* Стили для уведомлений */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10002;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        .notification.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+// Функция переключения панели настроек (определена заранее)
+function toggleSettings() {
+    console.log('toggleSettings вызвана');
+    const panel = document.getElementById('settingsPanel');
+    if (!panel) {
+        console.error('Панель настроек не найдена!');
+        return;
+    }
+    
+    console.log('Панель найдена:', panel);
+    console.log('Текущий display:', panel.style.display);
+    
+    if (panel.style.display === 'none' || panel.style.display === '') {
+        console.log('Открываем панель');
+        panel.style.display = 'block';
+        // Вызываем renderSocialInputs если функция уже определена
+        if (typeof renderSocialInputs === 'function') {
+            renderSocialInputs();
+        }
+        // Инициализируем перемещение панели если функция уже определена
+        if (typeof initPanelDragging === 'function') {
+            setTimeout(initPanelDragging, 100);
+        }
+    } else {
+        console.log('Закрываем панель');
+        panel.style.display = 'none';
+        // Скрываем подсказку при закрытии панели
+        const hint = document.getElementById('settingsHint');
+        if (hint) {
+            hint.style.display = 'none';
+        }
+    }
+}
+
+// Функция переключения режимов работы (определена заранее)
+function toggleMode() {
+    console.log('toggleMode вызвана');
+    const modeInput = document.querySelector('input[name="mode"]:checked');
+    if (!modeInput) {
+        console.log('Переключатель режимов не найден');
+        return;
+    }
+    
+    const mode = modeInput.value;
+    window.currentMode = mode; // Сохраняем в глобальной области видимости
+    console.log('Режим изменен на:', mode);
+    
+    // Находим секции по их содержимому
+    const socialSection = Array.from(document.querySelectorAll('.settings-section')).find(section => 
+        section.querySelector('h4') && section.querySelector('h4').textContent.includes('Социальные кнопки')
+    );
+    const jivoChatSection = Array.from(document.querySelectorAll('.settings-section')).find(section => 
+        section.querySelector('h4') && section.querySelector('h4').textContent.includes('Jivo чат')
+    );
+    const jivoWidgetsSection = document.querySelector('.jivo-widgets-settings');
+    
+    console.log('Найденные секции:', { 
+        socialSection: !!socialSection, 
+        jivoChatSection: !!jivoChatSection, 
+        jivoWidgetsSection: !!jivoWidgetsSection 
+    });
+    
+    if (mode === 'social') {
+        console.log('Показываем режим социальных сетей');
+        if (socialSection) {
+            socialSection.style.display = 'block';
+            console.log('Социальная секция показана');
+        }
+        if (jivoChatSection) {
+            jivoChatSection.style.display = 'block';
+            console.log('Jivo чат секция показана');
+        }
+        if (jivoWidgetsSection) {
+            jivoWidgetsSection.style.display = 'none';
+            console.log('Jivo виджеты секция скрыта');
+        }
+    } else if (mode === 'jivo') {
+        console.log('Показываем режим Jivo виджетов');
+        if (socialSection) {
+            socialSection.style.display = 'none';
+            console.log('Социальная секция скрыта');
+        }
+        if (jivoChatSection) {
+            jivoChatSection.style.display = 'none';
+            console.log('Jivo чат секция скрыта');
+        }
+        if (jivoWidgetsSection) {
+            jivoWidgetsSection.style.display = 'block';
+            console.log('Jivo виджеты секция показана');
+        } else {
+            console.error('Секция Jivo виджетов не найдена!');
+        }
+    }
+}
+
+// Функция добавления Jivo виджета (определена заранее)
+function addJivoWidget() {
+    const container = document.getElementById('jivoWidgetsContainer');
+    if (!container) return; // Если контейнер еще не создан
+    
+    const widgetId = 'jivo_widget_' + Date.now();
+    
+    const widgetConfig = document.createElement('div');
+    widgetConfig.className = 'social-input';
+    widgetConfig.innerHTML = 
+        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
+            '<h5 style="margin: 0;">Jivo виджет ' + (window.jivoWidgets ? window.jivoWidgets.length + 1 : 1) + '</h5>' +
+            '<button onclick="removeJivoWidget(\'' + widgetId + '\')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">×</button>' +
+        '</div>' +
+        '<div style="margin-bottom: 10px;">' +
+            '<label>Название кнопки:</label>' +
+            '<input type="text" id="jivo_widget_name_' + widgetId + '" placeholder="Например: Продажи" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">' +
+        '</div>' +
+        '<div style="margin-bottom: 10px;">' +
+            '<label>Цвет фона кнопки:</label>' +
+            '<input type="color" id="jivo_widget_color_' + widgetId + '" value="#ffffff" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; height: 40px;">' +
+        '</div>' +
+        '<div>' +
+            '<label>Код виджета Jivo:</label>' +
+            '<textarea id="jivo_widget_code_' + widgetId + '" placeholder="&lt;script src=&quot;//code.jivo.ru/widget/Yd1IbyauyY&quot; async&gt;&lt;/script&gt;" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; height: 60px; font-family: monospace; font-size: 12px;"></textarea>' +
+        '</div>';
+    
+    container.appendChild(widgetConfig);
+    
+    // Добавляем в глобальный массив если он существует
+    if (window.jivoWidgets) {
+        window.jivoWidgets.push(widgetId);
+    }
+}
+
+// Функция удаления Jivo виджета (определена заранее)
+function removeJivoWidget(widgetId) {
+    const widgetElement = document.getElementById('jivo_widget_name_' + widgetId)?.closest('.social-input');
+    if (widgetElement) {
+        widgetElement.remove();
+    }
+    
+    // Удаляем из глобального массива если он существует
+    if (window.jivoWidgets) {
+        const index = window.jivoWidgets.indexOf(widgetId);
+        if (index > -1) {
+            window.jivoWidgets.splice(index, 1);
+        }
+    }
+}
+
+// Функция закрытия панели настроек (определена заранее)
+function closeSettingsPanel() {
+    const panel = document.getElementById('settingsPanel');
+    if (panel) {
+        panel.style.display = 'none';
+    }
+}
+
+// Функция добавления социальной кнопки (определена заранее)
+function addSocialInput() {
+    // Убеждаемся, что панель настроек открыта
+    const panel = document.getElementById('settingsPanel');
+    if (panel) {
+        panel.style.display = 'block';
+    }
+    
+    // Вызываем showSocialSelector если функция уже определена
+    if (typeof showSocialSelector === 'function') {
+        showSocialSelector();
+    }
+}
+
+// Функция создания собственной кнопки (определена заранее)
+function addCustomSocialInput() {
+    // Убеждаемся, что панель настроек открыта
+    const panel = document.getElementById('settingsPanel');
+    if (panel) {
+        panel.style.display = 'block';
+    }
+    
+    // Вызываем функцию если она уже определена
+    if (typeof addCustomSocialInputMain === 'function') {
+        addCustomSocialInputMain();
+    }
+}
+
+// Функция удаления иконки Jivo (определена заранее)
+function removeJivoIcon() {
+    const iconInput = document.getElementById('jivoIcon');
+    if (iconInput) {
+        iconInput.value = '';
+    }
+}
+
+// Функция удаления главной иконки (определена заранее)
+function removeMainIcon() {
+    const iconInput = document.getElementById('mainIcon');
+    if (iconInput) {
+        iconInput.value = '';
+    }
+}
+
+// Функция удаления главного цвета (определена заранее)
+function removeMainColor() {
+    const colorInput = document.getElementById('mainColor');
+    if (colorInput) {
+        colorInput.value = '';
+    }
+}
+
+// Функция применения настроек (определена заранее)
+function applySettings() {
+    console.log('applySettings вызвана');
+    
+    // Обновляем настройки из полей ввода
+    if (typeof window.socialSettings !== 'undefined') {
+        window.socialSettings.forEach(setting => {
+            const nameInput = document.getElementById(setting.id + '_name');
+            const linkInput = document.getElementById(setting.id + '_link');
+            const iconInput = document.getElementById(setting.id + '_icon');
+            
+            if (nameInput) setting.name = nameInput.value;
+            if (linkInput) setting.link = linkInput.value;
+            if (iconInput) setting.icon = iconInput.value;
+        });
+    }
+    
+    // Обновляем настройки Jivo
+    const jivoEnabled = document.getElementById('jivoEnabled');
+    const jivoCode = document.getElementById('jivoCode');
+    const jivoChatMode = document.getElementById('jivoChatMode');
+    
+    if (jivoEnabled) {
+        if (typeof window.jivoSettings !== 'undefined') {
+            window.jivoSettings.enabled = jivoEnabled.checked;
+        }
+    }
+    if (jivoCode && typeof window.jivoSettings !== 'undefined') {
+        window.jivoSettings.code = jivoCode.value;
+    }
+    if (jivoChatMode && typeof window.jivoSettings !== 'undefined') {
+        window.jivoSettings.chatMode = jivoChatMode.checked;
+    }
+    
+    // Обновляем настройки отображения
+    const openMethodClick = document.getElementById('openMethodClick');
+    const menuOrientationVertical = document.getElementById('menuOrientationVertical');
+    
+    if (openMethodClick && typeof window.displaySettings !== 'undefined') {
+        window.displaySettings.openMethod = openMethodClick.checked ? 'click' : 'always';
+    }
+    if (menuOrientationVertical && typeof window.displaySettings !== 'undefined') {
+        window.displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
+    }
+    
+    // Сохраняем кастомные размеры кнопки
+    const customWidth = document.getElementById('customWidth');
+    const customHeight = document.getElementById('customHeight');
+    const customBorderRadius = document.getElementById('customBorderRadius');
+    
+    if (customWidth && customHeight && customBorderRadius && typeof window.mainIconSettings !== 'undefined') {
+        if (window.mainIconSettings.shapeType === 'customSize') {
+            window.mainIconSettings.customWidth = parseInt(customWidth.value) || 120;
+            window.mainIconSettings.customHeight = parseInt(customHeight.value) || 60;
+            window.mainIconSettings.customBorderRadius = parseInt(customBorderRadius.value) || 8;
+        }
+    }
+    
+    // Применяем настройки отображения
+    if (typeof updateMenuDisplay === 'function') {
+        updateMenuDisplay();
+    }
+    
+    // Пересоздаем меню (включая кнопку Jivo)
+    if (typeof createSocialMenu === 'function') {
+        createSocialMenu();
+    }
+    
+    // Применяем Jivo чат
+    if (typeof applyJivoChat === 'function') {
+        applyJivoChat();
+    }
+    
+    // Обновляем иконку главной кнопки
+    if (typeof updateMainButtonIcon === 'function') {
+        updateMainButtonIcon();
+    }
+    
+    // Генерируем готовый код для вставки
+    if (typeof generateReadyCode === 'function') {
+        generateReadyCode();
+    }
+    
+    // Скрываем подсказку
+    const settingsHint = document.getElementById('settingsHint');
+    if (settingsHint) {
+        settingsHint.style.display = 'none';
+    }
+    
+    // Показываем уведомление об успешном применении
+    showNotification('✅ Настройки применены! Готовый код сгенерирован.', 'success');
+    
+    // Скроллим к блоку с кодом и выделяем его
+    setTimeout(() => {
+        const codeOutput = document.getElementById('codeOutput');
+        if (codeOutput) {
+            codeOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Добавляем визуальное выделение блока
+            codeOutput.style.border = '3px solid #28a745';
+            codeOutput.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.3)';
+            codeOutput.style.transform = 'scale(1.02)';
+            codeOutput.style.transition = 'all 0.3s ease';
+            
+            // Убираем выделение через 3 секунды
+            setTimeout(() => {
+                codeOutput.style.border = '1px solid #dee2e6';
+                codeOutput.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+                codeOutput.style.transform = 'scale(1)';
+            }, 3000);
+        }
+        
+        // Выделяем кнопку "Копировать готовый код"
+        const copyButton = document.querySelector('.copy-button');
+        if (copyButton) {
+            copyButton.style.background = '#ffc107';
+            copyButton.style.color = '#212529';
+            copyButton.style.transform = 'scale(1.1)';
+            copyButton.style.boxShadow = '0 4px 15px rgba(255, 193, 7, 0.4)';
+            copyButton.style.transition = 'all 0.3s ease';
+            
+            // Возвращаем кнопку к исходному состоянию через 3 секунды
+            setTimeout(() => {
+                copyButton.style.background = '#28a745';
+                copyButton.style.color = 'white';
+                copyButton.style.transform = 'scale(1)';
+                copyButton.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            }, 3000);
+        }
+    }, 500);
+}
+
+// Функция очистки всех настроек (определена заранее)
+function clearAllSettings() {
+    if (typeof clearAllSettingsMain === 'function') {
+        clearAllSettingsMain();
+    }
+}
+
+// Функция копирования настроек (определена заранее)
+function copySettings() {
+    if (typeof copySettingsMain === 'function') {
+        copySettingsMain();
+    }
+}
+
+// Функция обработки клика по главной кнопке (определена заранее)
+function handleMainButtonClick() {
+    if (typeof handleMainButtonClickMain === 'function') {
+        handleMainButtonClickMain();
+    }
+}
+
+// Функция скрытия селектора социальных сетей (определена заранее)
+function hideSocialSelector() {
+    if (typeof hideSocialSelectorMain === 'function') {
+        hideSocialSelectorMain();
+    }
+}
+
+// Функция перемещения кнопки вверх (определена заранее)
+function moveSocialUp(index) {
+    if (typeof moveSocialUpMain === 'function') {
+        moveSocialUpMain(index);
+    }
+}
+
+// Функция перемещения кнопки вниз (определена заранее)
+function moveSocialDown(index) {
+    if (typeof moveSocialDownMain === 'function') {
+        moveSocialDownMain(index);
+    }
+}
+
+// Функция удаления кнопки (определена заранее)
+function removeSocialInput(id) {
+    if (typeof removeSocialInputMain === 'function') {
+        removeSocialInputMain(id);
+    }
+}
+
+// Функция обработки изменения типа главной иконки (определена заранее)
+function handleMainIconChange() {
+    if (typeof handleMainIconChangeMain === 'function') {
+        handleMainIconChangeMain();
+    }
+}
+
+// Популярные соцсети и мессенджеры (перемещено сюда для доступности)
+const popularSocials = [
+    { name: 'Telegram', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111646.png', link: 'https://t.me/' },
+    { name: 'WhatsApp', icon: 'https://cdn-icons-png.flaticon.com/512/733/733585.png', link: 'https://wa.me/' },
+    { name: 'VK', icon: 'https://cdn-icons-png.flaticon.com/512/145/145813.png', link: 'https://vk.com/' },
+    { name: 'Instagram', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', link: 'https://instagram.com/' },
+    { name: 'Facebook', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111392.png', link: 'https://facebook.com/' },
+    { name: 'Twitter', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111738.png', link: 'https://twitter.com/' },
+    { name: 'YouTube', icon: 'https://cdn-icons-png.flaticon.com/512/3670/3670147.png', link: 'https://youtube.com/' },
+    { name: 'Одноклассники', icon: 'https://cdn-icons-png.flaticon.com/512/889/889125.png', link: 'https://ok.ru/' },
+    { name: 'Имейл', icon: 'https://cdn-icons-png.flaticon.com/512/561/561127.png', link: 'mailto:' }
+];
+
+// Функция показа селектора соцсетей (перемещено сюда для доступности)
+function showSocialSelector() {
+    const modal = document.getElementById('socialSelectorModal');
+    const grid = document.getElementById('socialSelectorGrid');
+    
+    // Очищаем и заполняем сетку
+    grid.innerHTML = '';
+    
+    popularSocials.forEach(social => {
+        const option = document.createElement('div');
+        option.className = 'social-option';
+        option.onclick = () => selectSocial(social);
+        
+        option.innerHTML = `
+            <img src="${social.icon}" alt="${social.name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1827/1827933.png'">
+            <span>${social.name}</span>
+        `;
+        
+        grid.appendChild(option);
+    });
+    
+    modal.style.display = 'flex';
+}
+
+// Функция скрытия селектора (перемещено сюда для доступности)
+function hideSocialSelector() {
+    document.getElementById('socialSelectorModal').style.display = 'none';
+    
+    // Убеждаемся, что панель настроек остается открытой
+    setTimeout(() => {
+        const settingsPanel = document.getElementById('settingsPanel');
+        if (settingsPanel && settingsPanel.style.display === 'none') {
+            settingsPanel.style.display = 'block';
+        }
+    }, 50);
+}
+
+// Функция выбора соцсети (перемещено сюда для доступности)
+function selectSocial(social) {
+    const newId = 'custom_' + (Date.now() + Math.random()).toString(36).substr(2, 9);
+    const newSetting = {
+        id: newId,
+        name: social.name,
+        link: social.link,
+        icon: social.icon
+    };
+    
+    // Добавляем в массив социальных настроек
+    if (typeof window.socialSettings !== 'undefined') {
+        window.socialSettings.push(newSetting);
+    }
+    
+    // Сначала скрываем селектор
+    hideSocialSelector();
+    
+    // Затем обновляем отображение и убеждаемся, что панель открыта
+    if (typeof renderSocialInputs === 'function') {
+        renderSocialInputs();
+    }
+    
+    // Принудительно открываем панель настроек
+    const settingsPanel = document.getElementById('settingsPanel');
+    if (settingsPanel) {
+        settingsPanel.style.display = 'block';
+    }
+    
+    // Показываем уведомление и подсказку
+    if (typeof showNotification === 'function') {
+        showNotification(`✅ ${social.name} добавлен! Не забудьте настроить ссылку и нажать "Применить"`, 'info');
+    }
+    if (typeof showSettingsHint === 'function') {
+        showSettingsHint();
+    }
+    
+    // Прокручиваем к новой кнопке для удобства
+    setTimeout(() => {
+        const newInput = document.getElementById(newId + '_link');
+        if (newInput) {
+            newInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            newInput.focus();
+        }
+    }, 200);
+}
+
+// Функция показа уведомлений (перемещено сюда для доступности)
+function showNotification(message, type = 'success', duration = 3000) {
+    const container = document.getElementById('notificationContainer');
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    container.appendChild(notification);
+    
+    // Показываем уведомление
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    // Скрываем уведомление
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (container.contains(notification)) {
+                container.removeChild(notification);
+            }
+        }, 300);
+    }, duration);
+}
+
+// Функция показа подсказки о применении настроек (перемещено сюда для доступности)
+function showSettingsHint() {
+    const hint = document.getElementById('settingsHint');
+    if (hint) {
+        hint.style.display = 'block';
+    }
+}
+
+// Функция генерации готового кода (перемещено сюда для доступности)
+function generateReadyCode() {
+    let code = '';
+    
+    // Получаем текущий режим работы
+    const currentModeValue = document.querySelector('input[name="mode"]:checked')?.value || 'social';
+    
+    // Начинаем с комментария
+    code += '<!-- Мульти-кнопка с соцсетями -->\n';
+    
+    // Добавляем CSS стили
+    code += '<style>\n';
+    code += '.multibutton {\n';
+    code += '    position: fixed;\n';
+    code += '    bottom: 20px;\n';
+    code += '    right: 20px;\n';
+    code += '    z-index: 10000;\n';
+    code += '}\n\n';
+    code += '.main-button {\n';
+    
+    // Применяем кастомные размеры если они настроены
+    if (typeof window.mainIconSettings !== 'undefined' && window.mainIconSettings.shapeType === 'customSize') {
+        code += '    width: ' + window.mainIconSettings.customWidth + 'px;\n';
+        code += '    height: ' + window.mainIconSettings.customHeight + 'px;\n';
+        code += '    border-radius: ' + window.mainIconSettings.customBorderRadius + 'px;\n';
+    } else {
+        code += '    width: 60px;\n';
+        code += '    height: 60px;\n';
+        code += '    border-radius: 50%;\n';
+    }
+    
+    if (typeof window.mainIconSettings !== 'undefined' && window.mainIconSettings.colorType === 'custom') {
+        code += '    background: ' + window.mainIconSettings.customColor + ';\n';
+    } else {
+        code += '    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n';
+    }
+    code += '    border: none;\n';
+    code += '    cursor: pointer;\n';
+    code += '    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);\n';
+    code += '    transition: all 0.3s ease;\n';
+    code += '    display: flex;\n';
+    code += '    align-items: center;\n';
+    code += '    justify-content: center;\n';
+    code += '    position: relative;\n';
+    code += '    overflow: hidden;\n';
+    code += '}\n\n';
+    code += '.main-button:hover {\n';
+    code += '    transform: scale(1.1);\n';
+    code += '    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);\n';
+    code += '}\n\n';
+    code += '.main-button img {\n';
+    code += '    width: 30px;\n';
+    code += '    height: 30px;\n';
+    code += '    filter: brightness(0) invert(1);\n';
+    code += '}\n\n';
+    code += '.main-button .custom-icon {\n';
+    if (typeof window.mainIconSettings !== 'undefined' && window.mainIconSettings.type === 'custom' && window.mainIconSettings.customUrl) {
+        // Для кастомных иконок
+        code += '    width: 100%;\n';
+        code += '    height: 100%;\n';
+        code += '    object-fit: cover;\n';
+        code += '    filter: none;\n';
+        code += '    position: absolute;\n';
+        code += '    top: 0;\n';
+        code += '    left: 0;\n';
+        code += '    z-index: 1;\n';
+        code += '    padding: 0;\n';
+    } else {
+        code += '    display: none;\n';
+    }
+    code += '}\n\n';
+    code += '.popup-menu {\n';
+    code += '    position: absolute;\n';
+    if (typeof window.displaySettings !== 'undefined' && window.displaySettings.menuOrientation === 'horizontal') {
+        code += '    flex-direction: row;\n';
+    } else {
+        code += '    flex-direction: column;\n';
+    }
+    if (typeof window.displaySettings !== 'undefined' && window.displaySettings.openMethod === 'always') {
+        code += '    display: flex;\n';
+    } else {
+        code += '    display: none;\n';
+    }
+    code += '    align-items: center;\n';
+    code += '    gap: 10px;\n';
+    code += '}\n\n';
+    code += '.social-button {\n';
+    code += '    width: 50px;\n';
+    code += '    height: 50px;\n';
+    code += '    border-radius: 50%;\n';
+    code += '    border: none;\n';
+    code += '    background: white;\n';
+    code += '    cursor: pointer;\n';
+    code += '    display: flex;\n';
+    code += '    align-items: center;\n';
+    code += '    justify-content: center;\n';
+    code += '    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);\n';
+    code += '    transition: all 0.3s ease;\n';
+    code += '    text-decoration: none;\n';
+    code += '}\n\n';
+    code += '.social-button:hover {\n';
+    code += '    transform: scale(1.15);\n';
+    code += '}\n\n';
+    code += '.social-button img {\n';
+    code += '    width: 25px;\n';
+    code += '    height: 25px;\n';
+    code += '}\n\n';
+    code += '.jivo-button {\n';
+    code += '    background: white !important;\n';
+    code += '}\n\n';
+    code += '.jivo-button:hover {\n';
+    code += '    background: #f8f9fa !important;\n';
+    code += '}\n\n';
+    code += '.hidden {\n';
+    code += '    display: none !important;\n';
+    code += '}\n';
+    code += '</style>\n\n';
+    
+    // Добавляем HTML структуру
+    code += '<div class="multibutton">\n';
+    if (typeof window.displaySettings !== 'undefined' && window.displaySettings.openMethod === 'click') {
+        code += '    <button class="main-button">\n';
+        // В режиме чата используем настройки главной кнопки
+        if (typeof window.jivoSettings !== 'undefined' && window.jivoSettings.chatMode && window.jivoSettings.enabled) {
+            if (typeof window.mainIconSettings !== 'undefined' && window.mainIconSettings.type === 'custom' && window.mainIconSettings.customUrl) {
+                code += '        <img src="' + window.mainIconSettings.customUrl + '" alt="Кастомная иконка" class="custom-icon" />\n';
+            } else {
+                code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" />\n';
+            }
+        } else {
+            if (typeof window.mainIconSettings !== 'undefined' && window.mainIconSettings.type === 'custom' && window.mainIconSettings.customUrl) {
+                code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" style="display: none;" />\n';
+                code += '        <img src="' + window.mainIconSettings.customUrl + '" alt="Кастомная иконка" class="custom-icon" />\n';
+            } else {
+                code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" />\n';
+                code += '        <img src="" alt="Кастомная иконка" class="custom-icon" style="display: none;" />\n';
+            }
+        }
+        code += '    </button>\n';
+    }
+    
+    // В режиме чата не создаем меню с соцсетями
+    if (!(typeof window.jivoSettings !== 'undefined' && window.jivoSettings.chatMode && window.jivoSettings.enabled)) {
+        code += '    <div class="popup-menu" id="popupMenu">\n';
+        
+        // Проверяем режим работы
+        if (currentModeValue === 'jivo') {
+            // Генерируем кнопки Jivo виджетов
+            if (typeof window.jivoWidgets !== 'undefined') {
+                window.jivoWidgets.forEach(widgetId => {
+                    const name = document.getElementById('jivo_widget_name_' + widgetId)?.value;
+                    const codeValue = document.getElementById('jivo_widget_code_' + widgetId)?.value;
+                    const color = document.getElementById('jivo_widget_color_' + widgetId)?.value || '#ffffff';
+                    
+                    if (name && name.trim() !== '' && codeValue && codeValue.trim() !== '') {
+                        // Экранируем HTML теги и кавычки в коде виджета
+                        const escapedCode = codeValue.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        const escapedName = name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        code += '        <button class="social-button" onclick="loadJivoWidget(\'' + escapedCode + '\', \'' + escapedName + '\')" title="' + escapedName + '" style="background-color: ' + color + '; border: 2px solid #e0e0e0; border-radius: 25px; padding: 8px 16px; min-width: 80px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.3s ease;">\n';
+                        code += '            <span style="font-size: 12px; font-weight: bold; color: #333; text-align: center;">' + escapedName + '</span>\n';
+                        code += '        </button>\n';
+                    }
+                });
+            }
+        } else {
+            // Добавляем социальные кнопки
+            if (typeof window.socialSettings !== 'undefined') {
+                window.socialSettings.forEach(setting => {
+                    if (setting.link && setting.link.trim() !== '') {
+                        code += '        <a href="' + setting.link + '" class="social-button" target="_blank" title="' + setting.name + '">\n';
+                        code += '            <img src="' + setting.icon + '" alt="' + setting.name + '" />\n';
+                        code += '        </a>\n';
+                    }
+                });
+            }
+            
+            // Добавляем кнопку Jivo, если включен и НЕ в режиме чата
+            if (typeof window.jivoSettings !== 'undefined' && window.jivoSettings.enabled && !window.jivoSettings.chatMode) {
+                code += '        <button class="social-button" onclick="openJivoChat()" title="Написать в чат">\n';
+                if (window.jivoSettings.customIcon) {
+                    code += '            <img src="' + window.jivoSettings.customIcon + '" alt="Написать в чат" />\n';
+                } else {
+                    code += '            <img src="https://svgsilh.com/svg/873316-1f7a22.svg" alt="Jivo чат" />\n';
+                }
+                code += '        </button>\n';
+            }
+        }
+        
+        code += '    </div>\n';
+    }
+    code += '</div>\n\n';
+    
+    // Добавляем код Jivo, если включен
+    if (typeof window.jivoSettings !== 'undefined' && window.jivoSettings.enabled && window.jivoSettings.code) {
+        code += '\n<!-- Код Jivo чата -->\n';
+        code += window.jivoSettings.code + '\n';
+    }
+    
+    const jsCode = '\n\n<!-- Для работы кнопки добавьте JavaScript:\n&lt;script&gt;\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction loadJivoWidget(code, name) {\n    // Декодируем HTML entities обратно в обычные символы\n    const decodedCode = code.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");\n    const srcMatch = decodedCode.match(/src="([^"]+)"/);\n    if (srcMatch) {\n        const script = document.createElement("script");\n        script.src = srcMatch[1];\n        script.async = true;\n        \n        // Добавляем обработчик загрузки скрипта\n        script.onload = function() {\n            // Ждем немного, чтобы виджет инициализировался\n            setTimeout(() => {\n                if (window.jivo_api && typeof window.jivo_api.open === "function") {\n                    window.jivo_api.open();\n                } else {\n                    // Если API еще не готов, ждем еще немного\n                    setTimeout(() => {\n                        if (window.jivo_api && typeof window.jivo_api.open === "function") {\n                            window.jivo_api.open();\n                        }\n                    }, 1000);\n                }\n            }, 300);\n        };\n        \n        document.head.appendChild(script);\n    } else {\n        alert("Неверный формат кода виджета");\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api && typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\n// Скрываем стандартную кнопку Jivo\nfunction jivo_onLoadCallback() {\n    const jivo_custom_widget = true;\n}\n\n// Скрываем мульти-кнопку при открытии чата\nfunction jivo_onOpen() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "none";\n    }\n}\n\n// Показываем мульти-кнопку при закрытии чата\nfunction jivo_onClose() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "block";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        // Проверяем режим чата\n        const isChatMode = ' + (typeof window.jivoSettings !== 'undefined' && window.jivoSettings.chatMode && window.jivoSettings.enabled) + ';\n        const currentMode = "' + currentModeValue + '";\n        if (isChatMode) {\n            mainButton.addEventListener("click", openJivoChat);\n        } else {\n            mainButton.addEventListener("click", toggleMenu);\n        }\n    }\n    \n    // Применяем настройки отображения\n    const menu = document.getElementById("popupMenu");\n    if (menu) {\n        if ("' + (typeof window.displaySettings !== 'undefined' ? window.displaySettings.openMethod : 'click') + '" === "always") {\n            menu.style.display = "flex";\n        } else {\n            menu.style.display = "none";\n        }\n        \n        if ("' + (typeof window.displaySettings !== 'undefined' ? window.displaySettings.menuOrientation : 'vertical') + '" === "horizontal") {\n            menu.style.flexDirection = "row";\n        } else {\n            menu.style.flexDirection = "column";\n        }\n        \n        // Устанавливаем позицию меню с учетом размера кнопки\n        const buttonHeight = mainButton.offsetHeight || 60;\n        const gap = 10;\n        if ("' + (typeof window.displaySettings !== 'undefined' ? window.displaySettings.menuOrientation : 'vertical') + '" === "horizontal") {\n            menu.style.bottom = gap + "px";\n            menu.style.right = (buttonHeight + gap) + "px";\n        } else {\n            menu.style.bottom = (buttonHeight + gap) + "px";\n            menu.style.right = "0";\n        }\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton && menu && !multibutton.contains(event.target)) {\n        // Скрываем меню только если не выбрано "всегда видимое меню"\n        if ("' + (typeof window.displaySettings !== 'undefined' ? window.displaySettings.openMethod : 'click') + '" !== "always") {\n            menu.style.display = "none";\n        }\n    }\n});\n&lt;/script&gt; -->';
+    
+    // Показываем готовый код
+    const codeOutput = document.getElementById('codeOutput');
+    const settingsInfo = document.getElementById('settingsInfo');
+    
+    // Создаем textarea для отображения кода
+    if (!document.getElementById('readyCodeTextarea')) {
+        const textarea = document.createElement('textarea');
+        textarea.id = 'readyCodeTextarea';
+        textarea.style.width = '100%';
+        textarea.style.height = '400px';
+        textarea.style.fontFamily = 'monospace';
+        textarea.style.fontSize = '12px';
+        textarea.style.padding = '15px';
+        textarea.style.border = '1px solid #ddd';
+        textarea.style.borderRadius = '5px';
+        textarea.style.resize = 'vertical';
+        textarea.readOnly = true;
+        settingsInfo.appendChild(textarea);
+    }
+    
+    document.getElementById('readyCodeTextarea').value = code + jsCode;
+    codeOutput.style.display = 'block';
+    
+    // Обновляем кнопку копирования
+    const copyButton = document.querySelector('.copy-button');
+    if (copyButton) {
+        copyButton.textContent = '📋 Копировать готовый код';
+        copyButton.onclick = copyReadyCode;
+    }
+}
+
+// Функция копирования готового кода (перемещено сюда для доступности)
+function copyReadyCode() {
+    const textarea = document.getElementById('readyCodeTextarea');
+    textarea.select();
+    document.execCommand('copy');
+    
+    showNotification("📋 Готовый код скопирован! Вставьте его перед тегом </body>", "success");
+    
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = '✅ Скопировано!';
+    button.style.background = '#28a745';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '#28a745';
+    }, 2000);
+}
+
+// Функция обработки изменения цвета главной кнопки (перемещено сюда для доступности)
+function handleMainColorChange() {
+    const defaultColor = document.getElementById('defaultColor');
+    const customSection = document.getElementById('customMainColorSection');
+    
+    if (defaultColor && defaultColor.checked) {
+        if (typeof window.mainIconSettings !== 'undefined') {
+            window.mainIconSettings.colorType = 'default';
+        }
+        if (customSection) {
+            customSection.style.display = 'none';
+        }
+        if (typeof updateMainButtonColor === 'function') {
+            updateMainButtonColor();
+        }
+    } else {
+        if (typeof window.mainIconSettings !== 'undefined') {
+            window.mainIconSettings.colorType = 'custom';
+        }
+        if (customSection) {
+            customSection.style.display = 'block';
+        }
+        if (typeof updateMainButtonColor === 'function') {
+            updateMainButtonColor();
+        }
+        if (typeof updateMainColorPreview === 'function') {
+            updateMainColorPreview();
+        }
+        if (typeof window.mainIconSettings !== 'undefined' && window.mainIconSettings.customColor) {
+            if (typeof updateColorInfo === 'function') {
+                updateColorInfo(window.mainIconSettings.customColor);
+            }
+        }
+    }
+    
+    // Обновляем иконку в режиме чата
+    if (typeof updateMainButtonIcon === 'function') {
+        updateMainButtonIcon();
+    }
+}
+
+// Функция обработки изменения формы главной кнопки (перемещено сюда для доступности)
+function handleMainShapeChange() {
+    const defaultShape = document.getElementById('defaultShape');
+    const customSizeShape = document.getElementById('customSizeShape');
+    const customSizeSection = document.getElementById('customSizeSection');
+    
+    if (defaultShape && defaultShape.checked) {
+        if (typeof window.mainIconSettings !== 'undefined') {
+            window.mainIconSettings.shapeType = 'default';
+        }
+        if (customSizeSection) {
+            customSizeSection.style.display = 'none';
+        }
+        if (typeof updateMainButtonShape === 'function') {
+            updateMainButtonShape();
+        }
+    } else if (customSizeShape && customSizeShape.checked) {
+        if (typeof window.mainIconSettings !== 'undefined') {
+            window.mainIconSettings.shapeType = 'customSize';
+        }
+        if (customSizeSection) {
+            customSizeSection.style.display = 'block';
+        }
+        if (typeof updateMainButtonShape === 'function') {
+            updateMainButtonShape();
+        }
+    }
+    
+    // Обновляем иконку в режиме чата
+    if (typeof updateMainButtonIcon === 'function') {
+        updateMainButtonIcon();
+    }
+}
+
+// Инициализация кнопки настроек после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    const settingsButton = document.querySelector('.settings-toggle');
+    if (settingsButton) {
+        // Удаляем старый onclick и добавляем новый обработчик
+        settingsButton.removeAttribute('onclick');
+        settingsButton.addEventListener('click', function() {
+            console.log('Кнопка настроек нажата через addEventListener');
+            if (typeof toggleSettings === 'function') {
+                toggleSettings();
+            } else {
+                console.error('toggleSettings не найдена');
+                // Альтернативная реализация
+                const panel = document.getElementById('settingsPanel');
+                if (panel) {
+                    if (panel.style.display === 'none' || panel.style.display === '') {
+                        panel.style.display = 'block';
+                    } else {
+                        panel.style.display = 'none';
+                    }
+                }
+            }
+        });
+        console.log('Обработчик кнопки настроек добавлен');
+    }
+});
+</script>
+
+<button class="settings-toggle" onclick="if(typeof toggleSettings === 'function') { toggleSettings(); } else { console.error('toggleSettings не найдена'); }">⚙️ Настройки</button>
+
+<div class="settings-panel" id="settingsPanel">
+    <div class="settings-panel-header" id="settingsPanelHeader">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Настройка мульти-кнопки</h3>
+            <button onclick="closeSettingsPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">×</button>
+        </div>
+    </div>
+    <div class="settings-panel-content">
+    
+    <!-- Переключатель режимов -->
+    <div class="mode-selector">
+        <h4>Режим работы:</h4>
+        <label><input type="radio" name="mode" value="social" checked onchange="toggleMode()"> Социальные сети</label>
+        <label><input type="radio" name="mode" value="jivo" onchange="toggleMode()"> Jivo виджеты</label>
+    </div>
+    
+    <!-- Секция социальных кнопок -->
+    <div class="settings-section">
+        <h4>📱 Социальные кнопки</h4>
+        <div id="socialInputs">
+            <!-- Социальные кнопки будут добавляться сюда динамически -->
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="add-button" onclick="addSocialInput()" style="width: 50%; margin-bottom: 0;">➕ Добавить новую кнопку</button>
+            <button class="add-button custom-button" onclick="addCustomSocialInput()" style="width: 50%; margin-bottom: 0;">🎨 Создать собственную кнопку</button>
+        </div>
+    </div>
+    
+    <!-- Секция Jivo чата -->
+    <div class="settings-section">
+        <h4>💬 Jivo чат</h4>
+        <div class="jivo-toggle">
+            <input type="checkbox" id="jivoEnabled" onchange="toggleJivoSection()">
+            <label for="jivoEnabled">Включить Jivo чат</label>
+        </div>
+        <div class="jivo-toggle" style="margin-top: 10px;">
+            <input type="checkbox" id="jivoChatMode" onchange="handleJivoChatModeChange()">
+            <label for="jivoChatMode">Главная кнопка = кнопка чата (без соцсетей)</label>
+        </div>
+        <div id="jivoIconSection" style="display: none; margin-top: 15px;">
+            <div class="jivo-icon-input">
+                <label>🎨 Ссылка на свою иконку:</label>
+                <input type="url" id="jivoIconUrl" placeholder="https://example.com/icon.png" onchange="handleJivoIconUrl()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px;">
+                <div class="jivo-icon-preview" id="jivoIconPreview" style="display: none; margin-top: 10px;">
+                    <img id="jivoIconPreviewImg" alt="Предварительный просмотр" style="max-width: 50px; max-height: 50px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button type="button" onclick="removeJivoIcon()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
+                </div>
+            </div>
+        </div>
+        <div id="jivoCodeSection" style="display: none; margin-top: 15px;">
+            <div class="jivo-code-input">
+                <label>📝 Код виджета Jivo:</label>
+                <textarea id="jivoCode" placeholder='&lt;script src="//code.jivo.ru/widget/ВАШ_КОД" async&gt;&lt;/script&gt;' style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px; height: 60px; font-family: monospace; font-size: 12px;"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Секция Jivo виджетов -->
+    <div class="settings-section jivo-widgets-settings">
+        <h4>🔧 Jivo виджеты</h4>
+        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+            Добавьте кнопки с Jivo виджетами. Каждая кнопка будет загружать свой уникальный виджет.
+        </p>
+        
+        <div id="jivoWidgetsContainer">
+            <!-- Jivo виджеты будут добавляться динамически -->
+        </div>
+        
+        <button class="add-button" onclick="addJivoWidget()" style="width: 100%; margin-top: 10px;">+ Добавить Jivo виджет</button>
+    </div>
+    
+    <!-- Секция настроек отображения -->
+    <div class="settings-section">
+        <h4>🎛️ Настройки отображения</h4>
+        <div class="display-settings">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Способ открытия меню:</label>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="openMethodClick" name="openMethod" value="click" checked onchange="handleOpenMethodChange()">
+                    <label for="openMethodClick">По клику на главную кнопку (по умолчанию)</label>
+                </div>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="openMethodAlways" name="openMethod" value="always" onchange="handleOpenMethodChange()">
+                    <label for="openMethodAlways">Всегда видимое меню (без клика)</label>
+                </div>
+            </div>
+            
+            <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Ориентация меню:</label>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="menuOrientationVertical" name="menuOrientation" value="vertical" checked onchange="handleMenuOrientationChange()">
+                    <label for="menuOrientationVertical">Вертикальное (по умолчанию)</label>
+                </div>
+                <div style="margin-left: 10px;">
+                    <input type="radio" id="menuOrientationHorizontal" name="menuOrientation" value="horizontal" onchange="handleMenuOrientationChange()">
+                    <label for="menuOrientationHorizontal">Горизонтальное</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Секция главной иконки -->
+    <div class="settings-section">
+        <h4>🎯 Главная кнопка</h4>
+        <div class="main-icon-input">
+            <label>Выберите иконку для главной кнопки:</label>
+            <div style="margin-top: 10px;">
+                <input type="radio" id="defaultIcon" name="mainIcon" value="default" checked onchange="handleMainIconChange()">
+                <label for="defaultIcon">По умолчанию (карандаш)</label>
+            </div>
+            <div style="margin-top: 5px;">
+                <input type="radio" id="customMainIcon" name="mainIcon" value="custom" onchange="handleMainIconChange()">
+                <label for="customMainIcon">Своя иконка</label>
+            </div>
+            <div id="customMainIconSection" style="display: none; margin-top: 10px;">
+                <input type="url" id="mainIconUrl" placeholder="https://example.com/icon.png" onchange="handleMainIconUrl()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <div class="main-icon-preview" id="mainIconPreview" style="display: none; margin-top: 10px;">
+                    <img id="mainIconPreviewImg" alt="Предварительный просмотр" style="max-width: 50px; max-height: 50px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button type="button" onclick="removeMainIcon()" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Убрать</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-color-input" style="margin-top: 20px;">
+            <label>🎨 Цвет кнопки:</label>
+            <div style="margin-top: 10px;">
+                <input type="radio" id="defaultColor" name="mainColor" value="default" checked onchange="handleMainColorChange()">
+                <label for="defaultColor">По умолчанию (фиолетовый градиент)</label>
+            </div>
+            <div style="margin-top: 5px;">
+                <input type="radio" id="customMainColor" name="mainColor" value="custom" onchange="handleMainColorChange()">
+                <label for="customMainColor">Свой цвет</label>
+            </div>
+            <div id="customMainColorSection" style="display: none; margin-top: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="position: relative;">
+                        <input type="color" id="mainColorPicker" value="#667eea" onchange="handleMainColorPicker()" style="width: 60px; height: 50px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; padding: 0;">
+                        <div style="position: absolute; top: -5px; right: -5px; background: #fff; border: 1px solid #ddd; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666;">🎨</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <input type="text" id="mainColorCode" placeholder="#667eea" onchange="handleMainColorCode()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: monospace; font-size: 14px;">
+                        <div style="font-size: 11px; color: #666; margin-top: 2px;">HEX код цвета</div>
+                    </div>
+                    <div id="mainColorPreviewBox" style="width: 50px; height: 50px; border-radius: 50%; border: 3px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="button" onclick="removeMainColor()" style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">❌ Убрать цвет</button>
+                    <div id="colorInfo" style="font-size: 11px; color: #666; font-family: monospace;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-shape-input" style="margin-top: 20px;">
+            <label>🔲 Форма кнопки:</label>
+            <div style="margin-top: 10px;">
+                <input type="radio" id="defaultShape" name="mainShape" value="default" checked onchange="handleMainShapeChange()">
+                <label for="defaultShape">По умолчанию (круглая)</label>
+            </div>
+            <div style="margin-top: 5px;">
+                <input type="radio" id="customSizeShape" name="mainShape" value="customSize" onchange="handleMainShapeChange()">
+                <label for="customSizeShape">Собственный размер</label>
+            </div>
+            <div id="customSizeSection" style="display: none; margin-top: 10px;">
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border-left: 3px solid #28a745;">
+                    <p style="margin: 0 0 10px 0; font-size: 12px; color: #666;">
+                        <strong>📏 Укажите размеры кнопки в пикселях:</strong>
+                    </p>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div>
+                            <label for="customWidth" style="font-size: 12px; color: #666;">Ширина:</label>
+                            <input type="number" id="customWidth" value="120" min="30" max="500" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                        </div>
+                        <div>
+                            <label for="customHeight" style="font-size: 12px; color: #666;">Высота:</label>
+                            <input type="number" id="customHeight" value="60" min="30" max="500" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                        </div>
+                        <div>
+                            <label for="customBorderRadius" style="font-size: 12px; color: #666;">Скругление:</label>
+                            <input type="number" id="customBorderRadius" value="8" min="0" max="50" onchange="updateMainButtonShape()" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                        </div>
+                    </div>
+                    <p style="margin: 10px 0 0 0; font-size: 11px; color: #888;">
+                        💡 Рекомендуемые размеры для логотипов: ширина 120-200px, высота 50-80px
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="button-actions">
+        <button class="apply-button" onclick="applySettings()">Применить</button>
+        <button class="clear-button" onclick="clearAllSettings()">Очистить все</button>
+    </div>
+    
+    <div class="settings-hint" id="settingsHint" style="display: none;">
+        <p>💡 <strong>Не забудьте нажать "Применить"</strong> после изменения настроек!</p>
+    </div>
+    
+    <div class="code-output" id="codeOutput">
+        <h4>Настройки применены:</h4>
+        <div id="settingsInfo" style="background: #e9ecef; padding: 10px; border-radius: 3px; font-family: monospace; font-size: 12px;"></div>
+        <button class="copy-button" onclick="copySettings()">📋 Копировать настройки</button>
+    </div>
+    </div>
+</div>
+
+<!-- Контейнер для мульти-кнопки -->
+<div class="multibutton">
+    <button class="main-button" onclick="handleMainButtonClick()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon">
+        <img src="" alt="Кастомная иконка" class="custom-icon" style="display: none;">
+    </button>
+    <div class="popup-menu" id="popupMenu">
+        <!-- Тестовые кнопки по умолчанию -->
+        <a href="https://t.me/username" class="social-button" target="_blank" title="Telegram">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+        </a>
+        <a href="https://wa.me/1234567890" class="social-button" target="_blank" title="WhatsApp">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+        </a>
+        <a href="https://vk.com/username" class="social-button" target="_blank" title="VK">
+            <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">
+        </a>
+    </div>
+</div>
+
+<!-- Контейнер для Jivo виджета -->
+<div id="jivoContainer"></div>
+
+<!-- Модальное окно выбора соцсетей -->
+<div class="social-selector-modal" id="socialSelectorModal">
+    <div class="social-selector-content">
+        <div class="social-selector-header">
+            <h3>📱 Выберите социальную сеть</h3>
+        </div>
+        <div class="social-selector-grid" id="socialSelectorGrid">
+            <!-- Опции соцсетей будут добавлены динамически -->
+        </div>
+        <div class="social-selector-actions">
+            <button class="social-selector-btn social-selector-cancel" onclick="hideSocialSelector()">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- Контейнер для уведомлений -->
+<div id="notificationContainer"></div>
+
+<div class="demo-content">
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🚀 Мульти-кнопка с соцсетями</h1>
+            <p>Красивая и функциональная кнопка для вашего сайта</p>
+            <p>Настройте ссылки на социальные сети и Jivo чат</p>
+        </div>
+
+        <div class="demo-instructions">
+            <h2>📋 Как использовать</h2>
+            <ol>
+                <li><strong>Нажмите кнопку "⚙️ Настройки"</strong> в левом верхнем углу</li>
+                <li><strong>Добавьте социальные сети</strong> через селектор или вручную</li>
+                <li><strong>Настройте ссылки</strong> на ваши профили</li>
+                <li><strong>Нажмите "Применить"</strong> для сохранения настроек</li>
+                <li><strong>Кликните на фиолетовую кнопку</strong> в правом нижнем углу для тестирования</li>
+                <li><strong>Скопируйте сгенерированный код</strong> и вставьте на ваш сайт перед тегом <code>&lt;/body&gt;</code></li>
+                <li><strong>⚠️ Важно:</strong> При вставке кода на сайт <strong>уберите все знаки комментариев</strong> (<code>&lt;!--</code> и <code>--&gt;</code>)</li>
+            </ol>
+        </div>
+
+        <div class="demo-features">
+            <div class="demo-feature">
+                <h3>🎨 Красивый дизайн</h3>
+                <p>Современный градиентный дизайн с плавными анимациями и эффектами наведения</p>
+            </div>
+            
+            <div class="demo-feature">
+                <h3>⚙️ Простая настройка</h3>
+                <p>Удобная панель настроек для быстрого изменения ссылок и иконок</p>
+            </div>
+            
+            <div class="demo-feature">
+                <h3>📱 Адаптивность</h3>
+                <p>Отлично выглядит на всех устройствах - от мобильных до десктопов</p>
+            </div>
+            
+            <div class="demo-feature">
+                <h3>🚀 Быстрая работа</h3>
+                <p>Легкий код без зависимостей, загружается мгновенно</p>
+            </div>
+
+            <div class="demo-feature">
+                <h3>💬 Jivo интеграция</h3>
+                <p>Встроенная поддержка чат-виджета с автоматическим скрытием стандартной кнопки</p>
+            </div>
+
+            <div class="demo-feature">
+                <h3>🔧 Гибкость</h3>
+                <p>Поддержка 20+ популярных платформ с возможностью добавления кастомных</p>
+            </div>
+        </div>
+
+        <div class="icons-section">
+            <h2>📱 Популярные иконки для соцсетей</h2>
+            <p>Используйте эти ссылки на иконки в настройках мульти-кнопки:</p>
+            
+            <div class="icons-grid">
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+                    <div class="icon-info">
+                        <strong>Telegram</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111646.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+                    <div class="icon-info">
+                        <strong>WhatsApp</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/733/733585.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">
+                    <div class="icon-info">
+                        <strong>VK</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/145/145813.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                    <div class="icon-info">
+                        <strong>Instagram</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111463.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111392.png" alt="Facebook">
+                    <div class="icon-info">
+                        <strong>Facebook</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111392.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111738.png" alt="Twitter">
+                    <div class="icon-info">
+                        <strong>Twitter</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111738.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3670/3670147.png" alt="YouTube">
+                    <div class="icon-info">
+                        <strong>YouTube</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/3670/3670147.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/889/889125.png" alt="Одноклассники">
+                    <div class="icon-info">
+                        <strong>Одноклассники</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/889/889125.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Имейл">
+                    <div class="icon-info">
+                        <strong>Имейл</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/561/561127.png</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="icons-note">
+                <p><strong>💡 Как использовать:</strong></p>
+                <ol>
+                    <li>Откройте настройки мульти-кнопки</li>
+                    <li>В поле "URL иконки" вставьте любую ссылку из списка выше</li>
+                    <li>Или используйте селектор при добавлении новой кнопки</li>
+                    <li>Нажмите "Применить" для сохранения настроек</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="icons-section">
+            <h2>🔧 Полезные иконки</h2>
+            <p>Дополнительные иконки для различных функций:</p>
+            
+            <div class="icons-grid">
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2702/2702154.png" alt="База знаний">
+                    <div class="icon-info">
+                        <strong>База знаний</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/2702/2702154.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2190/2190552.png" alt="Чат 1">
+                    <div class="icon-info">
+                        <strong>Чат 1</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/2190/2190552.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/209/209989.png" alt="Чат 2">
+                    <div class="icon-info">
+                        <strong>Чат 2</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/209/209989.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8377/8377198.png" alt="Чат 3">
+                    <div class="icon-info">
+                        <strong>Чат 3</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/8377/8377198.png</code>
+                    </div>
+                </div>
+                
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8794/8794966.png" alt="Чат 4">
+                    <div class="icon-info">
+                        <strong>Чат 4</strong>
+                        <code>https://cdn-icons-png.flaticon.com/512/8794/8794966.png</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="icons-note">
+                <p><strong>💡 Применение:</strong></p>
+                <ul>
+                    <li><strong>База знаний</strong> - для ссылок на FAQ, документацию, справочники</li>
+                    <li><strong>Чат иконки</strong> - для различных чат-систем, поддержки, консультаций</li>
+                    <li>Используйте "Создать собственную кнопку" для добавления этих иконок</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Настройки по умолчанию
+// currentMode теперь управляется через window.currentMode в функции toggleMode
+window.currentMode = 'social'; // Устанавливаем режим по умолчанию
+window.jivoWidgets = [];
+let loadedJivoScripts = new Set();
+
+let socialSettings = [
+    { id: 'telegram', name: 'Telegram', link: 'https://t.me/username', icon: 'https://cdn-icons-png.flaticon.com/512/2111/2111646.png' },
+    { id: 'whatsapp', name: 'WhatsApp', link: 'https://wa.me/1234567890', icon: 'https://cdn-icons-png.flaticon.com/512/733/733585.png' },
+    { id: 'vk', name: 'VK', link: 'https://vk.com/username', icon: 'https://cdn-icons-png.flaticon.com/512/145/145813.png' }
+];
+
+let jivoSettings = {
+    enabled: false,
+    customIcon: null,
+    code: '',
+    chatMode: false
+};
+
+let displaySettings = {
+    openMethod: 'click', // 'click' или 'always'
+    menuOrientation: 'vertical' // 'vertical' или 'horizontal'
+};
+
+let mainIconSettings = {
+    type: 'default', // 'default' или 'custom'
+    customUrl: null,
+    colorType: 'default', // 'default' или 'custom'
+    customColor: '#667eea',
+    shapeType: 'default', // 'default', 'custom' или 'customSize'
+    customWidth: 120,
+    customHeight: 60,
+    customBorderRadius: 8
+};
+
+let nextId = 1;
+
+// Jivo коллбэки
+function jivo_onLoadCallback() {
+    // Скрываем стандартную кнопку Jivo
+    const jivo_custom_widget = true;
+}
+
+function jivo_onOpen() {
+    // Скрываем кастомную кнопку при открытии чата
+    document.querySelector('.multibutton').style.display = 'none';
+}
+
+function jivo_onClose() {
+    // Показываем кастомную кнопку при закрытии чата
+    document.querySelector('.multibutton').style.display = 'block';
+}
+
+// Функция переключения панели настроек (удалена - теперь определена в начале страницы)
+
+// Функция переключения меню
+function toggleMenu() {
+    console.log('toggleMenu вызвана');
+    const menu = document.getElementById('popupMenu');
+    console.log('Меню найдено:', menu);
+    console.log('Текущий display меню:', menu.style.display);
+    
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        console.log('Открываем меню');
+        menu.style.display = 'flex';
+    } else {
+        console.log('Закрываем меню');
+        menu.style.display = 'none';
+    }
+}
+
+// Функция переключения режимов работы (удалена - теперь определена в начале страницы)
+
+// Функции для работы с Jivo виджетами (удалены - теперь определены в начале страницы)
+
+function loadJivoScript(scriptSrc) {
+    if (loadedJivoScripts.has(scriptSrc)) {
+        // Если скрипт уже загружен, пытаемся открыть виджет
+        if (window.jivo_api && typeof window.jivo_api.open === 'function') {
+            window.jivo_api.open();
+        } else {
+            setTimeout(() => {
+                if (window.jivo_api && typeof window.jivo_api.open === 'function') {
+                    window.jivo_api.open();
+                }
+            }, 500);
+        }
+        return;
+    }
+    
+    const script = document.createElement('script');
+    script.src = scriptSrc;
+    script.async = true;
+    
+    // Добавляем обработчик загрузки скрипта
+    script.onload = function() {
+        // Ждем немного, чтобы виджет инициализировался
+        setTimeout(() => {
+            if (window.jivo_api && typeof window.jivo_api.open === 'function') {
+                window.jivo_api.open();
+            } else {
+                // Если API еще не готов, ждем еще немного
+                setTimeout(() => {
+                    if (window.jivo_api && typeof window.jivo_api.open === 'function') {
+                        window.jivo_api.open();
+                    }
+                }, 1000);
+            }
+        }, 300);
+    };
+    
+    document.head.appendChild(script);
+    loadedJivoScripts.add(scriptSrc);
+}
+
+// Функция переключения секции Jivo
+function toggleJivoSection() {
+    const enabled = document.getElementById('jivoEnabled').checked;
+    const iconSection = document.getElementById('jivoIconSection');
+    const codeSection = document.getElementById('jivoCodeSection');
+    jivoSettings.enabled = enabled;
+    
+    if (enabled) {
+        iconSection.style.display = 'block';
+        codeSection.style.display = 'block';
+    } else {
+        iconSection.style.display = 'none';
+        codeSection.style.display = 'none';
+    }
+}
+
+// Функция обработки режима чата
+function handleJivoChatModeChange() {
+    const chatMode = document.getElementById('jivoChatMode').checked;
+    jivoSettings.chatMode = chatMode;
+    
+    // Если включен режим чата, отключаем социальные сети
+    if (chatMode) {
+        socialButtons = [];
+        renderSocialInputs();
+    }
+    
+    // Пересоздаем мультикнопку
+    createMultibutton();
+    
+    // Обновляем иконку главной кнопки
+    updateMainButtonIcon();
+}
+
+// Функция обработки клика по главной кнопке
+function handleMainButtonClickMain() {
+    if (jivoSettings.chatMode && jivoSettings.enabled) {
+        // В режиме чата открываем Jivo
+        openJivoChat();
+    } else {
+        // Обычный режим - переключаем меню
+        toggleMenu();
+    }
+}
+
+// Функция обработки ссылки на иконку Jivo
+function handleJivoIconUrl() {
+    const urlInput = document.getElementById('jivoIconUrl');
+    const url = urlInput.value.trim();
+    
+    if (url) {
+        jivoSettings.customIcon = url;
+        
+        // Показываем предварительный просмотр
+        const preview = document.getElementById('jivoIconPreview');
+        const previewImg = document.getElementById('jivoIconPreviewImg');
+        previewImg.src = url;
+        preview.style.display = 'block';
+        
+        showNotification('✅ Ссылка на иконку добавлена!', 'success');
+    }
+}
+
+// Функция обработки изменения способа открытия меню
+function handleOpenMethodChange() {
+    const clickRadio = document.getElementById('openMethodClick');
+    if (clickRadio.checked) {
+        displaySettings.openMethod = 'click';
+    } else {
+        displaySettings.openMethod = 'always';
+    }
+    updateMenuDisplay();
+}
+
+// Функция обработки изменения ориентации меню
+function handleMenuOrientationChange() {
+    const verticalRadio = document.getElementById('menuOrientationVertical');
+    if (verticalRadio.checked) {
+        displaySettings.menuOrientation = 'vertical';
+    } else {
+        displaySettings.menuOrientation = 'horizontal';
+    }
+    updateMenuDisplay();
+}
+
+// Функция обновления отображения меню
+function updateMenuDisplay() {
+    const menu = document.getElementById('popupMenu');
+    const mainButton = document.querySelector('.main-button');
+    
+    if (displaySettings.openMethod === 'always') {
+        menu.style.display = 'flex';
+        if (mainButton) {
+            mainButton.style.display = 'none';
+        }
+    } else {
+        menu.style.display = 'none';
+        if (mainButton) {
+            mainButton.style.display = 'flex';
+        }
+    }
+    
+    // Обновляем ориентацию меню
+    if (displaySettings.menuOrientation === 'horizontal') {
+        menu.style.flexDirection = 'row';
+    } else {
+        menu.style.flexDirection = 'column';
+    }
+    
+    // Обновляем позицию меню с учетом размера кнопки
+    updateMenuPosition();
+}
+
+// Функция удаления загруженной иконки
+function removeJivoIcon() {
+    jivoSettings.customIcon = null;
+    document.getElementById('jivoIconUrl').value = '';
+    document.getElementById('jivoIconPreview').style.display = 'none';
+    showNotification('🗑️ Ссылка на иконку удалена', 'info');
+}
+
+// Функция обработки изменения типа главной иконки (переименована для избежания конфликтов)
+function handleMainIconChangeMain() {
+    const defaultIcon = document.getElementById('defaultIcon');
+    const customSection = document.getElementById('customMainIconSection');
+    
+    if (defaultIcon.checked) {
+        mainIconSettings.type = 'default';
+        customSection.style.display = 'none';
+        mainIconSettings.customUrl = null;
+        updateMainButtonIcon();
+    } else {
+        mainIconSettings.type = 'custom';
+        customSection.style.display = 'block';
+    }
+}
+
+// Функция обработки ссылки на главную иконку
+function handleMainIconUrl() {
+    const urlInput = document.getElementById('mainIconUrl');
+    const url = urlInput.value.trim();
+    
+    if (url) {
+        mainIconSettings.customUrl = url;
+        
+        // Показываем предварительный просмотр
+        const preview = document.getElementById('mainIconPreview');
+        const previewImg = document.getElementById('mainIconPreviewImg');
+        previewImg.src = url;
+        preview.style.display = 'block';
+        
+        updateMainButtonIcon();
+        showNotification('✅ Ссылка на главную иконку добавлена!', 'success');
+    }
+}
+
+// Функция удаления главной иконки
+function removeMainIcon() {
+    mainIconSettings.customUrl = null;
+    document.getElementById('mainIconUrl').value = '';
+    document.getElementById('mainIconPreview').style.display = 'none';
+    updateMainButtonIcon();
+    showNotification('🗑️ Ссылка на главную иконку удалена', 'info');
+}
+
+// Функция обновления главной кнопки
+function updateMainButtonIcon() {
+    const mainButtonElement = document.querySelector('.main-button');
+    const defaultIcon = mainButtonElement.querySelector('.default-icon');
+    const customIcon = mainButtonElement.querySelector('.custom-icon');
+    
+    // В режиме чата используем настройки главной кнопки
+    if (jivoSettings.chatMode && jivoSettings.enabled) {
+        if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+            // Используем кастомную иконку из настроек главной кнопки
+            customIcon.src = mainIconSettings.customUrl;
+            customIcon.style.display = 'block';
+            customIcon.style.width = '100%';
+            customIcon.style.height = '100%';
+            customIcon.style.objectFit = 'cover';
+            customIcon.style.filter = 'none';
+            customIcon.style.position = 'absolute';
+            customIcon.style.top = '0';
+            customIcon.style.left = '0';
+            customIcon.style.zIndex = '1';
+            customIcon.style.padding = '0';
+            
+            // Скрываем стандартную иконку
+            defaultIcon.style.display = 'none';
+        } else {
+            // Используем стандартную иконку из настроек главной кнопки
+            defaultIcon.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+            defaultIcon.style.display = 'block';
+            defaultIcon.style.width = '30px';
+            defaultIcon.style.height = '30px';
+            defaultIcon.style.objectFit = 'contain';
+            defaultIcon.style.filter = 'brightness(0) invert(1)';
+            defaultIcon.style.position = 'relative';
+            defaultIcon.style.top = '';
+            defaultIcon.style.left = '';
+            defaultIcon.style.zIndex = '';
+            
+            // Скрываем кастомную иконку
+            customIcon.style.display = 'none';
+        }
+    } else {
+        // Обычный режим
+        if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+            // Настраиваем кастомную иконку
+            customIcon.src = mainIconSettings.customUrl;
+            customIcon.style.display = 'block';
+            customIcon.style.width = '100%';
+            customIcon.style.height = '100%';
+            customIcon.style.objectFit = 'cover';
+            customIcon.style.filter = 'none'; // Убираем фильтр для сохранения оригинальных цветов
+            customIcon.style.position = 'absolute';
+            customIcon.style.top = '0';
+            customIcon.style.left = '0';
+            customIcon.style.zIndex = '1';
+            customIcon.style.padding = '0';
+            
+            // Скрываем стандартную иконку
+            defaultIcon.style.display = 'none';
+            
+            // Обновляем форму кнопки если включена автоматическая настройка
+            if (mainIconSettings.shapeType === 'custom') {
+                updateMainButtonShape();
+            }
+        } else {
+            // Возвращаем стандартную иконку
+            defaultIcon.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+            defaultIcon.style.display = 'block';
+            defaultIcon.style.width = '30px';
+            defaultIcon.style.height = '30px';
+            defaultIcon.style.objectFit = 'contain';
+            defaultIcon.style.filter = 'brightness(0) invert(1)';
+            defaultIcon.style.position = 'relative';
+            defaultIcon.style.top = '';
+            defaultIcon.style.left = '';
+            defaultIcon.style.zIndex = '';
+            
+            // Скрываем кастомную иконку
+            customIcon.style.display = 'none';
+            
+            // Возвращаем к форме по умолчанию
+            if (mainIconSettings.shapeType === 'custom') {
+                updateMainButtonShape();
+            }
+        }
+    }
+}
+
+// Функция обработки изменения типа цвета главной кнопки
+function handleMainColorChange() {
+    const defaultColor = document.getElementById('defaultColor');
+    const customSection = document.getElementById('customMainColorSection');
+    
+    if (defaultColor.checked) {
+        mainIconSettings.colorType = 'default';
+        customSection.style.display = 'none';
+        updateMainButtonColor();
+    } else {
+        mainIconSettings.colorType = 'custom';
+        customSection.style.display = 'block';
+        updateMainButtonColor();
+        updateMainColorPreview();
+        if (mainIconSettings.customColor) {
+            updateColorInfo(mainIconSettings.customColor);
+        }
+    }
+    
+    // Обновляем иконку в режиме чата
+    updateMainButtonIcon();
+}
+
+// Функция обработки выбора цвета через color picker
+function handleMainColorPicker() {
+    const colorPicker = document.getElementById('mainColorPicker');
+    const colorCode = document.getElementById('mainColorCode');
+    const color = colorPicker.value;
+    
+    mainIconSettings.customColor = color;
+    colorCode.value = color;
+    
+    updateMainButtonColor();
+    updateMainColorPreview();
+    updateColorInfo(color);
+    updateMainButtonIcon(); // Обновляем иконку в режиме чата
+    showNotification('✅ Цвет кнопки изменен!', 'success');
+}
+
+// Функция обработки ввода цветового кода
+function handleMainColorCode() {
+    const colorCode = document.getElementById('mainColorCode');
+    const colorPicker = document.getElementById('mainColorPicker');
+    const color = colorCode.value.trim();
+    
+    if (color && /^#[0-9A-F]{6}$/i.test(color)) {
+        mainIconSettings.customColor = color;
+        colorPicker.value = color;
+        
+        updateMainButtonColor();
+        updateMainColorPreview();
+        updateColorInfo(color);
+        updateMainButtonIcon(); // Обновляем иконку в режиме чата
+        showNotification('✅ Цветовой код применен!', 'success');
+    } else if (color) {
+        showNotification('❌ Неверный формат цвета! Используйте #RRGGBB', 'error');
+    }
+}
+
+// Функция обработки изменения формы главной кнопки
+function handleMainShapeChange() {
+    const defaultShape = document.getElementById('defaultShape');
+    const customSizeShape = document.getElementById('customSizeShape');
+    const customSizeSection = document.getElementById('customSizeSection');
+    
+    if (defaultShape.checked) {
+        mainIconSettings.shapeType = 'default';
+        customSizeSection.style.display = 'none';
+        updateMainButtonShape();
+    } else if (customSizeShape.checked) {
+        mainIconSettings.shapeType = 'customSize';
+        customSizeSection.style.display = 'block';
+        updateMainButtonShape();
+    }
+    
+    // Обновляем иконку в режиме чата
+    updateMainButtonIcon();
+}
+
+// Функция определения формы иконки
+function detectIconShape(imageUrl) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+            const ratio = this.width / this.height;
+            let shape = 'circle';
+            
+            // Для очень широких изображений (логотипы) используем горизонтальную форму
+            if (ratio > 5) {
+                shape = 'extra-wide';
+            } else if (ratio > 3) {
+                shape = 'horizontal';
+            } else if (Math.abs(ratio - 1) < 0.1) {
+                shape = 'square';
+            } else if (ratio > 1.2) {
+                shape = 'horizontal';
+            } else if (ratio < 0.8) {
+                shape = 'vertical';
+            }
+            
+            resolve(shape);
+        };
+        img.onerror = function() {
+            resolve('circle'); // По умолчанию круглая
+        };
+        img.src = imageUrl;
+    });
+}
+
+// Функция обновления формы главной кнопки
+async function updateMainButtonShape() {
+    const mainButton = document.querySelector('.main-button');
+    const customIcon = mainButton.querySelector('.custom-icon');
+    
+    if (mainIconSettings.shapeType === 'customSize') {
+        // Применяем собственные размеры
+        const customWidth = document.getElementById('customWidth').value;
+        const customHeight = document.getElementById('customHeight').value;
+        const customBorderRadius = document.getElementById('customBorderRadius').value;
+        
+        mainButton.style.width = customWidth + 'px';
+        mainButton.style.height = customHeight + 'px';
+        mainButton.style.borderRadius = customBorderRadius + 'px';
+        
+        if (customIcon) {
+            customIcon.style.borderRadius = customBorderRadius + 'px';
+            customIcon.style.objectFit = 'cover';
+            customIcon.style.padding = '0';
+        }
+    } else {
+        // Возвращаем к форме по умолчанию
+        mainButton.style.borderRadius = '50%';
+        mainButton.style.width = '60px';
+        mainButton.style.height = '60px';
+        if (customIcon) {
+            customIcon.style.borderRadius = '50%';
+        }
+    }
+    
+    // Обновляем позицию выпадающего меню
+    updateMenuPosition();
+    
+    // Обновляем иконку в режиме чата
+    updateMainButtonIcon();
+}
+
+// Функция обновления позиции выпадающего меню
+function updateMenuPosition() {
+    try {
+        const mainButton = document.querySelector('.main-button');
+        const popupMenu = document.getElementById('popupMenu');
+        
+        if (mainButton && popupMenu) {
+            const buttonHeight = mainButton.offsetHeight || 60; // Значение по умолчанию
+            const gap = 10; // Отступ между кнопкой и меню
+            
+            // Вычисляем новую позицию меню
+            const newBottom = buttonHeight + gap;
+            
+            // Применяем позицию в зависимости от ориентации
+            if (displaySettings.menuOrientation === 'horizontal') {
+                popupMenu.style.bottom = gap + 'px';
+                popupMenu.style.right = (buttonHeight + gap) + 'px';
+            } else {
+                popupMenu.style.bottom = newBottom + 'px';
+                popupMenu.style.right = '0';
+            }
+        }
+    } catch (error) {
+        console.log('Ошибка в updateMenuPosition:', error);
+    }
+}
+
+// Функция удаления пользовательского цвета
+function removeMainColor() {
+    mainIconSettings.colorType = 'default';
+    document.getElementById('defaultColor').checked = true;
+    document.getElementById('customMainColorSection').style.display = 'none';
+    document.getElementById('mainColorPreviewBox').style.display = 'none';
+    document.getElementById('colorInfo').textContent = '';
+    updateMainButtonColor();
+    showNotification('🗑️ Пользовательский цвет удален', 'info');
+}
+
+// Функция обновления цвета главной кнопки
+function updateMainButtonColor() {
+    const mainButton = document.querySelector('.main-button');
+    if (mainIconSettings.colorType === 'custom') {
+        mainButton.style.background = mainIconSettings.customColor;
+    } else {
+        mainButton.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    }
+}
+
+// Функция обновления предварительного просмотра цвета
+function updateMainColorPreview() {
+    const previewBox = document.getElementById('mainColorPreviewBox');
+    
+    if (mainIconSettings.colorType === 'custom') {
+        previewBox.style.background = mainIconSettings.customColor;
+        previewBox.style.display = 'block';
+    } else {
+        previewBox.style.display = 'none';
+    }
+}
+
+// Функция обновления информации о цвете
+function updateColorInfo(color) {
+    const colorInfo = document.getElementById('colorInfo');
+    if (color) {
+        // Конвертируем HEX в RGB
+        const r = parseInt(color.substr(1,2), 16);
+        const g = parseInt(color.substr(3,2), 16);
+        const b = parseInt(color.substr(5,2), 16);
+        
+        colorInfo.textContent = `RGB: ${r}, ${g}, ${b}`;
+    } else {
+        colorInfo.textContent = '';
+    }
+}
+
+// Дублированные функции удалены - они теперь определены в первом блоке скрипта
+
+// Функция добавления новой кнопки (переименована для избежания конфликтов)
+function addSocialInputMain() {
+    // Убеждаемся, что панель настроек открыта
+    document.getElementById('settingsPanel').style.display = 'block';
+    showSocialSelector();
+}
+
+// Функция создания собственной кнопки (переименована для избежания конфликтов)
+function addCustomSocialInputMain() {
+    const customId = 'custom_' + nextId++;
+    
+    // Создаем новую настройку с пустыми полями
+    const newSetting = {
+        id: customId,
+        name: 'Моя кнопка',
+        link: '',
+        icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png' // Иконка по умолчанию
+    };
+    
+    socialSettings.push(newSetting);
+    renderSocialInputs();
+    
+    // Убеждаемся, что панель настроек остается открытой
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'block';
+    
+    // Показываем уведомление и подсказку
+    showNotification('🎨 Создана собственная кнопка! Настройте её параметры', 'success');
+    showSettingsHint();
+    
+    // Прокручиваем к новому полю и фокусируемся на названии
+    setTimeout(() => {
+        const nameInput = document.getElementById(customId + '_name');
+        if (nameInput) {
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            nameInput.focus();
+            nameInput.select();
+        }
+    }, 100);
+}
+
+// Функция перемещения кнопки вверх (переименована для избежания конфликтов)
+function moveSocialUpMain(index) {
+    if (index > 0) {
+        const temp = socialSettings[index];
+        socialSettings[index] = socialSettings[index - 1];
+        socialSettings[index - 1] = temp;
+        renderSocialInputs();
+        
+        // Убеждаемся, что панель настроек остается открытой
+        const settingsPanel = document.getElementById('settingsPanel');
+        settingsPanel.style.display = 'block';
+        
+        showNotification(`⬆️ ${temp.name} перемещен вверх`, 'info');
+        showSettingsHint();
+    }
+    
+    // Предотвращаем всплытие события
+    event.stopPropagation();
+}
+
+// Функция перемещения кнопки вниз (переименована для избежания конфликтов)
+function moveSocialDownMain(index) {
+    if (index < socialSettings.length - 1) {
+        const temp = socialSettings[index];
+        socialSettings[index] = socialSettings[index + 1];
+        socialSettings[index + 1] = temp;
+        renderSocialInputs();
+        
+        // Убеждаемся, что панель настроек остается открытой
+        const settingsPanel = document.getElementById('settingsPanel');
+        settingsPanel.style.display = 'block';
+        
+        showNotification(`⬇️ ${temp.name} перемещен вниз`, 'info');
+        showSettingsHint();
+    }
+    
+    // Предотвращаем всплытие события
+    event.stopPropagation();
+}
+
+// Функция удаления кнопки (переименована для избежания конфликтов)
+function removeSocialInputMain(id) {
+    const setting = socialSettings.find(s => s.id === id);
+    const name = setting ? setting.name : 'Кнопка';
+    
+    socialSettings = socialSettings.filter(setting => setting.id !== id);
+    renderSocialInputs();
+    
+    // Убеждаемся, что панель настроек остается открытой
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'block';
+    
+    // Показываем уведомление об удалении и подсказку
+    showNotification(`🗑️ ${name} удален`, 'warning');
+    showSettingsHint();
+    
+    // Предотвращаем всплытие события
+    event.stopPropagation();
+}
+
+// Функция отрисовки полей ввода
+function renderSocialInputs() {
+    const container = document.getElementById('socialInputs');
+    container.innerHTML = '';
+    
+    socialSettings.forEach((setting, index) => {
+        const inputDiv = document.createElement('div');
+        inputDiv.className = 'social-input';
+        
+        // Добавляем класс подсветки для новых кнопок (если ссылка не настроена)
+        const baseLinks = [
+            'https://t.me/', 'https://wa.me/', 'https://vk.com/', 'https://instagram.com/', 
+            'https://facebook.com/', 'https://twitter.com/', 'https://youtube.com/', 
+            'https://linkedin.com/in/', 'https://discord.gg/', 'skype:', 'viber://chat?number=', 
+            'https://tiktok.com/@', 'https://snapchat.com/add/', 'https://pinterest.com/', 
+            'https://reddit.com/r/', 'https://twitch.tv/', 'https://github.com/', 
+            'https://steamcommunity.com/id/', 'https://open.spotify.com/user/', 'tel:'
+        ];
+        
+        if (baseLinks.includes(setting.link)) {
+            inputDiv.classList.add('newly-added');
+        }
+        
+        inputDiv.innerHTML = `
+            <div class="social-input-header">
+                <h4 class="social-input-title">${setting.name}</h4>
+                <div class="social-input-actions">
+                    <button class="move-button move-up" onclick="moveSocialUp(${index})" title="Переместить вверх" ${index === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="move-button move-down" onclick="moveSocialDown(${index})" title="Переместить вниз" ${index === socialSettings.length - 1 ? 'disabled' : ''}>↓</button>
+                    <button class="remove-button" onclick="removeSocialInput('${setting.id}')" title="Удалить">×</button>
+                </div>
+            </div>
+            <label>Название:</label>
+            <input type="text" id="${setting.id}_name" value="${setting.name}" placeholder="Название кнопки" onchange="updateSetting('${setting.id}', 'name', this.value)">
+            <label>Ссылка:</label>
+            <input type="text" id="${setting.id}_link" value="${setting.link}" placeholder="https://example.com" onchange="updateSetting('${setting.id}', 'link', this.value)">
+            <label>URL иконки:</label>
+            <input type="text" id="${setting.id}_icon" value="${setting.icon}" placeholder="https://example.com/icon.png" onchange="updateSetting('${setting.id}', 'icon', this.value)">
+        `;
+        
+        container.appendChild(inputDiv);
+    });
+}
+
+// Функция обновления настройки
+function updateSetting(id, field, value) {
+    const setting = socialSettings.find(s => s.id === id);
+    if (setting) {
+        setting[field] = value;
+        // Показываем подсказку о необходимости применить настройки
+        showSettingsHint();
+        
+        // Убираем подсветку, если ссылка настроена
+        if (field === 'link' && value && value.trim() !== '' && 
+            !value.endsWith('/') && !value.endsWith(':') && !value.endsWith('@')) {
+            const inputDiv = document.querySelector(`[id="${id}_link"]`).closest('.social-input');
+            if (inputDiv) {
+                inputDiv.classList.remove('newly-added');
+            }
+        }
+    }
+}
+
+// Функция закрытия панели настроек
+function closeSettingsPanel() {
+    const settingsPanel = document.getElementById('settingsPanel');
+    settingsPanel.style.display = 'none';
+    // Скрываем подсказку при закрытии панели
+    const hint = document.getElementById('settingsHint');
+    if (hint) {
+        hint.style.display = 'none';
+    }
+}
+
+// Переменные для перемещения панели
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+// Функция инициализации перемещения панели
+function initPanelDragging() {
+    const panel = document.getElementById('settingsPanel');
+    const header = document.getElementById('settingsPanelHeader');
+    
+    if (!panel || !header) return;
+    
+    header.addEventListener('mousedown', function(e) {
+        if (e.target.tagName === 'BUTTON') return; // Не начинаем перетаскивание при клике на кнопки
+        
+        isDragging = true;
+        const rect = panel.getBoundingClientRect();
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
+        
+        panel.style.transition = 'none';
+        e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        
+        const newX = e.clientX - dragOffsetX;
+        const newY = e.clientY - dragOffsetY;
+        
+        // Ограничиваем перемещение в пределах окна
+        const maxX = window.innerWidth - panel.offsetWidth;
+        const maxY = window.innerHeight - panel.offsetHeight;
+        
+        panel.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+        panel.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+        panel.style.right = 'auto';
+    });
+    
+    document.addEventListener('mouseup', function() {
+        if (isDragging) {
+            isDragging = false;
+            panel.style.transition = 'all 0.3s ease';
+        }
+    });
+}
+
+// Функция применения настроек
+function applySettingsMain() {
+    console.log('applySettings вызвана');
+    
+    // Обновляем настройки из полей ввода
+    socialSettings.forEach(setting => {
+        setting.name = document.getElementById(setting.id + '_name').value;
+        setting.link = document.getElementById(setting.id + '_link').value;
+        setting.icon = document.getElementById(setting.id + '_icon').value;
+    });
+    
+    // Обновляем настройки Jivo
+    jivoSettings.enabled = document.getElementById('jivoEnabled').checked;
+    jivoSettings.code = document.getElementById('jivoCode').value;
+    jivoSettings.chatMode = document.getElementById('jivoChatMode').checked;
+    
+    // Обновляем настройки отображения
+    const openMethodClick = document.getElementById('openMethodClick');
+    displaySettings.openMethod = openMethodClick.checked ? 'click' : 'always';
+    
+    const menuOrientationVertical = document.getElementById('menuOrientationVertical');
+    displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
+    
+    // Сохраняем кастомные размеры кнопки
+    if (mainIconSettings.shapeType === 'customSize') {
+        mainIconSettings.customWidth = parseInt(document.getElementById('customWidth').value) || 120;
+        mainIconSettings.customHeight = parseInt(document.getElementById('customHeight').value) || 60;
+        mainIconSettings.customBorderRadius = parseInt(document.getElementById('customBorderRadius').value) || 8;
+    }
+    
+    // Применяем настройки отображения
+    updateMenuDisplay();
+    
+    // Пересоздаем меню (включая кнопку Jivo)
+    createSocialMenu();
+    
+    // Применяем Jivo чат
+    applyJivoChat();
+    
+    // Обновляем иконку главной кнопки
+    updateMainButtonIcon();
+    
+    // Генерируем готовый код для вставки
+    generateReadyCode();
+    
+    // НЕ закрываем панель настроек - оставляем её открытой
+    // const settingsPanel = document.getElementById('settingsPanel');
+    // settingsPanel.style.display = 'none';
+    
+    // Скрываем подсказку
+    document.getElementById('settingsHint').style.display = 'none';
+    
+    // Показываем уведомление об успешном применении
+    showNotification('✅ Настройки применены! Готовый код сгенерирован.', 'success');
+    
+    // Скроллим к блоку с кодом и выделяем его
+    setTimeout(() => {
+        const codeOutput = document.getElementById('codeOutput');
+        if (codeOutput) {
+            codeOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Добавляем визуальное выделение блока
+            codeOutput.style.border = '3px solid #28a745';
+            codeOutput.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.3)';
+            codeOutput.style.transform = 'scale(1.02)';
+            codeOutput.style.transition = 'all 0.3s ease';
+            
+            // Убираем выделение через 3 секунды
+            setTimeout(() => {
+                codeOutput.style.border = '1px solid #dee2e6';
+                codeOutput.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+                codeOutput.style.transform = 'scale(1)';
+            }, 3000);
+        }
+        
+        // Выделяем кнопку "Копировать готовый код"
+        const copyButton = document.querySelector('.copy-button');
+        if (copyButton) {
+            copyButton.style.background = '#ffc107';
+            copyButton.style.color = '#212529';
+            copyButton.style.transform = 'scale(1.1)';
+            copyButton.style.boxShadow = '0 4px 15px rgba(255, 193, 7, 0.4)';
+            copyButton.style.transition = 'all 0.3s ease';
+            
+            // Возвращаем кнопку к исходному состоянию через 3 секунды
+            setTimeout(() => {
+                copyButton.style.background = '#28a745';
+                copyButton.style.color = 'white';
+                copyButton.style.transform = 'scale(1)';
+                copyButton.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            }, 3000);
+        }
+    }, 500);
+}
+
+// Функция открытия Jivo чата
+function openJivoChat() {
+    if (window.jivo_api && typeof window.jivo_api.open === 'function') {
+        window.jivo_api.open();
+        if (typeof window.jivo_onOpen === 'function') window.jivo_onOpen();
+    } else {
+        // Если API еще не загружен, пробуем через 300мс
+        setTimeout(openJivoChat, 300);
+    }
+}
+
+// Функция применения Jivo чата
+function applyJivoChat() {
+    const container = document.getElementById('jivoContainer');
+    container.innerHTML = '';
+    
+    if (jivoSettings.enabled) {
+        // Добавляем CSS для скрытия стандартной кнопки Jivo
+        const style = document.createElement('style');
+        style.textContent = '.jivo-widget-button { display: none !important; }';
+        container.appendChild(style);
+    }
+}
+
+// Функция очистки всех настроек
+function clearAllSettingsMain() {
+    if (confirm('Вы уверены, что хотите очистить все настройки?')) {
+        socialSettings = [];
+        nextId = 1;
+        jivoSettings.enabled = false;
+        jivoSettings.customIcon = null;
+        jivoSettings.code = '';
+        jivoSettings.chatMode = false;
+        displaySettings.openMethod = 'click';
+        displaySettings.menuOrientation = 'vertical';
+        mainIconSettings.type = 'default';
+        mainIconSettings.customUrl = null;
+        mainIconSettings.colorType = 'default';
+        mainIconSettings.customColor = '#667eea';
+        mainIconSettings.shapeType = 'default';
+        mainIconSettings.customWidth = 120;
+        mainIconSettings.customHeight = 60;
+        mainIconSettings.customBorderRadius = 8;
+        
+        document.getElementById('jivoEnabled').checked = false;
+        document.getElementById('jivoChatMode').checked = false;
+        document.getElementById('jivoIconUrl').value = '';
+        document.getElementById('jivoIconPreview').style.display = 'none';
+        document.getElementById('jivoIconSection').style.display = 'none';
+        document.getElementById('jivoCodeSection').style.display = 'none';
+        document.getElementById('jivoCode').value = '';
+        document.getElementById('openMethodClick').checked = true;
+        document.getElementById('menuOrientationVertical').checked = true;
+        document.getElementById('defaultIcon').checked = true;
+        document.getElementById('mainIconUrl').value = '';
+        document.getElementById('mainIconPreview').style.display = 'none';
+        document.getElementById('customMainIconSection').style.display = 'none';
+        document.getElementById('defaultColor').checked = true;
+        document.getElementById('mainColorCode').value = '#667eea';
+        document.getElementById('mainColorPicker').value = '#667eea';
+        document.getElementById('mainColorPreview').style.display = 'none';
+        document.getElementById('customMainColorSection').style.display = 'none';
+        document.getElementById('defaultShape').checked = true;
+        document.getElementById('customSizeSection').style.display = 'none';
+        document.getElementById('customWidth').value = '120';
+        document.getElementById('customHeight').value = '60';
+        document.getElementById('customBorderRadius').value = '8';
+        
+        renderSocialInputs();
+        createSocialMenu(); // Пересоздаем меню без кнопки Jivo
+        updateMainButtonIcon(); // Обновляем главную иконку
+        updateMainButtonColor(); // Обновляем цвет главной кнопки
+        updateMainButtonShape(); // Обновляем форму главной кнопки
+        document.getElementById('jivoContainer').innerHTML = '';
+        document.getElementById('codeOutput').style.display = 'none';
+        
+        // Показываем уведомление об очистке
+        showNotification('🧹 Все настройки очищены', 'info');
+    }
+}
+
+// Функция создания социального меню
+function createSocialMenu() {
+    const menu = document.getElementById('popupMenu');
+    menu.innerHTML = '';
+    
+    // В режиме чата не показываем соцсети
+    if (jivoSettings.chatMode && jivoSettings.enabled) {
+        return;
+    }
+    
+    if (window.currentMode === 'jivo') {
+        // Режим Jivo виджетов
+        window.jivoWidgets.forEach(widgetId => {
+            const name = document.getElementById(`jivo_widget_name_${widgetId}`)?.value;
+            const code = document.getElementById(`jivo_widget_code_${widgetId}`)?.value;
+            const color = document.getElementById(`jivo_widget_color_${widgetId}`)?.value || '#ffffff';
+            
+            if (name && name.trim() !== '' && code && code.trim() !== '') {
+                const button = document.createElement('button');
+                button.className = 'social-button';
+                button.title = name;
+                button.style.backgroundColor = color;
+                button.style.border = '2px solid #e0e0e0';
+                button.style.borderRadius = '25px';
+                button.style.padding = '8px 16px';
+                button.style.minWidth = '80px';
+                button.style.height = '50px';
+                button.style.display = 'flex';
+                button.style.alignItems = 'center';
+                button.style.justifyContent = 'center';
+                button.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                button.style.transition = 'all 0.3s ease';
+                button.innerHTML = '<span style="font-size: 12px; font-weight: bold; color: #333; text-align: center;">' + name + '</span>';
+                
+                button.onmouseover = function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                };
+                
+                button.onmouseout = function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                };
+                
+                button.onclick = function() {
+                    // Извлекаем src из кода виджета
+                    const srcMatch = code.match(/src="([^"]+)"/);
+                    if (srcMatch) {
+                        loadJivoScript(srcMatch[1]);
+                    } else {
+                        alert('Неверный формат кода виджета');
+                    }
+                };
+                
+                menu.appendChild(button);
+            }
+        });
+        return;
+    }
+    
+    // Создаем кнопки для каждой соцсети
+    socialSettings.forEach(setting => {
+        if (setting.link && setting.link.trim() !== '') {
+            const button = document.createElement('a');
+            button.href = setting.link;
+            button.className = 'social-button';
+            button.target = '_blank';
+            button.title = setting.name;
+            
+            const img = document.createElement('img');
+            img.src = setting.icon;
+            img.alt = setting.name;
+            img.onerror = function() {
+                this.src = 'https://cdn-icons-png.flaticon.com/512/1827/1827933.png';
+            };
+            
+            button.appendChild(img);
+            menu.appendChild(button);
+        }
+    });
+    
+    // Добавляем кнопку Jivo чата, если он включен и НЕ в режиме чата
+    if (jivoSettings.enabled && !jivoSettings.chatMode) {
+        const jivoButton = document.createElement('button');
+        jivoButton.className = 'social-button';
+        jivoButton.title = 'Написать в чат';
+        jivoButton.onclick = openJivoChat;
+        
+        if (jivoSettings.customIcon) {
+            // Используем загруженную иконку
+            const img = document.createElement('img');
+            img.src = jivoSettings.customIcon;
+            img.alt = 'Написать в чат';
+            img.style.width = '25px';
+            img.style.height = '25px';
+            jivoButton.appendChild(img);
+        } else {
+            // Используем стандартную иконку Jivo (svg-silh)
+            const img = document.createElement('img');
+            img.src = 'https://svgsilh.com/svg/873316-1f7a22.svg';
+            img.alt = 'Jivo чат';
+            img.style.width = '25px';
+            img.style.height = '25px';
+            jivoButton.appendChild(img);
+        }
+        
+        menu.appendChild(jivoButton);
+    }
+}
+
+// Функция генерации готового кода для вставки
+function generateReadyCode() {
+    let code = '';
+    
+    // Получаем текущий режим работы
+    const currentModeValue = document.querySelector('input[name="mode"]:checked')?.value || 'social';
+    
+    // Начинаем с комментария
+    code += '<!-- Мульти-кнопка с соцсетями -->\n';
+    
+    // Добавляем CSS стили
+    code += '<style>\n';
+    code += '.multibutton {\n';
+    code += '    position: fixed;\n';
+    code += '    bottom: 20px;\n';
+    code += '    right: 20px;\n';
+    code += '    z-index: 10000;\n';
+    code += '}\n\n';
+    code += '.main-button {\n';
+    
+    // Применяем кастомные размеры если они настроены
+    if (mainIconSettings.shapeType === 'customSize') {
+        code += '    width: ' + mainIconSettings.customWidth + 'px;\n';
+        code += '    height: ' + mainIconSettings.customHeight + 'px;\n';
+        code += '    border-radius: ' + mainIconSettings.customBorderRadius + 'px;\n';
+    } else {
+        code += '    width: 60px;\n';
+        code += '    height: 60px;\n';
+        code += '    border-radius: 50%;\n';
+    }
+    
+    if (mainIconSettings.colorType === 'custom') {
+        code += '    background: ' + mainIconSettings.customColor + ';\n';
+    } else {
+        code += '    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n';
+    }
+    code += '    border: none;\n';
+    code += '    cursor: pointer;\n';
+    code += '    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);\n';
+    code += '    transition: all 0.3s ease;\n';
+    code += '    display: flex;\n';
+    code += '    align-items: center;\n';
+    code += '    justify-content: center;\n';
+    code += '    position: relative;\n';
+    code += '    overflow: hidden;\n';
+    code += '}\n\n';
+    code += '.main-button:hover {\n';
+    code += '    transform: scale(1.1);\n';
+    code += '    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);\n';
+    code += '}\n\n';
+    code += '.main-button img {\n';
+    code += '    width: 30px;\n';
+    code += '    height: 30px;\n';
+    code += '    filter: brightness(0) invert(1);\n';
+    code += '}\n\n';
+    code += '.main-button .custom-icon {\n';
+    if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+        // Для кастомных иконок
+        code += '    width: 100%;\n';
+        code += '    height: 100%;\n';
+        code += '    object-fit: cover;\n';
+        code += '    filter: none;\n';
+        code += '    position: absolute;\n';
+        code += '    top: 0;\n';
+        code += '    left: 0;\n';
+        code += '    z-index: 1;\n';
+        code += '    padding: 0;\n';
+    } else {
+        code += '    display: none;\n';
+    }
+    code += '}\n\n';
+    code += '.popup-menu {\n';
+    code += '    position: absolute;\n';
+    if (displaySettings.menuOrientation === 'horizontal') {
+        code += '    flex-direction: row;\n';
+    } else {
+        code += '    flex-direction: column;\n';
+    }
+    if (displaySettings.openMethod === 'always') {
+        code += '    display: flex;\n';
+    } else {
+        code += '    display: none;\n';
+    }
+    code += '    align-items: center;\n';
+    code += '    gap: 10px;\n';
+    code += '}\n\n';
+    code += '.social-button {\n';
+    code += '    width: 50px;\n';
+    code += '    height: 50px;\n';
+    code += '    border-radius: 50%;\n';
+    code += '    border: none;\n';
+    code += '    background: white;\n';
+    code += '    cursor: pointer;\n';
+    code += '    display: flex;\n';
+    code += '    align-items: center;\n';
+    code += '    justify-content: center;\n';
+    code += '    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);\n';
+    code += '    transition: all 0.3s ease;\n';
+    code += '    text-decoration: none;\n';
+    code += '}\n\n';
+    code += '.social-button:hover {\n';
+    code += '    transform: scale(1.15);\n';
+    code += '}\n\n';
+    code += '.social-button img {\n';
+    code += '    width: 25px;\n';
+    code += '    height: 25px;\n';
+    code += '}\n\n';
+    code += '.jivo-button {\n';
+    code += '    background: white !important;\n';
+    code += '}\n\n';
+    code += '.jivo-button:hover {\n';
+    code += '    background: #f8f9fa !important;\n';
+    code += '}\n\n';
+    code += '.hidden {\n';
+    code += '    display: none !important;\n';
+    code += '}\n';
+    code += '</style>\n\n';
+    // Добавляем HTML структуру
+    code += '<div class="multibutton">\n';
+    if (displaySettings.openMethod === 'click') {
+        code += '    <button class="main-button">\n';
+        // В режиме чата используем настройки главной кнопки
+        if (jivoSettings.chatMode && jivoSettings.enabled) {
+            if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+                code += '        <img src="' + mainIconSettings.customUrl + '" alt="Кастомная иконка" class="custom-icon" />\n';
+            } else {
+                code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" />\n';
+            }
+        } else {
+            if (mainIconSettings.type === 'custom' && mainIconSettings.customUrl) {
+                code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" style="display: none;" />\n';
+                code += '        <img src="' + mainIconSettings.customUrl + '" alt="Кастомная иконка" class="custom-icon" />\n';
+            } else {
+                code += '        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png" alt="Меню" class="default-icon" />\n';
+                code += '        <img src="" alt="Кастомная иконка" class="custom-icon" style="display: none;" />\n';
+            }
+        }
+        code += '    </button>\n';
+    }
+    // В режиме чата не создаем меню с соцсетями
+    if (!(jivoSettings.chatMode && jivoSettings.enabled)) {
+        code += '    <div class="popup-menu" id="popupMenu">\n';
+        
+        // Проверяем режим работы
+        if (currentModeValue === 'jivo') {
+            // Генерируем кнопки Jivo виджетов
+            window.jivoWidgets.forEach(widgetId => {
+                const name = document.getElementById('jivo_widget_name_' + widgetId)?.value;
+                const codeValue = document.getElementById('jivo_widget_code_' + widgetId)?.value;
+                const color = document.getElementById('jivo_widget_color_' + widgetId)?.value || '#ffffff';
+                
+                if (name && name.trim() !== '' && codeValue && codeValue.trim() !== '') {
+                    // Экранируем HTML теги и кавычки в коде виджета
+                    const escapedCode = codeValue.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                    const escapedName = name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                    code += '        <button class="social-button" onclick="loadJivoWidget(\'' + escapedCode + '\', \'' + escapedName + '\')" title="' + escapedName + '" style="background-color: ' + color + '; border: 2px solid #e0e0e0; border-radius: 25px; padding: 8px 16px; min-width: 80px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.3s ease;">\n';
+                    code += '            <span style="font-size: 12px; font-weight: bold; color: #333; text-align: center;">' + escapedName + '</span>\n';
+                    code += '        </button>\n';
+                }
+            });
+        } else {
+            // Добавляем социальные кнопки
+            socialSettings.forEach(setting => {
+                if (setting.link && setting.link.trim() !== '') {
+                    code += '        <a href="' + setting.link + '" class="social-button" target="_blank" title="' + setting.name + '">\n';
+                    code += '            <img src="' + setting.icon + '" alt="' + setting.name + '" />\n';
+                    code += '        </a>\n';
+                }
+            });
+            
+            // Добавляем кнопку Jivo, если включен и НЕ в режиме чата
+            if (jivoSettings.enabled && !jivoSettings.chatMode) {
+                code += '        <button class="social-button" onclick="openJivoChat()" title="Написать в чат">\n';
+                if (jivoSettings.customIcon) {
+                    code += '            <img src="' + jivoSettings.customIcon + '" alt="Написать в чат" />\n';
+                } else {
+                    code += '            <img src="https://svgsilh.com/svg/873316-1f7a22.svg" alt="Jivo чат" />\n';
+                }
+                code += '        </button>\n';
+            }
+        }
+        
+        code += '    </div>\n';
+    }
+    code += '</div>\n\n';
+    // Показываем готовый код
+    const codeOutput = document.getElementById('codeOutput');
+    const settingsInfo = document.getElementById('settingsInfo');
+    // Создаем textarea для отображения кода
+    if (!document.getElementById('readyCodeTextarea')) {
+        const textarea = document.createElement('textarea');
+        textarea.id = 'readyCodeTextarea';
+        textarea.style.width = '100%';
+        textarea.style.height = '400px';
+        textarea.style.fontFamily = 'monospace';
+        textarea.style.fontSize = '12px';
+        textarea.style.padding = '15px';
+        textarea.style.border = '1px solid #ddd';
+        textarea.style.borderRadius = '5px';
+        textarea.style.resize = 'vertical';
+        textarea.readOnly = true;
+        settingsInfo.appendChild(textarea);
+    }
+    
+
+    
+    // Добавляем код Jivo, если включен
+    if (jivoSettings.enabled && jivoSettings.code) {
+        code += '\n<!-- Код Jivo чата -->\n';
+        code += jivoSettings.code + '\n';
+    }
+    
+    const jsCode = '\n\n<!-- Для работы кнопки добавьте JavaScript:\n&lt;script&gt;\nfunction toggleMenu() {\n    const menu = document.getElementById("popupMenu");\n    if (menu.style.display === "none" || menu.style.display === "") {\n        menu.style.display = "flex";\n    } else {\n        menu.style.display = "none";\n    }\n}\n\nfunction loadJivoWidget(code, name) {\n    // Декодируем HTML entities обратно в обычные символы\n    const decodedCode = code.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");\n    const srcMatch = decodedCode.match(/src="([^"]+)"/);\n    if (srcMatch) {\n        const script = document.createElement("script");\n        script.src = srcMatch[1];\n        script.async = true;\n        \n        // Добавляем обработчик загрузки скрипта\n        script.onload = function() {\n            // Ждем немного, чтобы виджет инициализировался\n            setTimeout(() => {\n                if (window.jivo_api && typeof window.jivo_api.open === "function") {\n                    window.jivo_api.open();\n                } else {\n                    // Если API еще не готов, ждем еще немного\n                    setTimeout(() => {\n                        if (window.jivo_api && typeof window.jivo_api.open === "function") {\n                            window.jivo_api.open();\n                        }\n                    }, 1000);\n                }\n            }, 300);\n        };\n        \n        document.head.appendChild(script);\n    } else {\n        alert("Неверный формат кода виджета");\n    }\n}\n\nfunction openJivoChat() {\n    if (window.jivo_api && typeof window.jivo_api.open === "function") {\n        window.jivo_api.open();\n    } else {\n        setTimeout(openJivoChat, 300);\n    }\n}\n\n// Скрываем стандартную кнопку Jivo\nfunction jivo_onLoadCallback() {\n    const jivo_custom_widget = true;\n}\n\n// Скрываем мульти-кнопку при открытии чата\nfunction jivo_onOpen() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "none";\n    }\n}\n\n// Показываем мульти-кнопку при закрытии чата\nfunction jivo_onClose() {\n    const multibutton = document.querySelector(".multibutton");\n    if (multibutton) {\n        multibutton.style.display = "block";\n    }\n}\n\ndocument.addEventListener("DOMContentLoaded", function() {\n    const mainButton = document.querySelector(".main-button");\n    if (mainButton) {\n        // Проверяем режим чата\n        const isChatMode = ' + (typeof window.jivoSettings !== \'undefined\' && window.jivoSettings.chatMode && window.jivoSettings.enabled) + ';\n        const currentMode = "' + currentModeValue + '";\n        if (isChatMode) {\n            mainButton.addEventListener("click", openJivoChat);\n        } else {\n            mainButton.addEventListener("click", toggleMenu);\n        }\n    }\n    \n    // Применяем настройки отображения\n    const menu = document.getElementById("popupMenu");\n    if (menu) {\n        if ("' + (typeof window.displaySettings !== \'undefined\' ? window.displaySettings.openMethod : \'click\') + '" === "always") {\n            menu.style.display = "flex";\n        } else {\n            menu.style.display = "none";\n        }\n        \n        if ("' + (typeof window.displaySettings !== \'undefined\' ? window.displaySettings.menuOrientation : \'vertical\') + '" === "horizontal") {\n            menu.style.flexDirection = "row";\n        } else {\n            menu.style.flexDirection = "column";\n        }\n        \n        // Устанавливаем позицию меню с учетом размера кнопки\n        const buttonHeight = mainButton.offsetHeight || 60;\n        const gap = 10;\n        if ("' + (typeof window.displaySettings !== \'undefined\' ? window.displaySettings.menuOrientation : \'vertical\') + '" === "horizontal") {\n            menu.style.bottom = gap + "px";\n            menu.style.right = (buttonHeight + gap) + "px";\n        } else {\n            menu.style.bottom = (buttonHeight + gap) + "px";\n            menu.style.right = "0";\n        }\n    }\n});\n\ndocument.addEventListener("click", function(event) {\n    const multibutton = document.querySelector(".multibutton");\n    const menu = document.getElementById("popupMenu");\n    if (multibutton && menu && !multibutton.contains(event.target)) {\n        // Скрываем меню только если не выбрано "всегда видимое меню"\n        if ("' + (typeof window.displaySettings !== \'undefined\' ? window.displaySettings.openMethod : \'click\') + '" !== "always") {\n            menu.style.display = "none";\n        }\n    }\n});\n&lt;/script&gt; -->';
+    
+    document.getElementById('readyCodeTextarea').value = code + jsCode;
+    codeOutput.style.display = 'block';
+    // Обновляем кнопку копирования
+    const copyButton = document.querySelector('.copy-button');
+    if (copyButton) {
+        copyButton.textContent = '📋 Копировать готовый код';
+        copyButton.onclick = copyReadyCode;
+    }
+}
+
+// Функция копирования готового кода
+function copyReadyCode() {
+    const textarea = document.getElementById('readyCodeTextarea');
+    textarea.select();
+    document.execCommand('copy');
+    
+    showNotification("📋 Готовый код скопирован! Вставьте его перед тегом </body>", "success");
+    
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = '✅ Скопировано!';
+    button.style.background = '#28a745';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '#28a745';
+    }, 2000);
+}
+
+// Функция копирования настроек
+function copySettingsMain() {
+    console.log('copySettings вызвана');
+    
+    let settingsText = '';
+    
+    // Копируем настройки социальных кнопок
+    settingsText += '📱 Социальные кнопки:\n';
+    socialSettings.forEach(setting => {
+        if (setting.link && setting.link.trim() !== '') {
+            settingsText += `${setting.name}: ${setting.link}\n`;
+        }
+    });
+    
+    // Копируем настройки Jivo
+    settingsText += '\n💬 Jivo чат:\n';
+    if (jivoSettings.enabled) {
+        settingsText += 'Включен\n';
+    } else {
+        settingsText += 'Отключен\n';
+    }
+    
+    // Создаем временный textarea для копирования
+    const textarea = document.createElement('textarea');
+    textarea.value = settingsText;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // Показываем уведомление
+    showNotification('📋 Настройки скопированы в буфер обмена!', 'success');
+    
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = '✅ Скопировано!';
+    button.style.background = '#28a745';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '#28a745';
+    }, 2000);
+}
+
+// Закрытие меню при клике вне его
+document.addEventListener('click', function(event) {
+    const multibutton = document.querySelector('.multibutton');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const settingsToggle = document.querySelector('.settings-toggle');
+    const socialSelectorModal = document.getElementById('socialSelectorModal');
+    
+    // Проверяем, является ли клик по кнопке перемещения
+    if (event.target.classList.contains('move-button') || 
+        event.target.closest('.move-button') || 
+        event.target.textContent === '↑' || 
+        event.target.textContent === '↓') {
+        return; // Не закрываем панель настроек при клике по кнопкам перемещения
+    }
+    
+    // Не закрываем панель настроек, если открыт селектор соцсетей
+    if (socialSelectorModal.style.display === 'flex') {
+        // Закрытие модального окна при клике вне его
+        if (event.target === socialSelectorModal) {
+            hideSocialSelector();
+        }
+        return; // Не закрываем панель настроек
+    }
+    
+    if (!multibutton.contains(event.target)) {
+        // Скрываем меню только если не выбрано "всегда видимое меню"
+        if (displaySettings.openMethod !== 'always') {
+            document.getElementById('popupMenu').style.display = 'none';
+        }
+    }
+});
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен');
+    
+    // Применяем начальные настройки отображения
+    updateMenuDisplay();
+    
+    // Инициализация режима работы (после создания элементов)
+    setTimeout(() => {
+        try {
+            console.log('Инициализация режима работы...');
+            toggleMode();
+            
+            // Создаем начальное меню после установки режима
+            createSocialMenu();
+            
+            // Добавляем пример Jivo виджета при первом запуске
+            if (window.jivoWidgets.length === 0) {
+                addJivoWidget();
+            }
+        } catch (error) {
+            console.error('Ошибка при инициализации режима:', error);
+        }
+    }, 200);
+    
+    // Дополнительный вызов через большее время для надежности
+    setTimeout(() => {
+        console.log('Повторная инициализация режима...');
+        toggleMode();
+        createSocialMenu(); // Создаем меню после повторной инициализации
+    }, 500);
+    
+    // Устанавливаем начальные значения Jivo
+    // (код Jivo теперь вставляется клиентом отдельно)
+});
+</script>
+
+</body>
+</html> 
