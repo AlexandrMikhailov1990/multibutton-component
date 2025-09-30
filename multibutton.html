@@ -923,6 +923,46 @@
 <body>
 
 <script>
+// Простой обработчик кнопки настроек
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен, инициализируем кнопку настроек...');
+    
+    const settingsButton = document.getElementById('settingsButton');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const closeButton = document.getElementById('closeSettingsButton');
+    
+    if (settingsButton && settingsPanel) {
+        console.log('Кнопка и панель настроек найдены');
+        
+        // Обработчик открытия/закрытия панели
+        settingsButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Кнопка настроек нажата!');
+            
+            if (settingsPanel.style.display === 'none' || settingsPanel.style.display === '') {
+                settingsPanel.style.display = 'block';
+                console.log('Панель настроек показана');
+            } else {
+                settingsPanel.style.display = 'none';
+                console.log('Панель настроек скрыта');
+            }
+        });
+        
+        // Обработчик кнопки закрытия
+        if (closeButton) {
+            closeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Кнопка закрытия нажата!');
+                settingsPanel.style.display = 'none';
+            });
+        }
+        
+        console.log('Обработчики кнопок настроек добавлены');
+    } else {
+        console.error('Кнопка или панель настроек не найдены!');
+    }
+});
+
 // Функция переключения панели настроек (определена заранее)
 function toggleSettings() {
     console.log('toggleSettings вызвана');
@@ -1816,13 +1856,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<button class="settings-toggle" onclick="if(typeof toggleSettings === 'function') { toggleSettings(); } else { console.error('toggleSettings не найдена'); }">⚙️ Настройки</button>
+<button class="settings-toggle" id="settingsButton">⚙️ Настройки</button>
 
 <div class="settings-panel" id="settingsPanel">
     <div class="settings-panel-header" id="settingsPanelHeader">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0;">Настройка мульти-кнопки</h3>
-            <button onclick="closeSettingsPanel()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">×</button>
+            <button id="closeSettingsButton" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
     </div>
     <div class="settings-panel-content">
