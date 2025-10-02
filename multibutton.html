@@ -3591,6 +3591,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateMenuDisplay();
     }
     
+    // Инициализируем перетаскивание панели настроек
+    if (typeof initPanelDragging === 'function') {
+        setTimeout(initPanelDragging, 100);
+    }
+    
     // Инициализация режима работы (после создания элементов)
     setTimeout(() => {
         try {
