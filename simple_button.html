@@ -16,7 +16,10 @@
     <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Простая мульти-кнопка</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Мульти-кнопка с Jivo виджетами v2.0</title>
     <style>
         .multibutton {
             position: fixed;
@@ -91,8 +94,10 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 300px;
+            max-width: 400px;
             display: none;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .settings-toggle {
@@ -113,6 +118,62 @@
             padding: 20px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
+
+        .mode-selector {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .mode-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .mode-selector input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .jivo-settings {
+            display: none;
+        }
+
+        .jivo-button-config {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .jivo-button-config h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .remove-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            float: right;
+            font-size: 12px;
+        }
+
+        .add-jivo-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -120,24 +181,47 @@
 <button class="settings-toggle" onclick="toggleSettings()">⚙️ Настройки</button>
 
 <div class="settings-panel" id="settingsPanel">
-    <h3>Настройка соцсетей</h3>
+    <h3>Настройка мульти-кнопки</h3>
     
-    <div style="margin-bottom: 15px;">
-        <label>Telegram:</label>
-        <input type="text" id="telegramLink" placeholder="https://t.me/username" value="https://t.me/username" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+    <div class="mode-selector">
+        <label>Режим работы:</label>
+        <label><input type="radio" name="mode" value="social" checked onchange="toggleMode()"> Социальные сети</label>
+        <label><input type="radio" name="mode" value="jivo" onchange="toggleMode()"> Jivo виджеты</label>
     </div>
     
-    <div style="margin-bottom: 15px;">
-        <label>WhatsApp:</label>
-        <input type="text" id="whatsappLink" placeholder="https://wa.me/1234567890" value="https://wa.me/1234567890" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+    <div id="socialSettings">
+        <h4>Настройка соцсетей</h4>
+        
+        <div style="margin-bottom: 15px;">
+            <label>Telegram:</label>
+            <input type="text" id="telegramLink" placeholder="https://t.me/username" value="https://t.me/username" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label>WhatsApp:</label>
+            <input type="text" id="whatsappLink" placeholder="https://wa.me/1234567890" value="https://wa.me/1234567890" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label>VK:</label>
+            <input type="text" id="vkLink" placeholder="https://vk.com/username" value="https://vk.com/username" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
     </div>
     
-    <div style="margin-bottom: 15px;">
-        <label>VK:</label>
-        <input type="text" id="vkLink" placeholder="https://vk.com/username" value="https://vk.com/username" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+    <div id="jivoSettings" class="jivo-settings">
+        <h4>Настройка Jivo виджетов</h4>
+        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+            Добавьте кнопки с Jivo виджетами. Каждая кнопка будет загружать свой уникальный виджет.
+        </p>
+        
+        <div id="jivoButtonsContainer">
+            <!-- Jivo кнопки будут добавляться динамически -->
+        </div>
+        
+        <button class="add-jivo-button" onclick="addJivoButton()">+ Добавить Jivo кнопку</button>
     </div>
     
-    <button onclick="applySettings()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">Применить</button>
+    <button onclick="applySettings()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">Применить настройки</button>
 </div>
 
 <div class="multibutton">
@@ -158,16 +242,32 @@
 </div>
 
 <div class="demo-content">
-    <h1>Простая мульти-кнопка</h1>
-    <p>Нажмите кнопку "⚙️ Настройки" в левом верхнем углу.</p>
+    <h1>Мульти-кнопка с поддержкой Jivo виджетов</h1>
+    <p>Нажмите кнопку "⚙️ Настройки" в левом верхнем углу для настройки.</p>
     <p>Затем нажмите на фиолетовую кнопку в правом нижнем углу.</p>
+    
+    <div style="background: #e8f4fd; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h3>🆕 Новые возможности:</h3>
+        <ul>
+            <li><strong>Режим социальных сетей</strong> - классические кнопки для Telegram, WhatsApp, VK</li>
+            <li><strong>Режим Jivo виджетов</strong> - настраиваемые кнопки с уникальными кодами виджетов</li>
+            <li><strong>Динамическая загрузка</strong> - виджеты загружаются только при нажатии на кнопку</li>
+            <li><strong>Неограниченное количество кнопок</strong> - добавляйте столько кнопок, сколько нужно</li>
+        </ul>
+    </div>
+    
     <div style="height: 1500px; padding: 20px;">
         <h2>Дополнительный контент</h2>
         <p>Этот блок создан для демонстрации работы мульти-кнопки.</p>
+        <p>Попробуйте переключиться между режимами в настройках!</p>
     </div>
 </div>
 
 <script>
+let currentMode = 'social';
+let jivoButtons = [];
+let loadedJivoScripts = new Set();
+
 function toggleSettings() {
     console.log('toggleSettings вызвана');
     const panel = document.getElementById('settingsPanel');
@@ -175,6 +275,22 @@ function toggleSettings() {
         panel.style.display = 'block';
     } else {
         panel.style.display = 'none';
+    }
+}
+
+function toggleMode() {
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    currentMode = mode;
+    
+    const socialSettings = document.getElementById('socialSettings');
+    const jivoSettings = document.getElementById('jivoSettings');
+    
+    if (mode === 'social') {
+        socialSettings.style.display = 'block';
+        jivoSettings.style.display = 'none';
+    } else {
+        socialSettings.style.display = 'none';
+        jivoSettings.style.display = 'block';
     }
 }
 
@@ -188,44 +304,117 @@ function toggleMenu() {
     }
 }
 
+function addJivoButton() {
+    const container = document.getElementById('jivoButtonsContainer');
+    const buttonId = 'jivo_' + Date.now();
+    
+    const buttonConfig = document.createElement('div');
+    buttonConfig.className = 'jivo-button-config';
+    buttonConfig.innerHTML = `
+        <button class="remove-button" onclick="removeJivoButton('${buttonId}')">×</button>
+        <h4>Jivo кнопка ${jivoButtons.length + 1}</h4>
+        <div style="margin-bottom: 10px;">
+            <label>Название кнопки:</label>
+            <input type="text" id="jivo_name_${buttonId}" placeholder="Например: Продажи" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+        <div>
+            <label>Код виджета Jivo:</label>
+            <input type="text" id="jivo_code_${buttonId}" placeholder="<script src=&quot;//code.jivo.ru/widget/Yd1IbyauyY&quot; async></script>" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+    `;
+    
+    container.appendChild(buttonConfig);
+    jivoButtons.push(buttonId);
+}
+
+function removeJivoButton(buttonId) {
+    const buttonIndex = jivoButtons.indexOf(buttonId);
+    if (buttonIndex > -1) {
+        jivoButtons.splice(buttonIndex, 1);
+        document.getElementById('jivoButtonsContainer').removeChild(
+            document.querySelector(`#jivoButtonsContainer .jivo-button-config:nth-child(${buttonIndex + 1})`)
+        );
+    }
+}
+
+function loadJivoScript(scriptSrc) {
+    if (loadedJivoScripts.has(scriptSrc)) {
+        return;
+    }
+    
+    const script = document.createElement('script');
+    script.src = scriptSrc;
+    script.async = true;
+    document.head.appendChild(script);
+    loadedJivoScripts.add(scriptSrc);
+}
+
 function applySettings() {
     console.log('applySettings вызвана');
-    
-    const telegramLink = document.getElementById('telegramLink').value;
-    const whatsappLink = document.getElementById('whatsappLink').value;
-    const vkLink = document.getElementById('vkLink').value;
     
     const menu = document.getElementById('popupMenu');
     menu.innerHTML = '';
     
-    if (telegramLink && telegramLink.trim() !== '') {
-        const button = document.createElement('a');
-        button.href = telegramLink;
-        button.className = 'social-button';
-        button.target = '_blank';
-        button.title = 'Telegram';
-        button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">';
-        menu.appendChild(button);
-    }
-    
-    if (whatsappLink && whatsappLink.trim() !== '') {
-        const button = document.createElement('a');
-        button.href = whatsappLink;
-        button.className = 'social-button';
-        button.target = '_blank';
-        button.title = 'WhatsApp';
-        button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">';
-        menu.appendChild(button);
-    }
-    
-    if (vkLink && vkLink.trim() !== '') {
-        const button = document.createElement('a');
-        button.href = vkLink;
-        button.className = 'social-button';
-        button.target = '_blank';
-        button.title = 'VK';
-        button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">';
-        menu.appendChild(button);
+    if (currentMode === 'social') {
+        const telegramLink = document.getElementById('telegramLink').value;
+        const whatsappLink = document.getElementById('whatsappLink').value;
+        const vkLink = document.getElementById('vkLink').value;
+        
+        if (telegramLink && telegramLink.trim() !== '') {
+            const button = document.createElement('a');
+            button.href = telegramLink;
+            button.className = 'social-button';
+            button.target = '_blank';
+            button.title = 'Telegram';
+            button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">';
+            menu.appendChild(button);
+        }
+        
+        if (whatsappLink && whatsappLink.trim() !== '') {
+            const button = document.createElement('a');
+            button.href = whatsappLink;
+            button.className = 'social-button';
+            button.target = '_blank';
+            button.title = 'WhatsApp';
+            button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">';
+            menu.appendChild(button);
+        }
+        
+        if (vkLink && vkLink.trim() !== '') {
+            const button = document.createElement('a');
+            button.href = vkLink;
+            button.className = 'social-button';
+            button.target = '_blank';
+            button.title = 'VK';
+            button.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">';
+            menu.appendChild(button);
+        }
+    } else {
+        // Режим Jivo виджетов
+        jivoButtons.forEach(buttonId => {
+            const name = document.getElementById(`jivo_name_${buttonId}`).value;
+            const code = document.getElementById(`jivo_code_${buttonId}`).value;
+            
+            if (name && name.trim() !== '' && code && code.trim() !== '') {
+                const button = document.createElement('button');
+                button.className = 'social-button';
+                button.title = name;
+                button.innerHTML = `<span style="font-size: 12px; font-weight: bold;">${name}</span>`;
+                
+                button.onclick = function() {
+                    // Извлекаем src из кода виджета
+                    const srcMatch = code.match(/src="([^"]+)"/);
+                    if (srcMatch) {
+                        loadJivoScript(srcMatch[1]);
+                        alert(`Загружен виджет: ${name}`);
+                    } else {
+                        alert('Неверный формат кода виджета');
+                    }
+                };
+                
+                menu.appendChild(button);
+            }
+        });
     }
     
     alert('Настройки применены!');
@@ -244,6 +433,14 @@ document.addEventListener('click', function(event) {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM загружен - простая версия');
+    
+    // Инициализация режима
+    toggleMode();
+    
+    // Добавляем пример Jivo кнопки при первом запуске
+    if (jivoButtons.length === 0) {
+        addJivoButton();
+    }
 });
 </script>
 

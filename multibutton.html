@@ -923,45 +923,7 @@
 <body>
 
 <script>
-// Простой обработчик кнопки настроек
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM загружен, инициализируем кнопку настроек...');
-    
-    const settingsButton = document.getElementById('settingsButton');
-    const settingsPanel = document.getElementById('settingsPanel');
-    const closeButton = document.getElementById('closeSettingsButton');
-    
-    if (settingsButton && settingsPanel) {
-        console.log('Кнопка и панель настроек найдены');
-        
-        // Обработчик открытия/закрытия панели
-        settingsButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Кнопка настроек нажата!');
-            
-            if (settingsPanel.style.display === 'none' || settingsPanel.style.display === '') {
-                settingsPanel.style.display = 'block';
-                console.log('Панель настроек показана');
-            } else {
-                settingsPanel.style.display = 'none';
-                console.log('Панель настроек скрыта');
-            }
-        });
-        
-        // Обработчик кнопки закрытия
-        if (closeButton) {
-            closeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('Кнопка закрытия нажата!');
-                settingsPanel.style.display = 'none';
-            });
-        }
-        
-        console.log('Обработчики кнопок настроек добавлены');
-    } else {
-        console.error('Кнопка или панель настроек не найдены!');
-    }
-});
+// Удален дублирующий обработчик - используется основной ниже
 
 // Функция переключения панели настроек (определена заранее)
 function toggleSettings() {
@@ -1177,137 +1139,7 @@ function removeMainColor() {
     }
 }
 
-// Функция применения настроек (определена заранее)
-function applySettings() {
-    console.log('applySettings вызвана');
-    
-    // Обновляем настройки из полей ввода
-    if (typeof window.socialSettings !== 'undefined') {
-        window.socialSettings.forEach(setting => {
-            const nameInput = document.getElementById(setting.id + '_name');
-            const linkInput = document.getElementById(setting.id + '_link');
-            const iconInput = document.getElementById(setting.id + '_icon');
-            
-            if (nameInput) setting.name = nameInput.value;
-            if (linkInput) setting.link = linkInput.value;
-            if (iconInput) setting.icon = iconInput.value;
-        });
-    }
-    
-    // Обновляем настройки Jivo
-    const jivoEnabled = document.getElementById('jivoEnabled');
-    const jivoCode = document.getElementById('jivoCode');
-    const jivoChatMode = document.getElementById('jivoChatMode');
-    
-    if (jivoEnabled) {
-        if (typeof window.jivoSettings !== 'undefined') {
-            window.jivoSettings.enabled = jivoEnabled.checked;
-        }
-    }
-    if (jivoCode && typeof window.jivoSettings !== 'undefined') {
-        window.jivoSettings.code = jivoCode.value;
-    }
-    if (jivoChatMode && typeof window.jivoSettings !== 'undefined') {
-        window.jivoSettings.chatMode = jivoChatMode.checked;
-    }
-    
-    // Обновляем настройки отображения
-    const openMethodClick = document.getElementById('openMethodClick');
-    const menuOrientationVertical = document.getElementById('menuOrientationVertical');
-    
-    if (openMethodClick && typeof window.displaySettings !== 'undefined') {
-        window.displaySettings.openMethod = openMethodClick.checked ? 'click' : 'always';
-    }
-    if (menuOrientationVertical && typeof window.displaySettings !== 'undefined') {
-        window.displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
-    }
-    
-    // Сохраняем кастомные размеры кнопки
-    const customWidth = document.getElementById('customWidth');
-    const customHeight = document.getElementById('customHeight');
-    const customBorderRadius = document.getElementById('customBorderRadius');
-    
-    if (customWidth && customHeight && customBorderRadius && typeof window.mainIconSettings !== 'undefined') {
-        if (window.mainIconSettings.shapeType === 'customSize') {
-            window.mainIconSettings.customWidth = parseInt(customWidth.value) || 120;
-            window.mainIconSettings.customHeight = parseInt(customHeight.value) || 60;
-            window.mainIconSettings.customBorderRadius = parseInt(customBorderRadius.value) || 8;
-        }
-    }
-    
-    // Применяем настройки отображения
-    if (typeof updateMenuDisplay === 'function') {
-        updateMenuDisplay();
-    }
-    
-    // Пересоздаем меню (включая кнопку Jivo)
-    if (typeof createSocialMenu === 'function') {
-        createSocialMenu();
-    }
-    
-    // Применяем Jivo чат
-    if (typeof applyJivoChat === 'function') {
-        applyJivoChat();
-    }
-    
-    // Обновляем иконку главной кнопки
-    if (typeof updateMainButtonIcon === 'function') {
-        updateMainButtonIcon();
-    }
-    
-    // Генерируем готовый код для вставки
-    if (typeof generateReadyCode === 'function') {
-        generateReadyCode();
-    }
-    
-    // Скрываем подсказку
-    const settingsHint = document.getElementById('settingsHint');
-    if (settingsHint) {
-        settingsHint.style.display = 'none';
-    }
-    
-    // Показываем уведомление об успешном применении
-    showNotification('✅ Настройки применены! Готовый код сгенерирован.', 'success');
-    
-    // Скроллим к блоку с кодом и выделяем его
-    setTimeout(() => {
-        const codeOutput = document.getElementById('codeOutput');
-        if (codeOutput) {
-            codeOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Добавляем визуальное выделение блока
-            codeOutput.style.border = '3px solid #28a745';
-            codeOutput.style.boxShadow = '0 0 20px rgba(40, 167, 69, 0.3)';
-            codeOutput.style.transform = 'scale(1.02)';
-            codeOutput.style.transition = 'all 0.3s ease';
-            
-            // Убираем выделение через 3 секунды
-            setTimeout(() => {
-                codeOutput.style.border = '1px solid #dee2e6';
-                codeOutput.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
-                codeOutput.style.transform = 'scale(1)';
-            }, 3000);
-        }
-        
-        // Выделяем кнопку "Копировать готовый код"
-        const copyButton = document.querySelector('.copy-button');
-        if (copyButton) {
-            copyButton.style.background = '#ffc107';
-            copyButton.style.color = '#212529';
-            copyButton.style.transform = 'scale(1.1)';
-            copyButton.style.boxShadow = '0 4px 15px rgba(255, 193, 7, 0.4)';
-            copyButton.style.transition = 'all 0.3s ease';
-            
-            // Возвращаем кнопку к исходному состоянию через 3 секунды
-            setTimeout(() => {
-                copyButton.style.background = '#28a745';
-                copyButton.style.color = 'white';
-                copyButton.style.transform = 'scale(1)';
-                copyButton.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            }, 3000);
-        }
-    }, 500);
-}
+// Функция применения настроек (определена заранее) - удалена, используется applySettingsMain
 
 // Функция очистки всех настроек (определена заранее)
 function clearAllSettings() {
@@ -1821,39 +1653,7 @@ function handleMainShapeChange() {
     }
 }
 
-// Инициализация кнопки настроек после загрузки DOM
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM загружен, инициализируем кнопку настроек...');
-    
-    const settingsButton = document.querySelector('.settings-toggle');
-    if (settingsButton) {
-        console.log('Кнопка настроек найдена:', settingsButton);
-        
-        // Удаляем старый onclick и добавляем новый обработчик
-        settingsButton.removeAttribute('onclick');
-        settingsButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Кнопка настроек нажата через addEventListener');
-            
-            const panel = document.getElementById('settingsPanel');
-            if (panel) {
-                console.log('Панель найдена, переключаем видимость');
-                if (panel.style.display === 'none' || panel.style.display === '') {
-                    panel.style.display = 'block';
-                    console.log('Панель показана');
-                } else {
-                    panel.style.display = 'none';
-                    console.log('Панель скрыта');
-                }
-            } else {
-                console.error('Панель настроек не найдена!');
-            }
-        });
-        console.log('Обработчик кнопки настроек добавлен');
-    } else {
-        console.error('Кнопка настроек не найдена!');
-    }
-});
+// Удален дублирующий обработчик - используется основной ниже
 </script>
 
 <button class="settings-toggle" id="settingsButton">⚙️ Настройки</button>
@@ -2048,7 +1848,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     
     <div class="button-actions">
-        <button class="apply-button" onclick="applySettings()">Применить</button>
+        <button class="apply-button" onclick="applySettingsMain()">Применить</button>
         <button class="clear-button" onclick="clearAllSettings()">Очистить все</button>
     </div>
     
@@ -3123,29 +2923,49 @@ function applySettingsMain() {
     console.log('applySettings вызвана');
     
     // Обновляем настройки из полей ввода
-    socialSettings.forEach(setting => {
-        setting.name = document.getElementById(setting.id + '_name').value;
-        setting.link = document.getElementById(setting.id + '_link').value;
-        setting.icon = document.getElementById(setting.id + '_icon').value;
-    });
+    if (typeof socialSettings !== 'undefined') {
+        socialSettings.forEach(setting => {
+            const nameInput = document.getElementById(setting.id + '_name');
+            const linkInput = document.getElementById(setting.id + '_link');
+            const iconInput = document.getElementById(setting.id + '_icon');
+            
+            if (nameInput) setting.name = nameInput.value;
+            if (linkInput) setting.link = linkInput.value;
+            if (iconInput) setting.icon = iconInput.value;
+        });
+    }
     
     // Обновляем настройки Jivo
-    jivoSettings.enabled = document.getElementById('jivoEnabled').checked;
-    jivoSettings.code = document.getElementById('jivoCode').value;
-    jivoSettings.chatMode = document.getElementById('jivoChatMode').checked;
+    if (typeof jivoSettings !== 'undefined') {
+        const jivoEnabled = document.getElementById('jivoEnabled');
+        const jivoCode = document.getElementById('jivoCode');
+        const jivoChatMode = document.getElementById('jivoChatMode');
+        
+        if (jivoEnabled) jivoSettings.enabled = jivoEnabled.checked;
+        if (jivoCode) jivoSettings.code = jivoCode.value;
+        if (jivoChatMode) jivoSettings.chatMode = jivoChatMode.checked;
+    }
     
     // Обновляем настройки отображения
-    const openMethodClick = document.getElementById('openMethodClick');
-    displaySettings.openMethod = openMethodClick.checked ? 'click' : 'always';
-    
-    const menuOrientationVertical = document.getElementById('menuOrientationVertical');
-    displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
+    if (typeof displaySettings !== 'undefined') {
+        const openMethodClick = document.getElementById('openMethodClick');
+        const menuOrientationVertical = document.getElementById('menuOrientationVertical');
+        
+        if (openMethodClick) displaySettings.openMethod = openMethodClick.checked ? 'click' : 'always';
+        if (menuOrientationVertical) displaySettings.menuOrientation = menuOrientationVertical.checked ? 'vertical' : 'horizontal';
+    }
     
     // Сохраняем кастомные размеры кнопки
-    if (mainIconSettings.shapeType === 'customSize') {
-        mainIconSettings.customWidth = parseInt(document.getElementById('customWidth').value) || 120;
-        mainIconSettings.customHeight = parseInt(document.getElementById('customHeight').value) || 60;
-        mainIconSettings.customBorderRadius = parseInt(document.getElementById('customBorderRadius').value) || 8;
+    if (typeof mainIconSettings !== 'undefined') {
+        const customWidth = document.getElementById('customWidth');
+        const customHeight = document.getElementById('customHeight');
+        const customBorderRadius = document.getElementById('customBorderRadius');
+        
+        if (customWidth && customHeight && customBorderRadius && mainIconSettings.shapeType === 'customSize') {
+            mainIconSettings.customWidth = parseInt(customWidth.value) || 120;
+            mainIconSettings.customHeight = parseInt(customHeight.value) || 60;
+            mainIconSettings.customBorderRadius = parseInt(customBorderRadius.value) || 8;
+        }
     }
     
     // Применяем настройки отображения
@@ -3740,7 +3560,7 @@ document.addEventListener('click', function(event) {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM загружен');
+    console.log('DOM загружен - инициализация мульти-кнопки');
     
     // Инициализация кнопки настроек
     const settingsButton = document.querySelector('.settings-toggle');
@@ -3767,35 +3587,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Применяем начальные настройки отображения
-    updateMenuDisplay();
+    if (typeof updateMenuDisplay === 'function') {
+        updateMenuDisplay();
+    }
     
     // Инициализация режима работы (после создания элементов)
     setTimeout(() => {
         try {
             console.log('Инициализация режима работы...');
-            toggleMode();
+            if (typeof toggleMode === 'function') {
+                toggleMode();
+            }
             
             // Создаем начальное меню после установки режима
-            createSocialMenu();
+            if (typeof createSocialMenu === 'function') {
+                createSocialMenu();
+            }
             
             // Добавляем пример Jivo виджета при первом запуске
-            if (window.jivoWidgets.length === 0) {
-                addJivoWidget();
+            if (typeof window.jivoWidgets !== 'undefined' && window.jivoWidgets.length === 0) {
+                if (typeof addJivoWidget === 'function') {
+                    addJivoWidget();
+                }
             }
         } catch (error) {
             console.error('Ошибка при инициализации режима:', error);
         }
     }, 200);
-    
-    // Дополнительный вызов через большее время для надежности
-    setTimeout(() => {
-        console.log('Повторная инициализация режима...');
-        toggleMode();
-        createSocialMenu(); // Создаем меню после повторной инициализации
-    }, 500);
-    
-    // Устанавливаем начальные значения Jivo
-    // (код Jivo теперь вставляется клиентом отдельно)
 });
 </script>
 
