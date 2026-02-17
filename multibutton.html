@@ -965,6 +965,20 @@
     <div class="page-loading-spinner"></div>
     <div class="page-loading-text">Загрузка...</div>
 </div>
+<script>
+(function(){
+    function hide(){
+        var el = document.getElementById('pageLoading');
+        if(el){ el.classList.add('hidden'); el.setAttribute('aria-hidden','true'); }
+    }
+    if(document.readyState === 'complete' || document.readyState === 'interactive'){
+        setTimeout(hide, 50);
+    } else {
+        document.addEventListener('DOMContentLoaded', function(){ setTimeout(hide, 50); });
+    }
+    setTimeout(hide, 4000);
+})();
+</script>
 
 <script>
 // Удален дублирующий обработчик - используется основной ниже
@@ -3615,16 +3629,14 @@ function hidePageLoading() {
         el.setAttribute('aria-hidden', 'true');
     }
 }
-// Резерв: скрыть загрузку через 3 сек, если DOMContentLoaded не сработал
-setTimeout(hidePageLoading, 3000);
+// Дублируем скрытие загрузки (основное — в скрипте сразу после #pageLoading)
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof hidePageLoading === 'function') hidePageLoading();
+});
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM загружен - инициализация мульти-кнопки');
-    // Скрываем загрузку после отрисовки кадра, чтобы контент был виден
-    requestAnimationFrame(function() {
-        requestAnimationFrame(hidePageLoading);
-    });
 
     // Инициализация кнопки настроек
     const settingsButton = document.querySelector('.settings-toggle');
