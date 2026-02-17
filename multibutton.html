@@ -909,8 +909,8 @@
     </style>
 </head>
 <body>
-
-<script>
+<button type="button" class="settings-toggle" id="settingsButton" onclick="(typeof toggleSettings==='function'?toggleSettings:openSettingsPanel)(); return false;">⚙️ Настройки</button>
+<script defer>
 // Резервное открытие/закрытие панели настроек (работает до загрузки основного скрипта)
 (function(){
     window.openSettingsPanel = function(){
@@ -924,7 +924,7 @@
 })();
 </script>
 
-<script>
+<script defer>
 // Удален дублирующий обработчик - используется основной ниже
 
 // Функция переключения панели настроек (определена заранее)
@@ -1659,8 +1659,6 @@ function handleMainShapeChange() {
 
 // Удален дублирующий обработчик - используется основной ниже
 </script>
-
-<button type="button" class="settings-toggle" id="settingsButton" onclick="(typeof toggleSettings==='function'?toggleSettings:openSettingsPanel)(); return false;">⚙️ Настройки</button>
 
 <div class="demo-content">
     <div class="demo-container">
