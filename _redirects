@@ -1,5 +1,3 @@
-# Netlify redirects
-/*    /multibutton.html   200
-
-
-
+# Корень и /multibutton ведут на страницу настроек
+/              /multibutton.html   302
+/multibutton   /multibutton.html   302

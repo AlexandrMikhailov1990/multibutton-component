@@ -5,5 +5,16 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Редиректы: корень и /multibutton открывают страницу настроек
+[[redirects]]
+  from = "/"
+  to = "/multibutton.html"
+  status = 302
+
+[[redirects]]
+  from = "/multibutton"
+  to = "/multibutton.html"
+  status = 302
+
 
 
