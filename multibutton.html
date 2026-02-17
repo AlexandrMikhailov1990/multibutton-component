@@ -7,22 +7,6 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Мульти-кнопка с соцсетями и Jivo v2.0</title>
-    
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        try {
-            (function(m,e,t,r,i,k,a){
-                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();
-                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103841163', 'ym');
-
-            ym(103841163, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
-        } catch (err) { console.warn('Yandex.Metrika:', err); }
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/103841163" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
     <style>
         * {
             margin: 0;
@@ -962,6 +946,7 @@
 </head>
 <body>
 
+<noscript><style>.page-loading{display:none!important}</style></noscript>
 <div class="page-loading" id="pageLoading" aria-hidden="false">
     <div class="page-loading-spinner"></div>
     <div class="page-loading-text">Загрузка...</div>
@@ -973,11 +958,12 @@
         if(el){ el.classList.add('hidden'); el.setAttribute('aria-hidden','true'); }
     }
     if(document.readyState === 'complete' || document.readyState === 'interactive'){
-        setTimeout(hide, 50);
+        setTimeout(hide, 30);
     } else {
-        document.addEventListener('DOMContentLoaded', function(){ setTimeout(hide, 50); });
+        document.addEventListener('DOMContentLoaded', function(){ setTimeout(hide, 30); });
     }
-    setTimeout(hide, 4000);
+    setTimeout(hide, 800);
+    setTimeout(hide, 150);
     // Резервное открытие/закрытие панели настроек (если основной скрипт не загрузился)
     window.openSettingsPanel = function(){
         var p = document.getElementById('settingsPanel');
