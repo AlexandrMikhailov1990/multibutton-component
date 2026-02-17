@@ -3615,13 +3615,16 @@ function hidePageLoading() {
         el.setAttribute('aria-hidden', 'true');
     }
 }
-// Резерв: скрыть загрузку через 5 сек, если DOMContentLoaded не сработал
-setTimeout(hidePageLoading, 5000);
+// Резерв: скрыть загрузку через 3 сек, если DOMContentLoaded не сработал
+setTimeout(hidePageLoading, 3000);
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM загружен - инициализация мульти-кнопки');
-    hidePageLoading();
+    // Скрываем загрузку после отрисовки кадра, чтобы контент был виден
+    requestAnimationFrame(function() {
+        requestAnimationFrame(hidePageLoading);
+    });
 
     // Инициализация кнопки настроек
     const settingsButton = document.querySelector('.settings-toggle');
