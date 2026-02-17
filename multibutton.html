@@ -10,14 +10,16 @@
     
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103841163', 'ym');
+        try {
+            (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103841163', 'ym');
 
-        ym(103841163, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+            ym(103841163, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+        } catch (err) { console.warn('Yandex.Metrika:', err); }
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/103841163" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
@@ -2152,13 +2154,13 @@ function jivo_onLoadCallback() {
 }
 
 function jivo_onOpen() {
-    // Скрываем кастомную кнопку при открытии чата
-    document.querySelector('.multibutton').style.display = 'none';
+    const el = document.querySelector('.multibutton');
+    if (el) el.style.display = 'none';
 }
 
 function jivo_onClose() {
-    // Показываем кастомную кнопку при закрытии чата
-    document.querySelector('.multibutton').style.display = 'block';
+    const el = document.querySelector('.multibutton');
+    if (el) el.style.display = 'block';
 }
 
 // Функция переключения панели настроек (удалена - теперь определена в начале страницы)
@@ -2167,6 +2169,7 @@ function jivo_onClose() {
 function toggleMenu() {
     console.log('toggleMenu вызвана');
     const menu = document.getElementById('popupMenu');
+    if (!menu) return;
     console.log('Меню найдено:', menu);
     console.log('Текущий display меню:', menu.style.display);
     
