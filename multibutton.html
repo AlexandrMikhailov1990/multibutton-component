@@ -940,6 +940,7 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
+            display: none !important;
         }
         .page-loading-spinner {
             width: 48px;
@@ -1727,6 +1728,143 @@ function handleMainShapeChange() {
 
 <button type="button" class="settings-toggle" id="settingsButton" onclick="(typeof toggleSettings==='function'?toggleSettings:openSettingsPanel)(); return false;">⚙️ Настройки</button>
 
+<div class="demo-content">
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🚀 Мульти-кнопка с соцсетями</h1>
+            <p>Красивая и функциональная кнопка для вашего сайта</p>
+            <p>Настройте ссылки на социальные сети и Jivo чат</p>
+        </div>
+
+        <div class="demo-instructions">
+            <h2>📋 Как использовать</h2>
+            <ol>
+                <li><strong>Нажмите кнопку "⚙️ Настройки"</strong> в левом верхнем углу</li>
+                <li><strong>Добавьте социальные сети</strong> через селектор или вручную</li>
+                <li><strong>Настройте ссылки</strong> на ваши профили</li>
+                <li><strong>Нажмите "Применить"</strong> для сохранения настроек</li>
+                <li><strong>Кликните на фиолетовую кнопку</strong> в правом нижнем углу для тестирования</li>
+                <li><strong>Скопируйте сгенерированный код</strong> и вставьте на ваш сайт перед тегом <code>&lt;/body&gt;</code></li>
+                <li><strong>⚠️ Важно:</strong> При вставке кода на сайт <strong>уберите все знаки комментариев</strong> (<code>&lt;!--</code> и <code>--&gt;</code>)</li>
+            </ol>
+        </div>
+
+        <div class="demo-features">
+            <div class="demo-feature">
+                <h3>🎨 Красивый дизайн</h3>
+                <p>Современный градиентный дизайн с плавными анимациями и эффектами наведения</p>
+            </div>
+            <div class="demo-feature">
+                <h3>⚙️ Простая настройка</h3>
+                <p>Удобная панель настроек для быстрого изменения ссылок и иконок</p>
+            </div>
+            <div class="demo-feature">
+                <h3>📱 Адаптивность</h3>
+                <p>Отлично выглядит на всех устройствах - от мобильных до десктопов</p>
+            </div>
+            <div class="demo-feature">
+                <h3>🚀 Быстрая работа</h3>
+                <p>Легкий код без зависимостей, загружается мгновенно</p>
+            </div>
+            <div class="demo-feature">
+                <h3>💬 Jivo интеграция</h3>
+                <p>Встроенная поддержка чат-виджета с автоматическим скрытием стандартной кнопки</p>
+            </div>
+            <div class="demo-feature">
+                <h3>🔧 Гибкость</h3>
+                <p>Поддержка 20+ популярных платформ с возможностью добавления кастомных</p>
+            </div>
+        </div>
+
+        <div class="icons-section">
+            <h2>📱 Популярные иконки для соцсетей</h2>
+            <p>Используйте эти ссылки на иконки в настройках мульти-кнопки:</p>
+            <div class="icons-grid">
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+                    <div class="icon-info"><strong>Telegram</strong> <code>https://cdn-icons-png.flaticon.com/512/2111/2111646.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+                    <div class="icon-info"><strong>WhatsApp</strong> <code>https://cdn-icons-png.flaticon.com/512/733/733585.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">
+                    <div class="icon-info"><strong>VK</strong> <code>https://cdn-icons-png.flaticon.com/512/145/145813.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                    <div class="icon-info"><strong>Instagram</strong> <code>https://cdn-icons-png.flaticon.com/512/2111/2111463.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111392.png" alt="Facebook">
+                    <div class="icon-info"><strong>Facebook</strong> <code>https://cdn-icons-png.flaticon.com/512/2111/2111392.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111738.png" alt="Twitter">
+                    <div class="icon-info"><strong>Twitter</strong> <code>https://cdn-icons-png.flaticon.com/512/2111/2111738.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3670/3670147.png" alt="YouTube">
+                    <div class="icon-info"><strong>YouTube</strong> <code>https://cdn-icons-png.flaticon.com/512/3670/3670147.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/889/889125.png" alt="Одноклассники">
+                    <div class="icon-info"><strong>Одноклассники</strong> <code>https://cdn-icons-png.flaticon.com/512/889/889125.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Имейл">
+                    <div class="icon-info"><strong>Имейл</strong> <code>https://cdn-icons-png.flaticon.com/512/561/561127.png</code></div>
+                </div>
+            </div>
+            <div class="icons-note">
+                <p><strong>💡 Как использовать:</strong></p>
+                <ol>
+                    <li>Откройте настройки мульти-кнопки</li>
+                    <li>В поле "URL иконки" вставьте любую ссылку из списка выше</li>
+                    <li>Или используйте селектор при добавлении новой кнопки</li>
+                    <li>Нажмите "Применить" для сохранения настроек</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="icons-section">
+            <h2>🔧 Полезные иконки</h2>
+            <p>Дополнительные иконки для различных функций:</p>
+            <div class="icons-grid">
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2702/2702154.png" alt="База знаний">
+                    <div class="icon-info"><strong>База знаний</strong> <code>https://cdn-icons-png.flaticon.com/512/2702/2702154.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2190/2190552.png" alt="Чат 1">
+                    <div class="icon-info"><strong>Чат 1</strong> <code>https://cdn-icons-png.flaticon.com/512/2190/2190552.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/209/209989.png" alt="Чат 2">
+                    <div class="icon-info"><strong>Чат 2</strong> <code>https://cdn-icons-png.flaticon.com/512/209/209989.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8377/8377198.png" alt="Чат 3">
+                    <div class="icon-info"><strong>Чат 3</strong> <code>https://cdn-icons-png.flaticon.com/512/8377/8377198.png</code></div>
+                </div>
+                <div class="icon-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/8794/8794966.png" alt="Чат 4">
+                    <div class="icon-info"><strong>Чат 4</strong> <code>https://cdn-icons-png.flaticon.com/512/8794/8794966.png</code></div>
+                </div>
+            </div>
+            <div class="icons-note">
+                <p><strong>💡 Применение:</strong></p>
+                <ul>
+                    <li><strong>База знаний</strong> - для ссылок на FAQ, документацию, справочники</li>
+                    <li><strong>Чат иконки</strong> - для различных чат-систем, поддержки, консультаций</li>
+                    <li>Используйте "Создать собственную кнопку" для добавления этих иконок</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="settings-panel" id="settingsPanel">
     <div class="settings-panel-header" id="settingsPanelHeader">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1973,206 +2111,6 @@ function handleMainShapeChange() {
 
 <!-- Контейнер для уведомлений -->
 <div id="notificationContainer"></div>
-
-<div class="demo-content">
-    <div class="demo-container">
-        <div class="demo-header">
-            <h1>🚀 Мульти-кнопка с соцсетями</h1>
-            <p>Красивая и функциональная кнопка для вашего сайта</p>
-            <p>Настройте ссылки на социальные сети и Jivo чат</p>
-        </div>
-
-        <div class="demo-instructions">
-            <h2>📋 Как использовать</h2>
-            <ol>
-                <li><strong>Нажмите кнопку "⚙️ Настройки"</strong> в левом верхнем углу</li>
-                <li><strong>Добавьте социальные сети</strong> через селектор или вручную</li>
-                <li><strong>Настройте ссылки</strong> на ваши профили</li>
-                <li><strong>Нажмите "Применить"</strong> для сохранения настроек</li>
-                <li><strong>Кликните на фиолетовую кнопку</strong> в правом нижнем углу для тестирования</li>
-                <li><strong>Скопируйте сгенерированный код</strong> и вставьте на ваш сайт перед тегом <code>&lt;/body&gt;</code></li>
-                <li><strong>⚠️ Важно:</strong> При вставке кода на сайт <strong>уберите все знаки комментариев</strong> (<code>&lt;!--</code> и <code>--&gt;</code>)</li>
-            </ol>
-        </div>
-
-        <div class="demo-features">
-            <div class="demo-feature">
-                <h3>🎨 Красивый дизайн</h3>
-                <p>Современный градиентный дизайн с плавными анимациями и эффектами наведения</p>
-            </div>
-            
-            <div class="demo-feature">
-                <h3>⚙️ Простая настройка</h3>
-                <p>Удобная панель настроек для быстрого изменения ссылок и иконок</p>
-            </div>
-            
-            <div class="demo-feature">
-                <h3>📱 Адаптивность</h3>
-                <p>Отлично выглядит на всех устройствах - от мобильных до десктопов</p>
-            </div>
-            
-            <div class="demo-feature">
-                <h3>🚀 Быстрая работа</h3>
-                <p>Легкий код без зависимостей, загружается мгновенно</p>
-            </div>
-
-            <div class="demo-feature">
-                <h3>💬 Jivo интеграция</h3>
-                <p>Встроенная поддержка чат-виджета с автоматическим скрытием стандартной кнопки</p>
-            </div>
-
-            <div class="demo-feature">
-                <h3>🔧 Гибкость</h3>
-                <p>Поддержка 20+ популярных платформ с возможностью добавления кастомных</p>
-            </div>
-        </div>
-
-        <div class="icons-section">
-            <h2>📱 Популярные иконки для соцсетей</h2>
-            <p>Используйте эти ссылки на иконки в настройках мульти-кнопки:</p>
-            
-            <div class="icons-grid">
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
-                    <div class="icon-info">
-                        <strong>Telegram</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111646.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
-                    <div class="icon-info">
-                        <strong>WhatsApp</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/733/733585.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" alt="VK">
-                    <div class="icon-info">
-                        <strong>VK</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/145/145813.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
-                    <div class="icon-info">
-                        <strong>Instagram</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111463.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111392.png" alt="Facebook">
-                    <div class="icon-info">
-                        <strong>Facebook</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111392.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111738.png" alt="Twitter">
-                    <div class="icon-info">
-                        <strong>Twitter</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/2111/2111738.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3670/3670147.png" alt="YouTube">
-                    <div class="icon-info">
-                        <strong>YouTube</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/3670/3670147.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/889/889125.png" alt="Одноклассники">
-                    <div class="icon-info">
-                        <strong>Одноклассники</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/889/889125.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Имейл">
-                    <div class="icon-info">
-                        <strong>Имейл</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/561/561127.png</code>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="icons-note">
-                <p><strong>💡 Как использовать:</strong></p>
-                <ol>
-                    <li>Откройте настройки мульти-кнопки</li>
-                    <li>В поле "URL иконки" вставьте любую ссылку из списка выше</li>
-                    <li>Или используйте селектор при добавлении новой кнопки</li>
-                    <li>Нажмите "Применить" для сохранения настроек</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="icons-section">
-            <h2>🔧 Полезные иконки</h2>
-            <p>Дополнительные иконки для различных функций:</p>
-            
-            <div class="icons-grid">
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2702/2702154.png" alt="База знаний">
-                    <div class="icon-info">
-                        <strong>База знаний</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/2702/2702154.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2190/2190552.png" alt="Чат 1">
-                    <div class="icon-info">
-                        <strong>Чат 1</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/2190/2190552.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/209/209989.png" alt="Чат 2">
-                    <div class="icon-info">
-                        <strong>Чат 2</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/209/209989.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/8377/8377198.png" alt="Чат 3">
-                    <div class="icon-info">
-                        <strong>Чат 3</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/8377/8377198.png</code>
-                    </div>
-                </div>
-                
-                <div class="icon-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/8794/8794966.png" alt="Чат 4">
-                    <div class="icon-info">
-                        <strong>Чат 4</strong>
-                        <code>https://cdn-icons-png.flaticon.com/512/8794/8794966.png</code>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="icons-note">
-                <p><strong>💡 Применение:</strong></p>
-                <ul>
-                    <li><strong>База знаний</strong> - для ссылок на FAQ, документацию, справочники</li>
-                    <li><strong>Чат иконки</strong> - для различных чат-систем, поддержки, консультаций</li>
-                    <li>Используйте "Создать собственную кнопку" для добавления этих иконок</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
 // Настройки по умолчанию
