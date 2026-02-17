@@ -1531,7 +1531,7 @@ function generateReadyCode() {
         if (srcMatch) {
             var widgetSrc = srcMatch[1].replace(/"/g, '\\"');
             code += '\n<!-- Jivo чат: загрузка после jivo_custom_widget, чтобы скрыть стандартную кнопку -->\n';
-            code += '<script>\nwindow.jivo_custom_widget=true;(function(){var s=document.createElement("script");s.src="' + widgetSrc + '";s.async=true;document.head.appendChild(s);})();\n</script>\n';
+            code += '<script>\nwindow.jivo_custom_widget=true;(function(){var s=document.createElement("script");s.src="' + widgetSrc + '";s.async=true;document.head.appendChild(s);})();\n</scr' + 'ipt>\n';
         } else {
             code += '\n<!-- Код Jivo чата -->\n';
             code += jivoCodeRaw + '\n';
@@ -3402,7 +3402,7 @@ function generateReadyCode() {
         if (srcMatchJivo) {
             var widgetSrcJivo = srcMatchJivo[1].replace(/"/g, '\\"');
             code += '\n<!-- Jivo чат: загрузка после jivo_custom_widget -->\n';
-            code += '<script>\nwindow.jivo_custom_widget=true;(function(){var s=document.createElement("script");s.src="' + widgetSrcJivo + '";s.async=true;document.head.appendChild(s);})();\n</script>\n';
+            code += '<script>\nwindow.jivo_custom_widget=true;(function(){var s=document.createElement("script");s.src="' + widgetSrcJivo + '";s.async=true;document.head.appendChild(s);})();\n</scr' + 'ipt>\n';
         } else {
             code += '\n<!-- Код Jivo чата -->\n';
             code += jivoCodeRaw + '\n';
